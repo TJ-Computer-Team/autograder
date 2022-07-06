@@ -6,8 +6,19 @@ router.get("/", (req, res) => {
 });
 
 router.post("/status", (req, res) => {
-    let code = req.body.code;
-    res.send(req.body.code);
+        //sends file to another website
+        let file= req.body.code;
+        let url = "http://localhost:3000/grade/status";
+        let formData = {
+                "file": file
+        };
+
+        let requestOptions = {
+                method: "POST",
+                headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                }
+        };
 });
 router.get("/status", (req, res) => {
     res.send("not success");
