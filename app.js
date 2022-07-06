@@ -8,20 +8,7 @@ const simpleoauth2 = require('simple-oauth2');
 const session = require('express-session');
 
 const Client = require('pg').Client;
-const cl =  new Client ({
-    user: "postgres",
-    password: process.env.PGPASSWORD,
-    port: 5432,
-    database: "autograder"
-});
-
-// cl.connect()
-// .then(() => console.log("Connected"))
-// .then(() => cl.query("INSERT INTO users VALUES ($1, $2)", [3, 'DanielOrz']))
-// .then(() => cl.query("SELECT * FROM users"))
-// .then(results => console.log(results.rows))
-// .catch(error => console.log(error))
-// .finally(() => cl.end());
+let cl = undefined;
 
 console.log("start");
 
@@ -96,9 +83,8 @@ async function processFunction(CODE, req, res2) {
             }
         }).then(res => {
             let user_data = res.data;
-            req.session.name = user_data.display_name;
-            req.session.username = user_data.ion_username;
-            res2.redirect("/profile");
+            req.session.id = user_data.id;
+            check(user_data, req, res2);
         })
         .catch((error) => {
             console.log(error);
@@ -108,6 +94,54 @@ async function processFunction(CODE, req, res2) {
         console.log('Access Token Error', error.message);
     }
 }
+async function check(user_data, req, res) {
+    try {
+        cl = new Client ({
+            user: "postgres",
+            password: process.env.PGPASSWORD,
+            port: 5432,
+            database: "autograder"
+        });
+        await cl.connect();
+        let results = await cl.query("SELECT * FROM users WHERE id = " + user_data.id);
+        if (results.rows.length == 0) {
+            cl.end();
+            await cl.end();
+            populate(user_data, req, res);
+        }
+        else {
+            cl.end();
+            req.session.name = results.rows[0].display_name;
+            req.session.username = results.rows[0].ion_username;
+            res.redirect("/profile");
+        }
+    }
+    catch (error) {
+        res.redirect("/");
+        console.log(error);
+    }
+}
+async function populate(user_data, req, res) {
+    try {
+        cl = new Client ({
+            user: "postgres",
+            password: process.env.PGPASSWORD,
+            port: 5432,
+            database: "autograder"
+        });
+        await cl.connect();
+        await cl.query("INSERT INTO users VALUES ($1, $2, $3, $4, $5)", [user_data.id, user_data.display_name, user_data.ion_username, 0, false]);
+        await cl.end();
+        req.session.name = user_data.display_name;
+        req.session.username = user_data.ion_username;
+        res.redirect("/profile");
+    }
+    catch (error) {
+        console.log(error);
+        res.redirect("/");
+    }
+}
+
 async function getToken() {
     const login_url = client.authorizeURL({
         redirect_uri: client_url,
