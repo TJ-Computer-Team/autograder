@@ -11,7 +11,6 @@ async function check(user_data, req, res) {
         await cl.connect();
         let results = await cl.query("SELECT * FROM users WHERE id = " + user_data.id);
         if (results.rows.length == 0) {
-            cl.end();
             await cl.end();
             populate(user_data, req, res);
         }

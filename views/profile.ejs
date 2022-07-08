@@ -10,5 +10,8 @@
     <div>Profile</div>    
     <div>Name: <%=locals.name%></div>
     <div>Username: <%=locals.username%></div>
+    <form action="/logout" method="POST">
+        <button type="submit">Log out</button>
+    </form>
 </body>
 </html>

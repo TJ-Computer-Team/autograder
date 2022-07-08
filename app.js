@@ -30,6 +30,11 @@ app.get("/login", async (req, res)=>{
 app.get("/profile", checkLoggedIn, (req, res)=>{ 
     res.render("profile", {name: req.session.name, username: req.session.username});
 });
+app.post("/logout", (req, res)=> {
+    req.session.destroy();
+    res.redirect("/");
+});
+
 
 function checkLoggedIn(req, res, next) {
     if (req.session.loggedin) {
