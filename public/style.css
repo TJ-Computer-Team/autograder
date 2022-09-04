@@ -1,13 +1,85 @@
+html {
+    background-attachment:fixed;
+    height: 200%;
+    background: linear-gradient(15deg, rgba(2,0,36,1) 0%, rgba(1,22,114,1) 88%, rgba(0,39,175,1) 98%, rgba(0,57,255,1) 100%);
+    overflow-x: hidden;
+}
+
 .codebox {
     width: 500px;
     height: 500px;
     border: 1px;
     border-color: black;
 }
+
+.button_link {
+    text-decoration: none;
+}
+
+.main {
+    padding-left: 3%;
+    padding-right: 3%;
+    padding-top: 4%;
+    padding-bottom: 4%;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.bgbox {
+    padding-left: 25%;
+    padding-right: 25%;
+    padding-top: 8%;
+    padding-bottom: 8%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: black;
+    border-radius: 3vw;
+    z-index: -998;
+    position: absolute;
+    opacity: 0.8;
+}
+.title {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 500%;
+    font-family: 'Verdana';
+    color: rgb(0, 157, 255);
+    padding: 3%;
+}
+
+.cnt_buttons {
+    margin: auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
 .button {
-    width: 500px;
-    height: 100px;
-    border: 1px;
-    border-color: black;
-    color: black;
+    padding: 20px;
+    width: 200px;
+
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+
+    border-radius: 4px;
+
+    background-color: rgb(0, 157, 255);
+
+    text-align: center;
+    color:black;
+    font-size: 200%; 
+    font-family: 'Lucida Console';
+
+    position: relative;
+}
+.button:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(219, 90, 245);
+}
+
+.animation-area {
+    position: absolute;
+    z-index: -999;
 }
