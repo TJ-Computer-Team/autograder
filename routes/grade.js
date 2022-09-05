@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab} = require("./displayProblem");
+const {grab, grabSubs, grabStatus} = require("./displayProblem");
 
 const {processFunction} = require("../oauth");
 const {check} = require("../profile");
@@ -13,7 +13,6 @@ router.use(session({
 }));
 
 router.get("/login", async (req, res)=>{ 
-    console.log("here");
     let CODE = req.query.code;
     let data = await processFunction(CODE, req, res);
     await check(data.user_data, data.req, data.res);
@@ -44,10 +43,10 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.
 
 
 router.get("/submit", checkLoggedIn, (req, res) => {
-    res.render("gradeSubmit");
+    res.render("gradeSubmit", {problemid: req.query.problem});
 });
 
-router.post("/status", checkLoggedIn, (req, res) => {
+router.post("/status", checkLoggedIn, (req, res) => { //eventually change to post to submit
         //sends file to another website
         let file= req.body.code;
         let url = "http://localhost:3000/grade/status";
@@ -61,8 +60,13 @@ router.post("/status", checkLoggedIn, (req, res) => {
                 }
         };
 });
-router.get("/status", checkLoggedIn, (req, res) => {
-    res.send("not success");
+router.get("/status", checkLoggedIn, async (req, res) => {
+    let submissions = await grabSubs(req.session.userid);
+    res.render("gradeStatus", {submissions: submissions});
+});
+router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
+    let vals = await grabStatus(req.params.id);
+    res.render("status", {submission: vals});
 });
 
 function checkLoggedIn(req, res, next) {

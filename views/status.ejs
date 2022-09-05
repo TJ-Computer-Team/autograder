@@ -18,20 +18,18 @@
         </ul>
     </div>
     <div class="main-block">
-        <div class="title"><%=locals.title%> (problem id=<%=locals.id%>)</div>
+        <div class="title">Problem Name: <%=locals.submission.problemName%>, Runtime: <%=locals.submission.runtime%>ms, Verdict: <%=locals.submission.verdict%></div>
         <div class="statement">
-            <%=locals.statement%>
+            <%=locals.submission.code%>
         </div>
     </div>
     <div class="option-buttons">
-        <a href = <%="/grade/submit?problem="+locals.id%>>
-            <div class="button">Submit</div>
+        <a href = <%="/grade/problemset/"+locals.submission.problemID%>>
+            <div class="button">Problem</div>
         </a> 
-        <a href = "/grade/problemset">
+        <a href = "/grade/status">
             <div class="button">Back</div>
         </a> 
     </div>
-    
-
 </body>
 </html>

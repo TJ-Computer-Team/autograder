@@ -18,6 +18,7 @@ async function check(user_data, req, res) {
             cl.end();
             req.session.name = results.rows[0].display_name;
             req.session.username = results.rows[0].username;
+            req.session.userid = results.rows[0].id;
             res.redirect("/grade/profile");
         }
     }
@@ -39,6 +40,7 @@ async function populate(user_data, req, res) {
         await cl.end();
         req.session.name = user_data.display_name;
         req.session.username = user_data.ion_username;
+        req.session.userid = user_data.id;
         
         res.redirect("/grade/profile");
     }

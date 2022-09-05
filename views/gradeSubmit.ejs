@@ -5,17 +5,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grade</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="../profile.css" />
 </head>
 <body>
-    <p>Submit Code</p>
-    <form action="/grade/status" method="POST">
-        <div>
-                <input type = "file" id = "code" name = "code" accept = ".cpp, .java, .py">
-        </div>
-        <div>
-            <button type="submit">Submit</button>
-        </div>
-    </form>
+    <div class="navbar">
+        <ul class="nb">
+            <li class="nb"><a href="/grade/profile">Home</a></li>
+            <li class="nb"><a href="/grade/status">Submissions</a></li>
+            <li class="nb"><a href="/grade/contests">Contests</a></li>
+            <li class="nb"><a href="/grade/problemset">Problemset</a></li>
+            <li class="nb"><a class='active' href="/grade/submit">Submit</a></li>
+        </ul>
+    </div>
+    <div class="main-block">
+        <div class="title">Submit</div>
+    </div>
+    <div class="main-block">
+        
+        <form action="/grade/status" method="POST">
+            <div class="problem-text">
+                <label class = "indent" for="problemid" >Problem ID:</label>
+                <input type = "text" id = "problemid" name = "problemid" value=<%=locals.problemid%>>
+            </div>
+            
+            <div class="problem-text">
+                <input type = "file" id ="code" name = "code" accept = ".cpp, .java, .py">
+            </div>
+            <div class="option-buttons">
+                <div class="button" type="submit">Submit</div>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

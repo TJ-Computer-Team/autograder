@@ -4,15 +4,52 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../profile.css" />
+    <title>Problemset</title>
 </head>
 <body>
-    <h1>Welcome to the grade</h1>
-    <a href="/grade/problemset">
-        <button>Problemset</button>
-    </a>
-    <a> 
-        <button>Contests</button>
-    </a>
+    <div class="navbar">
+        <ul class="nb">
+            <li class="nb"><a href="/grade/profile">Home</a></li>
+            <li class="nb"><a href="/grade/status">Submissions</a></li>
+            <li class="nb"><a  class="active" href="/grade/contests">Contests</a></li>
+            <li class="nb"><a href="/grade/problemset">Problemset</a></li>
+            <li class="nb"><a href="/grade/submit">Submit</a></li>
+        </ul>
+    </div>
+    <br>
+    <div class='main-block'>
+        <div class="title">Contests</div>
+    </div>
+    <div class='main-block' id="problems">
+        <div class="problem-text">There are no contests currently.</div>
+        <ul class="sl">
+            <li class="sl">
+                <a href = <%="/grade/problemset/"+locals.p1%>>
+                    <div class="problem-text"><%=locals.p1n%></div>
+                </a>
+            </li>
+            <li class="sl">
+                <a href = <%="/grade/problemset/"+locals.p2%>>
+                    <div class="problem-text"><%=locals.p2n%></div>
+                </a>
+            </li>
+            <li class="sl">
+                <a href = <%="/grade/problemset/"+locals.p3%>>
+                    <div class="problem-text"><%=locals.p3n%></div>
+                </a>
+            </li>
+            <li class="sl">
+                <a href = <%="/grade/problemset/"+locals.p4%>>
+                    <div class="problem-text"><%=locals.p4n%></div>
+                </a>
+            </li>
+            <li class="sl"> 
+                <a href = <%="/grade/problemset/"+locals.p5%>>
+                    <div class="problem-text"><%=locals.p5n%></div>
+                </a>
+            </li>
+        </ul>
+    </div>
 </body>
 </html>
