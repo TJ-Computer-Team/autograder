@@ -3,4 +3,3 @@ const execSync = require('child_process').execSync;
 
 const output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/java.cfg', { encoding: 'utf-8' });  // the default is 'buffer'
 console.log('Output was:\n', output);
-

@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab, grabSubs, grabStatus} = require("./displayProblem");
+const {grab, grabSubs, grabStatus, createSubmission} = require("./displayProblem");
+const {queue} = require("./runTests");
 
 const {processFunction} = require("../oauth");
 const {check} = require("../profile");
@@ -59,6 +60,11 @@ router.post("/status", checkLoggedIn, (req, res) => { //eventually change to pos
                         "Content-Type": "application/x-www-form-urlencoded"
                 }
         };
+        let pid = req.body.problemid;
+        let language = undefined; //get language
+        let sid = createSubmission(req.session.userid, file, pid, language);
+        queue(pid, sid);
+        res.redirect("/status");
 });
 router.get("/status", checkLoggedIn, async (req, res) => {
     let submissions = await grabSubs(req.session.userid);
