@@ -22,17 +22,18 @@
     </div>
     <div class="main-block">
         
-        <form action="/grade/status" method="POST">
+        <form action="/grade/status"  method="POST">
             <div class="problem-text">
                 <label class = "indent" for="problemid" >Problem ID:</label>
                 <input type = "text" id = "problemid" name = "problemid" value=<%=locals.problemid%>>
             </div>
             
             <div class="problem-text">
-                <input type = "file" id ="code" name = "code" accept = ".cpp, .java, .py">
+                <input type = "text" id = "lang" name = "lang" value="cpp or py or java" accept = "cpp, java, py"><br>
+		<textarea id="codeinput" name="code" rows="30" cols="80">Insert Code Here</textarea>
             </div>
             <div class="option-buttons">
-                <div class="button" type="submit">Submit</div>
+                <button class="button" type="submit">Submit</button>
             </div>
         </form>
     </div>

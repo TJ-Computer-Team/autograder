@@ -38,8 +38,8 @@ async function grabSubs(id) {
             database: "autograder"
         });
         await cl.connect();
-        let results = await cl.query("SELECT * FROM submissions WHERE submissions.user = " + id);
-        if (results.rows.length == 0) {
+        let results = await cl.query("SELECT * FROM submissions WHERE submissions.usr = " + id);
+	if (results.rows.length == 0) {
             await cl.end();
             return false;
         }
@@ -52,7 +52,7 @@ async function grabSubs(id) {
                     id: results.rows[i].id,
                     verdict: results.rows[i].verdict,
                     runtime: results.rows[i].runtime,
-                    problemName: results.rows[i].problemName
+                    problemname: results.rows[i].problemname
                 }
                 retarr.push(ret);
             }
@@ -84,8 +84,8 @@ async function grabStatus(id) {
                 user: id,
                 verdict: results.rows[0].verdict,
                 runtime: results.rows[0].runtime,
-                problemName: results.rows[0].problemName,
-                problemID: results.rows[0].problemID,
+                problemname: results.rows[0].problemname,
+                problemid: results.rows[0].problemid,
                 code: results.rows[0].code,
                 language: results.rows[0].language
             }
@@ -97,7 +97,7 @@ async function grabStatus(id) {
         return false;
     }
 }
-async function grabStatus(id) {
+async function grabProblem(id) {
     try {
         cl = new Client ({
             user: "postgres",
@@ -160,14 +160,17 @@ async function createSubmission(user, code, problem, language) {
             database: "autograder"
         });
         await cl.connect();
-        let results = await cl.query("statement to generate submission row into table and retrieve the new id");
+	console.log(user, code, problem, language);
+	let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname) values (${user}, '${code}', ${problem}, '${language}', -1, -1, 'RN', 'doesnotexist') RETURNING id`;
+	console.log(qry);
+        let results = await cl.query(qry);
         if (results.rows.length == 0) {
             await cl.end();
             return false;
         }
         else {
-            cl.end();
-            return;
+            await cl.end();
+            return results.rows[0].id;
         }
     }
     catch (error) {

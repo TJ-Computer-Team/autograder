@@ -7,6 +7,11 @@ const {queue} = require("./runTests");
 const {processFunction} = require("../oauth");
 const {check} = require("../profile");
 const session = require('express-session');
+
+const FileReader = require('filereader');
+const csvtojson = require('csvtojson');
+const upload = require('express-fileupload');
+
 router.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
@@ -47,31 +52,32 @@ router.get("/submit", checkLoggedIn, (req, res) => {
     res.render("gradeSubmit", {problemid: req.query.problem});
 });
 
-router.post("/status", checkLoggedIn, (req, res) => { //eventually change to post to submit
+router.post("/status", checkLoggedIn, async (req, res) => { //eventually change to post to submit
         //sends file to another website
-        let file= req.body.code;
-        let url = "http://localhost:3000/grade/status";
-        let formData = {
-                "file": file
-        };
-        let requestOptions = {
-                method: "POST",
-                headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                }
-        };
-        let pid = req.body.problemid;
-        let language = undefined; //get language
-        let sid = createSubmission(req.session.userid, file, pid, language);
-        queue(pid, sid);
-        res.redirect("/status");
+
+	let language = req.body.lang;
+	if (language != 'py' && language != 'cpp' && language != 'java') {
+	    console.log("bad");
+	    res.send("unacceptable code language");
+	    return;
+	}
+	
+	let pid = req.body.problemid;
+	let file = req.body.code;
+	
+        let sid = await createSubmission(req.session.userid, file, pid, language);
+	console.log(sid);
+        //queue(pid, sid);
+        res.redirect("/grade/status");
 });
 router.get("/status", checkLoggedIn, async (req, res) => {
     let submissions = await grabSubs(req.session.userid);
+    
     res.render("gradeStatus", {submissions: submissions});
 });
 router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
     let vals = await grabStatus(req.params.id);
+
     res.render("status", {submission: vals});
 });
 
