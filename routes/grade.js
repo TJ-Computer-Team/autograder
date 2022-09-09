@@ -56,6 +56,7 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
         //sends file to another website
 
 	let language = req.body.lang;
+	console.log(language);
 	if (language != 'py' && language != 'cpp' && language != 'java') {
 	    console.log("bad");
 	    res.send("unacceptable code language");
@@ -63,11 +64,14 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 	}
 	
 	let pid = req.body.problemid;
+	if(pid ==""){
+		res.send("WHAT PROBLEM STUPID");
+		return;
+	}
 	let file = req.body.code;
 	
         let sid = await createSubmission(req.session.userid, file, pid, language);
-	console.log(sid);
-        //queue(pid, sid);
+        await queue(pid, sid);
         res.redirect("/grade/status");
 });
 router.get("/status", checkLoggedIn, async (req, res) => {

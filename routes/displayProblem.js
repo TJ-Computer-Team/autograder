@@ -44,7 +44,8 @@ async function grabSubs(id) {
             return false;
         }
         else {
-            cl.end();
+            await cl.end();
+	    console.log("e2");
             retarr = [];
             for (let i=0; i<results.rows.length; i++) {
                 let ret = {
@@ -79,7 +80,7 @@ async function grabStatus(id) {
             return false;
         }
         else {
-            cl.end();
+            await cl.end();
             let ret = {
                 user: id,
                 verdict: results.rows[0].verdict,
@@ -112,7 +113,7 @@ async function grabProblem(id) {
             return false;
         }
         else {
-            cl.end();
+            await cl.end();
             let ret = {
                 checker: results.rows[0].checkerBinary,
                 tl: results.rows[0].tl,
@@ -135,15 +136,22 @@ async function insertSubmission(id, verdict, runtime, memory) {
             port: 5432,
             database: "autograder"
         });
+	console.log("qqqqq");
         await cl.connect();
-        let results = await cl.query("query to update row of id with verdict");
-        if (results.rows.length == 0) {
+	console.log(`UPDATE submissions SET verdict = '${verdict}', runtime = ${runtime},memory = ${memory} WHERE id = ${id};`);
+        let results = await cl.query(`UPDATE submissions SET verdict = '${verdict}', runtime = ${runtime}, memory = ${memory} WHERE id = ${id};`);
+        console.log(results);
+	if (results.rows.length == 0) {
+	    console.log("ending");
             await cl.end();
+ 	    console.log("ended")
             return false;
         }
         else {
-            cl.end();
-            return;
+	    console.log("ending 2")
+            await cl.end();
+	    console.log("eneded1");
+            return false;
         }
     }
     catch (error) {

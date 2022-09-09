@@ -1,0 +1,1 @@
+print("daniel is hot")
