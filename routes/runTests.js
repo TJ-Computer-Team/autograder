@@ -36,17 +36,25 @@ async function run() {
     let language = res.language;
 
     let output = undefined, fverdict = undefined, runtime = 420, memory = 100;
-    console.log("BEFORE RUN");
+
     for (let i=0; i<1; i++) {
         let verdict = undefined;
+
         if (language == 'cpp') {
 		fs.writeFileSync('test.cpp', userCode);
             //write to correct file for code
             output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/executable.cfg', { encoding: 'utf-8' });  //pipe input into this
         }
         else if (language == 'py') {
-		fs.writeFileSync('routes/subcode/hello.py', userCode);
-            output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg', { encoding: 'utf-8' });  
+	    console.log("running python");
+            fs.writeFileSync('routes/subcode/hello.py', userCode);
+            try {
+	    	output = await execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg', { encoding: 'utf-8' })
+            }
+            catch (error) {
+	        console.log("ERROR", error);
+            }
+            
 	    console.log("output was", output);
 	    if (output.includes("dan")) {
 		console.log("inclies");

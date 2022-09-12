@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab, grabSubs, grabStatus, createSubmission} = require("./displayProblem");
+const {grab, grabSubs, grabStatus, createSubmission, testSql} = require("./displayProblem");
 const {queue} = require("./runTests");
 
 const {processFunction} = require("../oauth");
@@ -34,6 +34,7 @@ router.get("/", (req, res) => {
     res.redirect("/grade/profile");
 });
 router.get("/contests", checkLoggedIn, (req, res) => {
+    testSql();
     res.render('contests');
 });
 router.get("/problemset", checkLoggedIn, (req, res) => {
@@ -76,7 +77,6 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 });
 router.get("/status", checkLoggedIn, async (req, res) => {
     let submissions = await grabSubs(req.session.userid);
-    
     res.render("gradeStatus", {submissions: submissions});
 });
 router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
