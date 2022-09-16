@@ -25,11 +25,16 @@
         <form action="/grade/status"  method="POST">
             <div class="problem-text">
                 <label class = "indent" for="problemid" >Problem ID:</label>
-                <input type = "text" id = "problemid" name = "problemid" value=<%=locals.problemid%>>
+                <input type = "number" id = "problemid" name = "problemid" value=<%=locals.problemid%> min = "1" max = "100">
             </div>
             
             <div class="problem-text">
-                <input type = "text" id = "lang" name = "lang" value="cpp or py or java" accept = "cpp, java, py"><br>
+	    <select id="lang" name="lang">
+		  <option value="cpp">C++</option>
+		  <option value="java">java</option>
+		  <option value="python">python</option>
+		</select>
+		<br>
 		<textarea id="codeinput" name="code" rows="30" cols="80">Insert Code Here</textarea>
             </div>
             <div class="option-buttons">

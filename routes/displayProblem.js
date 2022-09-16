@@ -28,6 +28,29 @@ async function testSql() {
         });
     });
 }
+async function checkAdmin(id){
+	return new Promise((res, rej)=>{
+		pl.connect((err, client, release)=>{
+			if(err){
+				console.log("Error checking admin");
+				res(false);
+			}
+			let qry = "SELECT * FROM users WHERE id=$1 AND admin=false";
+			client.query(qry, [id], (err, results)=>{
+				release();
+				if(err){
+					console.log("error while query");
+					res(false);
+				}
+				if(results.rows.length==0){
+					res(false);
+				}else{
+					res(true);
+				}
+			});
+		});
+	});
+}
 async function grab(id) {
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
@@ -35,8 +58,8 @@ async function grab(id) {
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = "SELECT * FROM problems WHERE id = " + id;
-            client.query(qry, (err, results) => {
+            let qry = "SELECT * FROM problems WHERE id = $1";
+            client.query(qry, [id], (err, results) => {
                 release();
                 if (err) {
                     console.log("an error occured while querying");
@@ -64,8 +87,8 @@ async function grabSubs(id) {
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = "SELECT * FROM submissions WHERE submissions.usr = " + id;
-            client.query(qry, (err, results) => {
+            let qry = "SELECT * FROM submissions WHERE submissions.usr = $1";
+            client.query(qry, [id], (err, results) => {
                 release();
                 if (err) {
                     console.log("an error occured while querying");
@@ -99,8 +122,8 @@ async function grabStatus(id) {
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = "SELECT * FROM submissions WHERE id = " + id;
-            client.query(qry, (err, results) => {
+            let qry = "SELECT * FROM submissions WHERE id = $1";
+            client.query(qry, [id], (err, results) => {
                 release();
                 if (err) {
                     console.log("an error occured while querying");
@@ -132,8 +155,8 @@ async function grabProblem(id) {
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = "SELECT * FROM problems WHERE id = " + id;
-            client.query(qry, (err, results) => {
+            let qry = "SELECT * FROM problems WHERE id = $1";
+            client.query(qry,[id], (err, results) => {
                 release();
                 if (err) {
                     console.log("an error occured while querying");
@@ -162,8 +185,8 @@ async function insertSubmission(id, verdict, runtime, memory) {
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = `UPDATE submissions SET verdict = '${verdict}', runtime = ${runtime},memory = ${memory} WHERE id = ${id};`;
-            client.query(qry, (err, results) => {
+            let qry = `UPDATE submissions SET verdict = $1, runtime = $2,memory = $3 WHERE id = $4;`;
+            client.query(qry,[verdict, runtime, memory, id], (err, results) => {
                 release();
                 if (err) {
                     console.log("an error occured while querying");
@@ -186,8 +209,9 @@ async function createSubmission(user, code, problem, language) {
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname) values (${user}, '${code}', ${problem}, '${language}', -1, -1, 'RN', 'doesnotexist') RETURNING id`;
-            client.query(qry, (err, results) => {
+            let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname) values ($1, $2, $3, $4, -1, -1, 'RN', 'doesnotexist') RETURNING id`;
+	    let vals = [user, code, problem, language];
+            client.query(qry, vals, (err, results) => {
                 release();
                 if (err) {
                     console.log("an error occured while querying");
@@ -224,5 +248,8 @@ module.exports = {
     },
     testSql: () => {
         return testSql();
+    },
+    checkAdmin: (id) => {
+        return checkAdmin(id);
     }
 }

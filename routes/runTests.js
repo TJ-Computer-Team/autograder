@@ -15,7 +15,6 @@ function queue(pid, sid) {
     }
 }
 async function run() {
-	console.log("HI");
     if (tasks.length == 0) {
         running = false;
         return;
@@ -45,7 +44,7 @@ async function run() {
             //write to correct file for code
             output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/executable.cfg', { encoding: 'utf-8' });  //pipe input into this
         }
-        else if (language == 'py') {
+        else if (language == 'python') {
 	    console.log("running python");
             fs.writeFileSync('routes/subcode/hello.py', userCode);
             try {
