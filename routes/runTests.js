@@ -39,7 +39,7 @@ async function run() {
     for (let i=0; i<1; i++) {
         let verdict = undefined;
 
-        if (language == 'cpp') {
+	    if (language == 'cpp') {
 		fs.writeFileSync('test.cpp', userCode);
             //write to correct file for code
             output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/executable.cfg', { encoding: 'utf-8' });  //pipe input into this
@@ -55,11 +55,11 @@ async function run() {
             }
             
 	    console.log("output was", output);
-	    if (output.includes("dan")) {
+	    if (output!=undefined &&output.includes("dan")) {
 		console.log("inclies");
 		fverdict = "AC";
 	    }
-	    else if (output == "dan") {
+	    else if (output!=undefined&&poutput == "dan") {
  		fverdict = "AC";
 		console.log("here", fverdict);
 	    }

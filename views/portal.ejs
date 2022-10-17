@@ -5,14 +5,65 @@
     <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
     <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
     <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS" />
+        <script type="module">
+                import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
+                customElements.define("latex-js", LaTeXJSComponent)
+        </script>
+
+        <style>
+                latex-js {
+                display: inline-block;
+                width: 40%;
+                border: 1px solid red;
+                margin-right: 2em;
+                }
+        </style>
     <TITLE>create problem</TITLE>
 </HEAD>
 <BODY>
-	<form action="/create">
-	  <p><label for="w3review">Review of W3Schools:</label></p>
-	  <textarea id="w3review" name="w3review" rows="4" cols="50">At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.</textarea>
-	  <br>
-	  <input type="submit" value="Submit">
-	</form>
+        <form action="/create">
+          <p><label for="pid">problem id</label></p>
+	  <input type = "number" id="pid" name="pid" value = <%=pid%>>
+          <br>
+          <p><label for="pname">problem name</label></p>
+	  <input type = "text" id="pname" name="pname" value=<%=pname%>>
+          <br>
+          <p><label for="cid">contest id</label></p>
+	  <input type = "number" id="cid" name="cid" value=<%=cid%>>
+          <br>
+          <p><label for="pts">points</label></p>
+	  <input type = "number" id="pts" name="pts" value=<%=pts%>>
+          <br>
+          <p><label for="tl">time limit</label></p>
+	  <input type = "number" id="tl" name="tl" value=<%=tl%>>
+          <br>
+          <p><label for="ml">memory limit</label></p>
+	  <input type = "number" id="ml" name="ml" value=<%=ml%>>
+          <br>
+          <p><label for="secret">secret</label></p>
+	  <input type = "checkbox" id="secret" name="secret" value="secret" <%=secret%>>
+	  <label for ="test">I this problem is finished</label>
+          <br>
+          <!--make sure to change the max and min for everything -->
+          <br>
+          <p><label for="state">statement in latex</label></p>
+	  <textarea id="state" name="state" rows="4" cols="50"><%=state%></textarea>
+          <br>
+          <input type="submit" value="Submit">
+        </form>  
+	<h1>Compiling LaTeX</h1>
+
+  <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/" id ="lat">
+    \documentclass{article}
+
+   \begin{document}
+    <%= latexstate%>
+    \end{document}
+  </latex-js>
+
+
+
+
 
 </BODY>
+
