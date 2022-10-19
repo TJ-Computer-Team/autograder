@@ -1,1 +1,1 @@
-print("dan");#wow johnny so orz
+print("dan")

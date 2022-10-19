@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 
 const pl = new Pool({
+
 	user: "postgres",
 	password: process.env.PGPASSWORD,
 	port: 5432,
@@ -51,24 +52,51 @@ async function getProblems(){
 		});
 	});
 }
-async function addTest(tval, pid){
-}
-async function addChecker(checkercode, cid){
+async function getUserProblems(){
 	return new Promise((res, rej)=>{
+		pl.connect((err, client, release)=>{
+			let qry = 'SELECT ';
+		});
 	});
 }
-async function addProblem(pname,cid, checkid, sol, state, tl, ml, inter, secret, pid=0){
+async function addTest(tval, pid){
+}
+async function addChecker(checkid, checkercode){
 	return new Promise((res, rej)=>{
 		pl.connect((err, client, release)=>{
 			if(err){
 				console.log("Error adding problem");
 				res(false);
 			}
+			let qry = `INSERT INTO checker (code)
+			VALUES ($1) RETURNING id;`;
+			client.query(qry, [checkercode], (err, results)=>{
+				release();
+				if(err){
+					console.log(err);
+					console.log("HE");
+					console.log("error while query");
+					res(false);
+				}
+				res(true);
+			});
+		});
+	});
+}
+async function addProblem(pname,cid,checkid, sol, state, tl, ml, inter, secret){
+	return new Promise((res, rej)=>{
+		pl.connect((err, client, release)=>{
+			if(err){
+				console.log("Error adding problem");
+				res(false);
+			}
+			// pid | name | contestid | checkerid | solution | statement | tl | ml | interactive | secret 
 			let qry = `INSERT INTO problems (name, contestid, checkerid,solution, statement, tl, ml, interactive, secret)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURING pid;`;
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING pid;`;
 			client.query(qry, [pname, cid, checkid, sol, state, tl, ml, inter, secret], (err, results)=>{
 				release();
 				if(err){
+					console.log(err);
 					console.log("error while query");
 					res(false);
 				}
@@ -81,8 +109,11 @@ module.exports = {
 	testSql: ()=>{
 		return testSql();
 	},
-	addProblem: (pname,cid, pts,state, tl, ml, checker, secret) => {
-		return addProblem(pname,cid, pts,state, tl, ml, checker, secret);
+	addProblem: (pname,cid, checkid,sol, state, tl, ml, inter, secret) => {
+		return addProblem(pname,cid,checkid, sol,state, tl, ml, inter, secret);
+	},
+	addChecker: (checkid, code)=>{
+		return addChecker(checkid, code);
 	},
 	getProblems: () =>{
 		return getProblems();

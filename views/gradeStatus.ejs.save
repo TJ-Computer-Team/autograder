@@ -34,16 +34,14 @@
 		<tr>
 			<td>
 				<a href = <%="/grade/status/"+locals.submissions[i].id%>>
-					#<%=locals.submissions[i].id%>
-				</a>
+                		#<%=locals.submissions[i].id%>
+	        		</a>
 			</td>
 			<td>
 				Daniel
 			</td>
 			<td>
-				<a href = <%="/grade/problemset/"+locals.submissions[i].problemid%>>
-					<%=locals.submissions[i].problemname%>
-				</a>
+				<%=locals.submissions[i].problemname%>
 			</td>
 			<td>
 				<%=locals.submissions[i].runtime%>ms

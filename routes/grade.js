@@ -2,10 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const {grab, grabSubs, grabStatus,checkAdmin, createSubmission} = require("./displayProblem");
-const {getProblem, addProblem, testSql} = require("./problems");
+const {getProblem, addProblem, testSql, addChecker} = require("./problems");
 const {queue} = require("./runTests");
 
-const {processFunction} = require("../oauth");
+const {processFunction, getToken} = require("../oauth");
 const {check} = require("../profile");
 const session = require('express-session');
 
@@ -19,6 +19,15 @@ router.use(session({
 	saveUninitialized: false
 }));
 
+router.get("/authlogin", async (req, res) => {
+	if (req.session.loggedin) {
+                res.redirect("/grade/profile");
+        }
+	else {
+		let theurl = await getToken();
+		res.redirect(theurl);
+	}
+});
 router.get("/login", async (req, res)=>{ 
 	let CODE = req.query.code;
 	let data = await processFunction(CODE, req, res);
@@ -84,35 +93,60 @@ router.get("/createProblem", checkLoggedIn, async (req, res) => {
 	if(admin){
 		console.log(testSql());
 		console.log("HI");
-		res.render("portal", {ml:0, pts:0, pid: 0, tl:0, pname:"problem name", cid:-1, secret:"", state:"Your latex code here", latexstate:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
+		res.render("portal", {ml:0, pts:0, pid: -1, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
 	}else{
 		res.send("UR NOT ADMIN");
 	}
 });
-router.post("/create", checkLoggedIn, async(req, res)=>{
+router.get("/addChecker", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	console.log("HI");
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
 	if(admin){
+		res.render("addChecker", {cid:0, code:""});
+	}
+});
+router.post("/addCheck", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		console.log("attempteing to create");
+		let cid = req.body.cid;
+		let code = req.body.code;
+		let ret = {
+			"cid": cid,
+			"code": code
+		};
+		console.log(ret);
+		addChecker(cid, code);
+		res.render("addChecker", ret);
+	}
+});
+router.post("/create", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		console.log("attempteing to create");
+		//let problems = await getUserProblems(req.session.userid);
 		let pts= req.body.pts;
-		let pid = req.body.pid;
+		let pid = req.body.pid;//TAKE CARE OF THISS!!!!
 		let pname = req.body.pname;
 		let cid= req.body.cid;
 		let state= req.body.state;
 		let tl= req.body.tl;
 		let ml= req.body.ml;
 		let secret = req.body.secret;
+		console.log(secret);
 		let ret = {
-			"points": pts,
-			"pid":pid,
+			"pts": pts,
+			"pid": pid,
 			"pname":pname,
 			"cid":cid,
 			"state":state,
 			"tl":tl,
 			"ml":ml,
-			"checker":checker,
-			"secret":secret
+			"secret":""
 		};
-		//async function addProblem(probid, pname,cid, pts,state, tl, ml, test, checker, secret){
-		addProblem(pid, pname, cid, pts, state, tl, ml, secret);
+		console.log(ret);
+//async function addProblem(pname,cid,checkid, sol, state, tl, ml, inter, secret){
+		addProblem(pname, cid,0, '', state, tl, ml,false,false, pid); 
 		res.render("portal", ret);
 	}else{
 		res.send("UR NOT ADMIN");

@@ -50,6 +50,7 @@ body {
 
 a {
     text-decoration: none;
+    color: rgb(66, 221, 245);
 }
 
 ul.sl {
@@ -169,3 +170,29 @@ li.nb a:hover:not(.active) {
 .active {
     background-color: #0074da;
 }
+
+table {
+	width: 100%;
+	color: white;
+	background-color: rgb(77, 119, 159);
+	font-family: 'Lucida Sans';
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 0.5vw;
+	border-collapse: collapse;
+}
+th {
+	font-size: 250%;
+	border: 1px solid;
+	border-color: black;
+
+}
+td {
+	font-size: 200%;
+	padding-left: 0.5vw;
+	text-decoration: none;	
+	border: 1px solid;
+	border-color: black;
+}
+
+

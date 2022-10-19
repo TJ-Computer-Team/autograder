@@ -21,7 +21,7 @@
     <TITLE>create problem</TITLE>
 </HEAD>
 <BODY>
-        <form action="/create">
+        <form action="/grade/create" method="POST">
           <p><label for="pid">problem id</label></p>
 	  <input type = "number" id="pid" name="pid" value = <%=pid%>>
           <br>
@@ -57,7 +57,7 @@
     \documentclass{article}
 
    \begin{document}
-    <%= latexstate%>
+    <%= state%>
     \end{document}
   </latex-js>
 
