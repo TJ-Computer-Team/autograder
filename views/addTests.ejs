@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<HTML LANG="EN">
+<HEAD>
+    <META CHARSET="UTF-8">
+    <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
+    <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
+    <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS" />
+    <TITLE>create problem</TITLE>
+</HEAD>
+<BODY>
+        <form action="/grade/addTest" method="POST">
+          <p><label for="tid">test id</label></p>
+	  <input type = "number" id="tid" name="tid" value = <%=tid%>>
+          <br>
+          <p><label for="pts">points test worth</label></p>
+	  <input type = "number" id="pts" name="pts" value = <%=pts%>>
+          <br>
+          <p><label for="pid">problem id</label></p>
+	  <input type = "number" id="pid" name="pid" value = <%=pid%>>
+          <br>
+          <p><label for="test">test input</label></p>
+	  <textarea id="test" name="test" rows="4" cols="50"><%=test%></textarea>
+          <br>
+          <input type="submit" value="Submit">
+        </form>  
+
+
+
+
+
+
+</BODY>
+

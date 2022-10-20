@@ -59,7 +59,28 @@ async function getUserProblems(){
 		});
 	});
 }
-async function addTest(tval, pid){
+async function addTest(tid,pts, pid, tval){
+	return new Promise((res, rej)=>{
+		pl.connect((err, client, release)=>{
+			if(err){
+				console.log("Error adding problem");
+				res(false);
+			}
+			console.log(tval, pid);
+			let qry = `INSERT INTO test (points,pid, test)
+			VALUES ($1, $2, $3) RETURNING id;`;
+			client.query(qry, [pts, pid, tval], (err, results)=>{
+				release();
+				if(err){
+					console.log(err);
+					console.log("HE");
+					console.log("error while query");
+					res(false);
+				}
+				res(true);
+			});
+		});
+	});
 }
 async function addChecker(checkid, checkercode){
 	return new Promise((res, rej)=>{
@@ -100,7 +121,7 @@ async function addProblem(pname,cid,checkid, sol, state, tl, ml, inter, secret){
 					console.log("error while query");
 					res(false);
 				}
-				res(true);
+				res(results);
 			});
 		});
 	});
@@ -114,6 +135,9 @@ module.exports = {
 	},
 	addChecker: (checkid, code)=>{
 		return addChecker(checkid, code);
+	},
+	addTest: (tid, pts, pid, test)=>{
+		return addTest(tid, pts, pid, test);
 	},
 	getProblems: () =>{
 		return getProblems();

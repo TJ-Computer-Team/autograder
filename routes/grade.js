@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const {grab, grabSubs, grabStatus,checkAdmin, createSubmission} = require("./displayProblem");
-const {getProblem, addProblem, testSql, addChecker} = require("./problems");
+const {getProblem, addProblem, testSql, addChecker, addTest} = require("./problems");
 const {queue} = require("./runTests");
 
 const {processFunction, getToken} = require("../oauth");
@@ -118,6 +118,32 @@ router.post("/addCheck", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST A
 		console.log(ret);
 		addChecker(cid, code);
 		res.render("addChecker", ret);
+	}
+});
+router.get("/addTest", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	console.log("HI");
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		res.render("addTests", {tid:0, pts:100, pid:0, test:""});
+	}
+});
+router.post("/addTest", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		console.log("attempteing to create");
+		let pid= req.body.pid;
+		let tid= req.body.tid;
+		let pts= req.body.pts;
+		let test= req.body.test;
+		let ret = {
+			"pid": pid,
+			"test":test,
+			"tid": tid,
+			"pts":pts
+		};
+		console.log(ret);
+		addTest(tid, pts, pid, test);
+		res.render("addTests", ret);
 	}
 });
 router.post("/create", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
