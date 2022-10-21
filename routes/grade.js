@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab, grabSubs, grabStatus,checkAdmin, createSubmission} = require("./displayProblem");
+const {grab, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile} = require("./displayProblem");
 const {getProblem, addProblem, testSql, addChecker, addTest} = require("./problems");
 const {queue} = require("./runTests");
 
@@ -40,6 +40,17 @@ router.post("/logout", (req, res)=> {
 router.get("/profile", checkLoggedIn, (req, res)=>{ 
 	res.render("profile", {name: req.session.name, username: req.session.username});
 });
+router.get("/profile/:id", checkLoggedIn, async (req, res) => {
+	let vals = await grabProfile(req.params.id);
+	if (vals == false) {
+		res.send("No such user");
+	}
+	else {
+		res.render("fprofile", {name: vals.name, username: vals.username});
+	}
+});
+
+
 router.get("/", (req, res) => {
 	res.redirect("/grade/profile");
 });

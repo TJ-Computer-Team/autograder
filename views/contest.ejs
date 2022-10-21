@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../profile.css" />
+    <title>Contest</title>
+</head>
+<body>
+    <div class="navbar">
+        <ul class="nb">
+            <li class="nb"><a href="/grade/profile">Home</a></li>
+            <li class="nb"><a href="/grade/status">Submissions</a></li>
+            <li class="nb"><a href="/grade/contests">Contests</a></li>
+            <li class="nb"><a href="/grade/problemset">Problemset</a></li>
+            <li class="nb"><a href="/grade/submit">Submit</a></li>
+        </ul>
+    </div>
+    <div class="main-block">
+        <div class="title"><%=locals.title%> (problem id=<%=locals.id%>)</div>
+        <div class="statement">
+            <%=locals.statement%>
+        </div>
+    </div>
+    <div class="option-buttons">
+        <a href = <%="/grade/submit?problem="+locals.id%>>
+            <div class="button">Submit</div>
+        </a> 
+        <a href = "/grade/problemset">
+            <div class="button">Back</div>
+        </a> 
+    </div>
+    
+
+</body>
+</html>

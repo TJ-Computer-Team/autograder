@@ -1,4 +1,4 @@
-const {grabProblem, insertSubmission, grabStatus} = require("./displayProblem");
+const {grabProblem, insertSubmission, grabStatus, grabTests} = require("./displayProblem");
 const execSync = require('child_process').execSync;
 const fs = require('fs');
 
@@ -14,6 +14,14 @@ function queue(pid, sid) {
 		running = true;
 	}
 }
+async function compileTests(pid){
+	let res = await grabTests(pid);
+	tests.forEach(i =>{
+		//let solCode = await solCode;
+		//fs.writeFileSync('test.cpp', solCode);
+		//addSol(i.id, ans);
+	});
+}
 async function run() {
 	if (tasks.length == 0) {
 		running = false;
@@ -23,9 +31,11 @@ async function run() {
 	let sub = tasksS.shift();
 	console.log(task, sub);
 	let res = await grabProblem(task);
-	console.log(res);
+	let tests = await grabTests(task);
 	let tl = res.tl;
 	let ml = res.ml;
+	console.log(tests);
+	console.log(res);
 	res = await grabStatus(sub);
 	console.log("result", res);
 	let userCode = res.code;
@@ -34,7 +44,7 @@ async function run() {
 
 	let output = undefined, fverdict = undefined, runtime = 420, memory = 100;
 
-	for (let i=0; i<1; i++) {
+	tests.forEach(i =>{
 		let verdict = undefined;
 
 		if (language == 'cpp') {
@@ -46,7 +56,9 @@ async function run() {
 			console.log("running python");
 			fs.writeFileSync('routes/subcode/hello.py', userCode);
 			try {
-				output = await execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg > test.in', { encoding: 'utf-8' })
+				//output = await execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg > test.in', { encoding: 'utf-8' });
+				//JOHNNY I CHNGED UR CODE CUZ IT WOULDNT COMPILE SRY
+				output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg > test.in', { encoding: 'utf-8' });
 			}
 			catch (error) {
 				console.log("ERROR", error);
@@ -73,7 +85,7 @@ async function run() {
 			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/java.cfg', { encoding: 'utf-8' });  
 		}
 		//  verdict = execSync('sudo ./nsjail/nsjail --config nsjail/configs/checker.cfg', { encoding: 'utf-8' }); //pipe output into this 
-	}
+	});
 	console.log("after run", fverdict);
 	insertSubmission(sub, fverdict, runtime, memory);
 
@@ -86,5 +98,8 @@ async function run() {
 module.exports = {
 	queue: (pid, sid) => {
 		return queue(pid, sid);
+	},
+	compileTests: (pid) => {
+		return compileTests(pid);
 	}
 }

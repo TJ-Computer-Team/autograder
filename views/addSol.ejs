@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<HTML LANG="EN">
+<HEAD>
+    <META CHARSET="UTF-8">
+    <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
+    <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
+    <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS" />
+    <TITLE>create problem</TITLE>
+</HEAD>
+<BODY>
+        <form action="/grade/addSol" method="POST">
+          <p><label for="pid">problem id</label></p>
+	  <input type = "number" id="pid" name="pid" value = <%=pid%>>
+          <br>
+          <p><label for="code">solution code</label></p>
+	  <textarea id="code" name="code" rows="4" cols="50"><%=code%></textarea>
+          <br>
+          <input type="submit" value="Submit">
+        </form>  
+
+
+
+
+
+
+</BODY>
+
