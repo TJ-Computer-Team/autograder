@@ -1,9 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile} = require("./displayProblem");
-const {getProblem, addProblem, testSql, addChecker, addTest} = require("./problems");
-const {queue} = require("./runTests");
+const {grab, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile} = require("./displayProblem");
+const {getProblem, addProblem, testSql, addChecker, addTest, addSol, makePublic} = require("./problems");
+const {queue, compileTests} = require("./runTests");
 
 const {processFunction, getToken} = require("../oauth");
 const {check} = require("../profile");
@@ -21,8 +21,8 @@ router.use(session({
 
 router.get("/authlogin", async (req, res) => {
 	if (req.session.loggedin) {
-                res.redirect("/grade/profile");
-        }
+		res.redirect("/grade/profile");
+	}
 	else {
 		let theurl = await getToken();
 		res.redirect(theurl);
@@ -57,11 +57,19 @@ router.get("/", (req, res) => {
 router.get("/contests", checkLoggedIn, (req, res) => {
 	res.render('contests');
 });
-router.get("/problemset", checkLoggedIn, (req, res) => {
+router.get("/contests/:id", checkLoggedIn, (req, res) => {
+	let vals = {
+		title: "Test",
+		problems: [1, 2, 3],
+	}
+	res.render("contest", {title: vals.title, problems: vals.problems});
+});
+router.get("/problemset", checkLoggedIn, async (req, res) => {
 	let page = req.query.page;
 	if (page == undefined) page = 0;
 	let start = page*5; //write multipage later
-	res.render("gradeProblemset", {p1: 0, p1n: "Problem 1", p2: 1, p2n: "Problem 2", p3: 2, p3n: "Problem 3", p4: 3, p4n: "Problem 4", p5: 4, p5n: "Problem 5"});
+	let vals = await grabAllProblems();
+	res.render("gradeProblemset", {problems: vals});
 });
 router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.id
 	let vals = await grab(req.params.id);
@@ -157,6 +165,84 @@ router.post("/addTest", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AN
 		res.render("addTests", ret);
 	}
 });
+router.get("/finProblem", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	console.log("HI");
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		res.render("finProblem", {"pid":0});
+	}
+});
+router.post("/finProblem", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		let pid = req.body.pid;
+		let ret = {
+			"pid": pid
+		}
+		makePublic(pid);
+		res.render("finProblem", ret);
+	}
+});
+router.get("/compileTests", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	console.log("HI");
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		res.render("finProblem", {"pid":0});
+	}
+});
+router.post("/compileTests", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		let pid = req.body.pid;
+		let ret = {
+			"pid": pid
+		}
+		compileTests(pid);
+		res.render("finProblem", ret);
+	}
+});
+router.post("/addTest", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		console.log("attempteing to create");
+		let pid= req.body.pid;
+		let tid= req.body.tid;
+		let pts= req.body.pts;
+		let test= req.body.test;
+		let ret = {
+			"pid": pid,
+			"test":test,
+			"tid": tid,
+			"pts":pts
+		};
+		console.log(ret);
+		addTest(tid, pts, pid, test);
+		res.render("addTests", ret);
+	}
+});
+router.get("/addSol", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		res.render("addSol", {pid:0, code:""});
+	}
+});
+router.post("/addSol", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	if(admin){
+		console.log("attempteing to create");
+		let pid= req.body.pid;
+		let code= req.body.code;
+		let lang = req.body.lang;
+		let ret = {
+			"pid": pid,
+			"code":code,
+			"lang":lang
+		};
+		console.log(lang);
+		addSol(pid, code, lang);
+		res.render("addSol", ret);
+	}
+});
 router.post("/create", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
 	if(admin){
@@ -182,7 +268,7 @@ router.post("/create", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND
 			"secret":""
 		};
 		console.log(ret);
-//async function addProblem(pname,cid,checkid, sol, state, tl, ml, inter, secret){
+		//async function addProblem(pname,cid,checkid, sol, state, tl, ml, inter, secret){
 		addProblem(pname, cid,0, '', state, tl, ml,false,false, pid); 
 		res.render("portal", ret);
 	}else{

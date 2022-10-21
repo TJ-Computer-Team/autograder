@@ -1,1 +1,1 @@
-print("dan")
+print("help");

@@ -58,7 +58,7 @@ async function grab(id) {
 				console.log("Error getting client");
 				resolve(false);
 			}
-			let qry = "SELECT * FROM problems WHERE id = $1";
+			let qry = "SELECT * FROM problems WHERE pid = $1";
 			client.query(qry, [id], (err, results) => {
 				release();
 				if (err) {
@@ -79,6 +79,30 @@ async function grab(id) {
 			});
 		});
 	});
+}
+async function grabAllProblems() {
+        return new Promise((resolve, reject) => {
+                pl.connect((err, client, release) => {
+                        if (err) {
+                                console.log("Error getting client");
+                                resolve(false);
+                        }
+                        let qry = "SELECT * FROM problems";
+                        client.query(qry, [], (err, results) => {
+                                release();
+                                if (err) {
+                                        console.log("an error occured while querying");
+                                        resolve(false);
+                                }
+                                if (results.rows.length == 0) {
+                                        resolve(false);
+                                }
+                                else {
+                                        resolve(results.rows);
+                                }
+                        });
+                });
+        });
 }
 async function grabSubs(id) {
 	return new Promise((resolve, reject) => {
@@ -105,7 +129,8 @@ async function grabSubs(id) {
 							id: results.rows[i].id,
 							verdict: results.rows[i].verdict,
 							runtime: results.rows[i].runtime,
-							problemname: results.rows[i].problemname
+							problemname: results.rows[i].problemname,
+							problemid: results.rows[i].problemid
 						}
 						retarr.push(ret);
 					}
@@ -172,6 +197,30 @@ async function grabTests(id) {
 		});
 	});
 }
+async function updateTestSol(id, ans) {
+	return new Promise((resolve, reject) => {
+		pl.connect((err, client, release) => {
+			if (err) {
+				console.log("Error getting client");
+				resolve(false);
+			}
+			let qry = `UPDATE test SET ans= $1 WHERE id = $2;`;
+			client.query(qry,[ans, id], (err, results) => {
+				release();
+				if (err) {
+					console.log("an error occured while querying");
+					resolve(false);
+				}
+				if (results.rows.length == 0) {
+					resolve(false);
+				}
+				else {
+					resolve(false);
+				}
+			});
+		});
+	});
+}
 async function grabProblem(id) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
@@ -193,7 +242,9 @@ async function grabProblem(id) {
 				}else{
 					let ret = {
 						tl: results.rows[0].tl,
-						ml: results.rows[0].ml
+						ml: results.rows[0].ml,
+						sol: results.rows[0].solution,
+						lang: results.rows[0].sollang
 					}
 					resolve(ret);
 				}
@@ -282,6 +333,9 @@ module.exports = {
 	grab: (id) => {
 		return grab(id);
 	},
+	grabAllProblems: () => {
+		return grabAllProblems();
+	},
 	grabSubs: (id) => {
 		return grabSubs(id);
 	},
@@ -302,6 +356,9 @@ module.exports = {
 	},
 	createSubmission: (user, code, problem, language) => {
 		return createSubmission(user, code, problem, language);
+	},
+	updateTestSol: (id, sol)=>{
+		return updateTestSol(id, sol);
 	},
 	testSql: () => {
 		return testSql();

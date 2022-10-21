@@ -20,35 +20,21 @@
     <br>
     <div class='main-block'>
         <div class="title">Problemset</div>
+	<%=locals.problems%>
     </div>
     <div class='main-block' id="problems">
-        <ul class="sl">
-            <li class="sl">
-                <a href = <%="/grade/problemset/"+locals.p1%>>
-                    <div class="problem-text"><%=locals.p1n%></div>
-                </a>
-            </li>
-            <li class="sl">
-                <a href = <%="/grade/problemset/"+locals.p2%>>
-                    <div class="problem-text"><%=locals.p2n%></div>
-                </a>
-            </li>
-            <li class="sl">
-                <a href = <%="/grade/problemset/"+locals.p3%>>
-                    <div class="problem-text"><%=locals.p3n%></div>
-                </a>
-            </li>
-            <li class="sl">
-                <a href = <%="/grade/problemset/"+locals.p4%>>
-                    <div class="problem-text"><%=locals.p4n%></div>
-                </a>
-            </li>
-            <li class="sl"> 
-                <a href = <%="/grade/problemset/"+locals.p5%>>
-                    <div class="problem-text"><%=locals.p5n%></div>
-                </a>
-            </li>
+	<%=locals.problems.length%>
+	<ul class="sl">
+            <% for (let i = locals.problems.length-1; i>=0; i--) { %>
+                <li class="sl">
+		    AAAAAAAAAAAAAAAAAAAA
+                    <a href = <%="/grade/problemset/"+locals.problems[i].id%>>
+                        <div class="problem-text"><%=locals.problems[i].problemname%></div>
+                    </a>
+                </li>
+            <% } %>
         </ul>
+        
     </div>
 </body>
 </html>

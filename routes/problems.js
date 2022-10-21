@@ -104,6 +104,29 @@ async function addChecker(checkid, checkercode){
 		});
 	});
 }
+async function addSol(pid, code, lang){//FIX
+	return new Promise((res, rej)=>{
+		pl.connect((err, client, release)=>{
+			if(err){
+				console.log("Error adding problem");
+				res(false);
+			}
+			let qry = `UPDATE problems SET solution=$1, sollang=$3
+			WHERE pid=$2`;
+			console.log("lang", lang);
+			client.query(qry, [code, pid, lang], (err, results)=>{
+				release();
+				if(err){
+					console.log(err);
+					console.log("HE");
+					console.log("error while query");
+					res(false);
+				}
+				res(true);
+			});
+		});
+	});
+}
 async function addProblem(pname,cid,checkid, sol, state, tl, ml, inter, secret){
 	return new Promise((res, rej)=>{
 		pl.connect((err, client, release)=>{
@@ -138,6 +161,9 @@ module.exports = {
 	},
 	addTest: (tid, pts, pid, test)=>{
 		return addTest(tid, pts, pid, test);
+	},
+	addSol: (pid, code, lang)=>{
+		return addSol(pid, code,lang);
 	},
 	getProblems: () =>{
 		return getProblems();

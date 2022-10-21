@@ -1,4 +1,4 @@
-const {grabProblem, insertSubmission, grabStatus, grabTests} = require("./displayProblem");
+const {grabProblem, insertSubmission, grabStatus, grabTests, updateTestSol} = require("./displayProblem");
 const execSync = require('child_process').execSync;
 const fs = require('fs');
 
@@ -15,11 +15,40 @@ function queue(pid, sid) {
 	}
 }
 async function compileTests(pid){
-	let res = await grabTests(pid);
-	tests.forEach(i =>{
-		//let solCode = await solCode;
-		//fs.writeFileSync('test.cpp', solCode);
-		//addSol(i.id, ans);
+	let problem= await grabProblem(pid);
+	console.log(problem);
+	let solution = problem.sol;
+	let lang = problem.lang;
+	await grabTests(pid).then((tests)=>{
+		console.log("tests", tests);
+		for(let i = 0; i<tests.length; i++){
+			if (lang== 'cpp') {
+				fs.writeFileSync('test.cpp', solution);
+				//write to correct file for code
+				//output = execSync('test.in<sudo ./nsjail/nsjail --config nsjail/configs/executable.cfg', { encoding: 'utf-8' });  //pipe input into this
+			}
+			else if (lang== 'python') {
+				console.log(solution);
+				console.log("running python");
+				fs.writeFileSync('routes/subcode/hello.py', solution);
+				try {
+					//output = await execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg > test.in', { encoding: 'utf-8' });
+					//JOHNNY I CHNGED UR CODE CUZ IT WOULDNT COMPILE SRY
+					output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg < test.in', { encoding: 'utf-8' });
+				}
+				catch (error) {
+					console.log("ERROR", error);
+				}
+				console.log("output was", output);
+				updateTestSol(tests[i].id, output);
+			}
+			else if (lang== 'java') {
+				fs.writeFileSync('test.java', solution);
+				output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/java.cfg', { encoding: 'utf-8' });  
+			}
+			//fs.writeFileSync('test.cpp', solCode);
+			//addSol(i.id, ans);
+		}
 	});
 }
 async function run() {
@@ -44,7 +73,7 @@ async function run() {
 
 	let output = undefined, fverdict = undefined, runtime = 420, memory = 100;
 
-	tests.forEach(i =>{
+	for(let i = 0; i<tests.length; i++){
 		let verdict = undefined;
 
 		if (language == 'cpp') {
@@ -85,7 +114,7 @@ async function run() {
 			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/java.cfg', { encoding: 'utf-8' });  
 		}
 		//  verdict = execSync('sudo ./nsjail/nsjail --config nsjail/configs/checker.cfg', { encoding: 'utf-8' }); //pipe output into this 
-	});
+	}
 	console.log("after run", fverdict);
 	insertSubmission(sub, fverdict, runtime, memory);
 
