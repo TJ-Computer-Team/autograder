@@ -20,16 +20,13 @@
     <br>
     <div class='main-block'>
         <div class="title">Problemset</div>
-	<%=locals.problems%>
     </div>
     <div class='main-block' id="problems">
-	<%=locals.problems.length%>
 	<ul class="sl">
             <% for (let i = locals.problems.length-1; i>=0; i--) { %>
-                <li class="sl">
-		    AAAAAAAAAAAAAAAAAAAA
-                    <a href = <%="/grade/problemset/"+locals.problems[i].id%>>
-                        <div class="problem-text"><%=locals.problems[i].problemname%></div>
+                <li class="sl">		    
+                    <a href = <%="/grade/problemset/"+locals.problems[i].pid%>>
+                        <div class="problem-text"><%=locals.problems[i].name%></div>
                     </a>
                 </li>
             <% } %>

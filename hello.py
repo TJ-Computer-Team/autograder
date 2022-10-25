@@ -1,1 +1,1 @@
-print("daniel is hot")
+psdfasdfrint("daniel is hot")

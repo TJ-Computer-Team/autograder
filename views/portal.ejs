@@ -13,9 +13,10 @@
         <style>
                 latex-js {
                 display: inline-block;
-                width: 40%;
+                width: 100%;
                 border: 1px solid red;
-                margin-right: 2em;
+                margin-right: 1em;
+		font-size: 200em;
                 }
         </style>
     <TITLE>create problem</TITLE>
@@ -30,6 +31,9 @@
           <br>
           <p><label for="cid">contest id</label></p>
 	  <input type = "number" id="cid" name="cid" value=<%=cid%>>
+          <br>
+          <p><label for="checkid">check id</label></p>
+	  <input type = "number" id="checkid" name="checkid" value=<%=checkid%>>
           <br>
           <p><label for="pts">points</label></p>
 	  <input type = "number" id="pts" name="pts" value=<%=pts%>>
@@ -54,7 +58,7 @@
 	<h1>Compiling LaTeX</h1>
 
   <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/" id ="lat">
-    \documentclass{article}
+    \documentclass[92pt]{article}
 
    \begin{document}
     <%= state%>

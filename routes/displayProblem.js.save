@@ -1,3 +1,4 @@
+
 const { Pool } = require('pg');
 
 const pl = new Pool({
@@ -133,38 +134,18 @@ async function grabAllProblems() {
                 });
         });
 }
-async function grabSubs(user, contest) {
+async function grabSubs(id) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
 			if (err) {
 				console.log("Error getting client");
 				resolve(false);
 			}
-			let qry = undefined;
-			let params = [];
-			if (contest == undefined && user == undefined) {
-				qry = "SELECT * FROM submissions";
-			}
-			else if (contest == undefined) {
-				qry = "SELECT * FROM submissions WHERE submissions.usr = $1";
-				params.push(user);
-			}
-			else if (user == undefined) {
-				qry = "SELECT * FROM submissions WHERE submissions.contest = $1";
-				params.push(contest);
-			}
-			else {
-				qry = "SELECT * FROM submissions WHERE submissions.usr = $1 AND submissions.contest = $2";
-				params.push(user);
-				params.push(contest);
-			}
-			console.log(user, contest);
-			console.log(qry);
-			client.query(qry, params, (err, results) => {
-				console.log(user, contest);
+			let qry = "SELECT * FROM submissions WHERE submissions.usr = $1";
+			client.query(qry, [id], (err, results) => {
 				release();
 				if (err) {
-					console.log("an error occured while querying", err);
+					console.log("an error occured while querying");
 					resolve(false);
 				}
 				if (results.rows.length == 0) {
@@ -174,7 +155,7 @@ async function grabSubs(user, contest) {
 					retarr = [];
 					for (let i=0; i<results.rows.length; i++) {
 						let ret = {
-							user: results.rows[i].usr,
+							user: id,
 							id: results.rows[i].id,
 							verdict: results.rows[i].verdict,
 							runtime: results.rows[i].runtime,
@@ -293,8 +274,7 @@ async function grabProblem(id) {
 						tl: results.rows[0].tl,
 						ml: results.rows[0].ml,
 						sol: results.rows[0].solution,
-						lang: results.rows[0].sollang,
-						checkid: results.rows[0].checkerid
+						lang: results.rows[0].sollang
 					}
 					resolve(ret);
 				}
@@ -379,176 +359,6 @@ async function grabProfile(id) {
                 });
         });
 }
-async function testSql() {
-	pl.connect((err, client, release) => {
-		if (err) {
-			console.log("Error getting client");
-			return;
-		}
-		let qry = "SELECT * FROM users;";
-		client.query(qry, (err, result) => {
-			release();
-			if (err) {
-				console.log("an error occured while querying");
-				return false;
-			}
-			console.log(result.rows);
-		});
-	});
-}
-async function getProblems(){
-	return new Promise((res, rej)=>{
-		pl.connect((err, client, release)=>{
-			if(err){
-				console.log("Error getting prolbems");
-				res(false);
-			}
-			let qry = "SELECT * FROM problems WHERE secret=false";//or u have access
-			client.query(qry, (err, results)=>{
-				release();
-				if(err){
-					console.log("error while query");
-					res(false);
-				}
-				if(results.rows.length==0){
-					res(false);
-				}else{
-					res(results.rows);
-				}
-			});
-		});
-	});
-}
-async function getUserProblems(){
-	return new Promise((res, rej)=>{
-		pl.connect((err, client, release)=>{
-			let qry = 'SELECT ';
-		});
-	});
-}
-async function addTest(tid,pts, pid, tval){
-	return new Promise((res, rej)=>{
-		pl.connect((err, client, release)=>{
-			if(err){
-				console.log("Error adding problem");
-				res(false);
-			}
-			console.log(tval, pid);
-			let qry = `INSERT INTO test (points,pid, test)
-			VALUES ($1, $2, $3) RETURNING id;`;
-			client.query(qry, [pts, pid, tval], (err, results)=>{
-				release();
-				if(err){
-					console.log(err);
-					console.log("HE");
-					console.log("error while query");
-					res(false);
-				}
-				res(true);
-			});
-		});
-	});
-}
-async function updateChecker(checkid, checkercode, lang){
-	return new Promise((res, rej)=>{
-		pl.connect((err, client, release)=>{
-			if(err){
-				console.log("Error adding problem");
-				res(false);
-			}
-			let qry = `UPDATE CHECKER SET code=$1, lang=$2 WHERE id = $3;`;
-			client.query(qry, [checkercode, lang, checkid], (err, results)=>{
-				release();
-				if(err){
-					console.log(err);
-					console.log("HE");
-					console.log("error while query");
-					res(false);
-				}
-				res(true);
-			});
-		});
-	});
-}
-async function addChecker(checkid, checkercode, lang){
-	return new Promise((res, rej)=>{
-		pl.connect((err, client, release)=>{
-			if(err){
-				console.log("Error adding problem");
-				res(false);
-			}
-			let qry = `INSERT INTO checker (code, lang)
-			VALUES ($1, $2) RETURNING id;`;
-			client.query(qry, [checkercode, lang], (err, results)=>{
-				release();
-				if(err){
-					console.log(err);
-					console.log("HE");
-					console.log("error while query");
-					res(false);
-				}
-				res(true);
-			});
-		});
-	});
-}
-async function addSol(pid, code, lang){//FIX
-	return new Promise((res, rej)=>{
-		pl.connect((err, client, release)=>{
-			if(err){
-				console.log("Error adding problem");
-				res(false);
-			}
-			let qry = `UPDATE problems SET solution=$1, sollang=$3
-			WHERE pid=$2`;
-			console.log("lang", lang);
-			client.query(qry, [code, pid, lang], (err, results)=>{
-				release();
-				if(err){
-					console.log(err);
-					console.log("HE");
-					console.log("error while query");
-					res(false);
-				}
-				res(true);
-			});
-		});
-	});
-}
-async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, secret){
-	return new Promise((res, rej)=>{
-		pl.connect((err, client, release)=>{
-			if(err){
-				console.log("Error adding problem");
-				res(false);
-			}
-			console.log(pid);
-			// pid | name | contestid | checkerid | solution | statement | tl | ml | interactive | secret 
-			let qry = `INSERT INTO problems (pid, name, contestid, checkerid,solution, statement, tl, ml, interactive, secret)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (pid)
-			DO UPDATE SET 
-				name = excluded.name,
-				contestid= excluded.contestid,
-				checkerid= excluded.checkerid,
-				statement= excluded.statement,
-				tl= excluded.tl,
-				ml= excluded.ml,
-				interactive= excluded.interactive,
-				secret= excluded.secret
-
-			`;
-			client.query(qry, [pid, pname, cid, checkid, sol, state, tl, ml, inter, secret], (err, results)=>{
-				release();
-				if(err){
-					console.log(err);
-					console.log("error while query");
-					res(false);
-				}
-				res(results);
-			});
-		});
-	});
-}
 module.exports = {
 	grab: (id) => {
 		return grab(id);
@@ -559,8 +369,8 @@ module.exports = {
 	grabAllProblems: () => {
 		return grabAllProblems();
 	},
-	grabSubs: (user, contest) => {
-		return grabSubs(user, contest);
+	grabSubs: (id) => {
+		return grabSubs(id);
 	},
 	grabStatus: (id) => {
 		return grabStatus(id);
@@ -585,24 +395,6 @@ module.exports = {
 	},
 	testSql: () => {
 		return testSql();
-	},
-	addProblem: (pid, pname,cid, checkid,sol, state, tl, ml, inter, secret) => {
-		return addProblem(pid, pname,cid,checkid, sol,state, tl, ml, inter, secret);
-	},
-	addChecker: (checkid, code, lang)=>{
-		return addChecker(checkid, code, lang);
-	},
-	updateChecker: (checkid, code, lang)=>{
-		return updateChecker(checkid, code, lang);
-	},
-	addTest: (tid, pts, pid, test)=>{
-		return addTest(tid, pts, pid, test);
-	},
-	addSol: (pid, code, lang)=>{
-		return addSol(pid, code,lang);
-	},
-	getProblems: () =>{
-		return getProblems();
 	},
 	checkAdmin: (id) => {
 		return checkAdmin(id);

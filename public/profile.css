@@ -223,13 +223,13 @@ table {
 	border-collapse: collapse;
 }
 th {
-	font-size: 3vw;
+	font-size: 2.5vw;
 	border: 1px solid;
 	border-color: black;
 
 }
 td {
-	font-size: 2.5vw;
+	font-size: 2vw;
 	padding-left: 0.5vw;
 	text-decoration: none;	
 	border: 1px solid;

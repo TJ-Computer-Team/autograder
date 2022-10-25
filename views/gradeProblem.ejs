@@ -5,6 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../profile.css" />
+	<script type="module">
+                import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
+                customElements.define("latex-js", LaTeXJSComponent)
+        </script>
+	<style>
+                latex-js {
+			color: red;
+			transform: scale(3.0);
+                }
+        </style>
     <title>Problem</title>
 </head>
 <body>
@@ -22,6 +32,12 @@
         <div class="statement">
             <%=locals.statement%>
         </div>
+	<latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/" id ="lat" class="statement">
+	    \documentclass{article}
+	    \begin{document}
+		    <%=locals.statement%>
+	    \end{document}
+	</latex-js>
     </div>
     <div class="option-buttons">
         <a href = <%="/grade/submit?problem="+locals.id%>>

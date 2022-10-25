@@ -1,4 +1,4 @@
-const {grabProblem, insertSubmission, grabStatus, grabTests, updateTestSol} = require("./displayProblem");
+const {grabProblem, insertSubmission, grabStatus, grabTests, updateTestSol, grabChecker} = require("./displayProblem");
 const execSync = require('child_process').execSync;
 const fs = require('fs');
 
@@ -23,7 +23,7 @@ async function compileTests(pid){
 		console.log("tests", tests);
 		for(let i = 0; i<tests.length; i++){
 			if (lang== 'cpp') {
-				fs.writeFileSync('test.cpp', solution);
+				fs.writeFileSync('routes/subcode/test.cpp', solution);
 				//write to correct file for code
 				//output = execSync('test.in<sudo ./nsjail/nsjail --config nsjail/configs/executable.cfg', { encoding: 'utf-8' });  //pipe input into this
 			}
@@ -43,7 +43,7 @@ async function compileTests(pid){
 				updateTestSol(tests[i].id, output);
 			}
 			else if (lang== 'java') {
-				fs.writeFileSync('test.java', solution);
+				fs.writeFileSync('routes/subcode/test.java', solution);
 				output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/java.cfg', { encoding: 'utf-8' });  
 			}
 			//fs.writeFileSync('test.cpp', solCode);
@@ -61,25 +61,24 @@ async function run() {
 	console.log(task, sub);
 	let res = await grabProblem(task);
 	let tests = await grabTests(task);
+	let checkid = res.checkid;
 	let tl = res.tl;
 	let ml = res.ml;
-	console.log(tests);
-	console.log(res);
 	res = await grabStatus(sub);
-	console.log("result", res);
 	let userCode = res.code;
 
 	let language = res.language;
 
-	let output = undefined, fverdict = undefined, runtime = 420, memory = 100;
+	let output = undefined, fverdict = "AC", runtime = 420, memory = 100;
 
 	for(let i = 0; i<tests.length; i++){
 		let verdict = undefined;
-
+		fs.writeFileSync('test.in', tests[i].test);
 		if (language == 'cpp') {
-			fs.writeFileSync('test.cpp', userCode);
+			fs.writeFileSync('routes/subcode/test.cpp', userCode);
 			//write to correct file for code
-			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/executable.cfg', { encoding: 'utf-8' });  //pipe input into this
+			let wow = execSync('g++ routes/subcode/test.cpp');
+			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/executable.cfg < test.in', { encoding: 'utf-8' });  //pipe input into this
 		}
 		else if (language == 'python') {
 			console.log("running python");
@@ -87,35 +86,45 @@ async function run() {
 			try {
 				//output = await execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg > test.in', { encoding: 'utf-8' });
 				//JOHNNY I CHNGED UR CODE CUZ IT WOULDNT COMPILE SRY
-				output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg > test.in', { encoding: 'utf-8' });
+				output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg < test.in', { encoding: 'utf-8' });
 			}
 			catch (error) {
 				console.log("ERROR", error);
 			}
 
-			console.log("output was", output);
-			if (output == undefined) {
-				fverdict = "ER";
-			}
-			else if (output.includes("dan")) {
-				console.log("inclies");
-				fverdict = "AC";
-			}
-			else if (poutput == "dan") {
-				fverdict = "AC";
-				console.log("here", fverdict);
-			}
-			else {
-				fverdict = "WA";
-			}
 		}
 		else if (language == 'java') {
 			fs.writeFileSync('test.java', userCode);
 			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/java.cfg', { encoding: 'utf-8' });  
 		}
-		//  verdict = execSync('sudo ./nsjail/nsjail --config nsjail/configs/checker.cfg', { encoding: 'utf-8' }); //pipe output into this 
+		console.log("output was", output);
+		fs.writeFileSync('test.in', output);
+		fs.writeFileSync('test.out', tests[0].ans);
+		let check= await grabChecker(checkid);
+		let ccode = check.code;
+		let lang= check.lang;
+		if (lang== 'cpp') {
+			fs.writeFileSync('routes/subcode/test.cpp', ccode);
+			let wow = execSync('g++ routes/subcode/test.cpp');
+			//write to correct file for code
+			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/executable.cfg', { encoding: 'utf-8' });  //pipe input into this
+		}
+		else if (lang== 'python') {
+			console.log(solution);
+			console.log("running python");
+			fs.writeFileSync('routes/subcode/hello.py', ccode);
+			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg < test.in', { encoding: 'utf-8' });
+			updateTestSol(tests[i].id, output);
+		}
+		else if (lang== 'java') {
+			fs.writeFileSync('test.java', ccode);
+			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/java.cfg', { encoding: 'utf-8' });  
+		}
+		if(!output.includes("AC")){
+			fverdict = "WA";
+			break;
+		}
 	}
-	console.log("after run", fverdict);
 	insertSubmission(sub, fverdict, runtime, memory);
 
 	//checker = undefined;

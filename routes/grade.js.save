@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, addSol, makePublic, updateChecker} = require("./displayProblem");
+const {grab, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile} = require("./displayProblem");
+const {getProblem, addProblem, testSql, addChecker, addTest, addSol, makePublic, updateChecker} = require("./problems");
 const {queue, compileTests} = require("./runTests");
 
 const {processFunction, getToken} = require("../oauth");
@@ -61,8 +62,7 @@ router.get("/contests/:id", checkLoggedIn, (req, res) => {
 		title: "Test",
 		problems: [1, 2, 3],
 	}
-	let cid = req.params.id;
-	res.render("contest", {title: vals.title, problems: vals.problems, user: req.session.userid, cid: cid});
+	res.render("contest", {title: vals.title, problems: vals.problems});
 });
 router.get("/problemset", checkLoggedIn, async (req, res) => {
 	let page = req.query.page;
@@ -106,10 +106,9 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 router.get("/status", checkLoggedIn, async (req, res) => {
 	let user = req.query.user;
 	let contest = req.query.contest;
-	let admin = await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
-	console.log(user, contest, admin);
-	if (user == undefined && contest == undefined && !admin) {
-		user = req.session.userid;
+	if (user == undefined) {
+		user = "submissions.usr"; (contest != undefined) {
+		contest = "submissions.contest";
 	}
 	let submissions = await grabSubs(user, contest);
 	res.render("gradeStatus", {submissions: submissions});
