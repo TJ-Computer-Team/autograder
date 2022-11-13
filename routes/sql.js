@@ -6,8 +6,8 @@ const pl = new Pool({
 	port: 5432,
 	database: "autograder",
 	max: 20,
-	idleTimeoutMillis: 10000,
-	connectionTimeoutMillis: 2000,
+	idleTimeoutMillis: 0,
+	connectionTimeoutMillis: 10000,
 	allowExitOnIdle: true
 });
 
@@ -32,7 +32,7 @@ async function checkAdmin(id){
 	return new Promise((res, rej)=>{
 		pl.connect((err, client, release)=>{
 			if(err){
-				console.log("Error checking admin");
+				console.log("Error checking admin", err);
 				res(false);
 			}
 			let qry = "SELECT * FROM users WHERE id=$1 AND admin=false";
@@ -73,7 +73,12 @@ async function grab(id) {
 					let ret = {
 						id: id,
 						title: results.rows[0].name,
-						statement: results.rows[0].statement
+						statement: results.rows[0].statement,
+						secret: results.rows[0].secret,
+						tl: results.rows[0].tl,
+						ml: results.rows[0].ml,
+						contestid: results.rows[0].contestid,
+						checkerid: results.rows[0].checkerid
 					}
 					resolve(ret);
 				}
@@ -110,7 +115,7 @@ async function grabChecker(id) {
 		});
 	});
 }
-async function grabAllProblems() {
+async function grabAllProblems(cid) {
         return new Promise((resolve, reject) => {
                 pl.connect((err, client, release) => {
                         if (err) {
@@ -118,7 +123,12 @@ async function grabAllProblems() {
                                 resolve(false);
                         }
                         let qry = "SELECT * FROM problems";
-                        client.query(qry, [], (err, results) => {
+                        let params = [];
+			if (cid != undefined) {
+				qry  = "SELECT * FROM problems WHERE problems.contestid = $1";
+				params = [cid]
+			}
+			client.query(qry, params, (err, results) => {
                                 release();
                                 if (err) {
                                         console.log("an error occured while querying");
@@ -159,10 +169,7 @@ async function grabSubs(user, contest) {
 				params.push(user);
 				params.push(contest);
 			}
-			console.log(user, contest);
-			console.log(qry);
 			client.query(qry, params, (err, results) => {
-				console.log(user, contest);
 				release();
 				if (err) {
 					console.log("an error occured while querying", err);
@@ -291,6 +298,7 @@ async function grabProblem(id) {
 					resolve(false);
 				}else{
 					let ret = {
+						name: results.rows[0].name,
 						cid: results.rows[0].contestid,
 						tl: results.rows[0].tl,
 						ml: results.rows[0].ml,
@@ -328,15 +336,15 @@ async function insertSubmission(id, verdict, runtime, memory) {
 		});
 	});
 }
-async function createSubmission(user, code, problem, language, cid) {
+async function createSubmission(user, code, problem, language, problemname, cid) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
 			if (err) {
 				console.log("Error getting client");
 				resolve(false);
 			}
-			let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest) values ($1, $2, $3, $4, -1, -1, 'RN', 'doesnotexist', $5) RETURNING id`;
-			let vals = [user, code, problem, language, cid];
+			let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest) values ($1, $2, $3, $4, -1, -1, 'RN', $5, $6) RETURNING id`;
+			let vals = [user, code, problem, language, problemname, cid];
 			client.query(qry, vals, (err, results) => {
 				release();
 				if (err) {
@@ -618,8 +626,8 @@ module.exports = {
 	grabChecker: (id) => {
 		return grabChecker(id);
 	},
-	grabAllProblems: () => {
-		return grabAllProblems();
+	grabAllProblems: (cid) => {
+		return grabAllProblems(cid);
 	},
 	grabSubs: (user, contest) => {
 		return grabSubs(user, contest);
@@ -639,8 +647,8 @@ module.exports = {
 	insertSubmission: (id, verdict, runtime, memory) => {
 		return insertSubmission(id, verdict, runtime, memory);
 	},
-	createSubmission: (user, code, problem, language, cid) => {
-		return createSubmission(user, code, problem, language, cid);
+	createSubmission: (user, code, problem, language, problemname, cid) => {
+		return createSubmission(user, code, problem, language, problemname, cid);
 	},
 	updateTestSol: (id, sol)=>{
 		return updateTestSol(id, sol);

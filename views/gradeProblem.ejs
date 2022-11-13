@@ -29,11 +29,9 @@
     </div>
     <div class="main-block">
         <div class="title"><%=locals.title%> (problem id=<%=locals.id%>)</div>
-        <div class="statement">
-            <%=locals.statement%>
-        </div>
 	<latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/" id ="lat" class="statement">
-	    \documentclass{article}
+	    
+	    \documentclass[20pt]{letter}
 	    \begin{document}
 		    <%=locals.statement%>
 	    \end{document}

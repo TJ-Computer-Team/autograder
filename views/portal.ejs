@@ -13,18 +13,31 @@
         <style>
                 latex-js {
                 display: inline-block;
-                width: 100%;
-                border: 1px solid red;
-                margin-right: 1em;
-		font-size: 200em;
                 }
         </style>
     <TITLE>create problem</TITLE>
 </HEAD>
 <BODY>
-        <form action="/grade/create" method="POST">
+    <script type="text/javascript">
+	    async function getProblem(e) {
+			const response = await fetch('/admin/getProblem?id='+e.target.value);
+			let data = await response.json();
+			document.getElementById('pname').value=data.title;
+			document.getElementById('cid').value=data.contestid;
+			document.getElementById('checkid').value=data.checkerid;
+			document.getElementById('tl').value=data.tl;
+			document.getElementById('ml').value=data.ml;
+			document.getElementById('state').innerHTML=data.statement;
+
+				console.log(data.tl);
+				console.log(data);
+	    }
+
+	</script>
+
+        <form action="/admin/create" method="POST">
           <p><label for="pid">problem id</label></p>
-	  <input type = "number" id="pid" name="pid" value = <%=pid%>>
+	  <input type = "number" id="pid" name="pid" value = <%=pid%> onchange="getProblem(event)">
           <br>
           <p><label for="pname">problem name</label></p>
 	  <input type = "text" id="pname" name="pname" value=<%=pname%>>
@@ -54,12 +67,11 @@
 	  <textarea id="state" name="state" rows="4" cols="50"><%=state%></textarea>
           <br>
           <input type="submit" name="submit" value="Submit">
-          <input type="submit" name="submit" value="Update">
         </form>  
 	<h1>Compiling LaTeX</h1>
 
   <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/" id ="lat">
-    \documentclass[92pt]{article}
+    \documentclass[20pt]{letter}
 
    \begin{document}
     <%= state%>

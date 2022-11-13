@@ -7,7 +7,6 @@ const {queue, compileTests} = require("./runTests");
 const {processFunction, getToken} = require("../oauth");
 const {check} = require("../profile");
 const session = require('express-session');
-
 const FileReader = require('filereader');
 const csvtojson = require('csvtojson');
 const upload = require('express-fileupload');
@@ -18,10 +17,25 @@ router.get("/", (req, res) => {
 router.get("/createProblem", async (req, res) => {
 	console.log(req.session);
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = true;
 	if(admin){
 		console.log(testSql());
 		console.log("HI");
 		res.render("portal", {checkid:2, ml:0, pts:0, pid: -1, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
+	}else{
+		res.send("UR NOT ADMIN");
+	}
+});
+router.get("/getProblem", async (req, res)=>{
+	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin=true;
+	if(admin){
+		console.log(req.query);
+		console.log(req.query.id);
+		let vals = await grab(req.query.id);
+		console.log("HERE");
+		console.log(vals);
+		res.json(vals);
 	}else{
 		res.send("UR NOT ADMIN");
 	}

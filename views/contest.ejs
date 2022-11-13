@@ -20,7 +20,7 @@
     </ul>
   </div>
   <div class="main-block">
-    <div class="title">Test Contest</div>
+    <div class="title"><%=locals.title%></div>
   </div>
   <div class="cnav">
     <ul class="cnb">
@@ -38,11 +38,13 @@
         <th>Name</th>
         <th>Solved</th>
       </tr>
+      <% for (let i=0; i<locals.problems.length; i++) { %>
       <tr>
-        <td class="centertext">A</td>
-        <td class="centertext">Problem 1</td>
-        <td class="centertext">x1</td>
+        <td class="centertext"><%=i+1%></td>
+        <td class="centertext"><a href="/grade/problemset/<%=locals.problems[i].pid%>"><%=locals.problems[i].name%></a></td>
+        <td class="centertext">0</td>
       </tr>
+      <% } %>
     </table>
   </div>
   <div class="main-block">

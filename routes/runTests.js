@@ -20,8 +20,9 @@ async function compileTests(pid){
 	let solution = problem.sol;
 	let lang = problem.lang;
 	await grabTests(pid).then((tests)=>{
-		console.log("tests", tests);
 		for(let i = 0; i<tests.length; i++){
+			fs.writeFileSync('test.in', tests[i].test);
+			console.log("tests", tests[i].test);
 			if (lang== 'cpp') {
 				fs.writeFileSync('routes/subcode/test.cpp', solution);
 				//write to correct file for code
@@ -99,7 +100,7 @@ async function run() {
 		}
 		console.log("output was", output);
 		fs.writeFileSync('test.in', output);
-		fs.writeFileSync('test.out', tests[0].ans);
+		fs.writeFileSync('test.out', tests[i].ans);
 		let check= await grabChecker(checkid);
 		let ccode = check.code;
 		let lang= check.lang;
@@ -114,13 +115,15 @@ async function run() {
 			console.log("running python");
 			fs.writeFileSync('routes/subcode/hello.py', ccode);
 			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg < test.in', { encoding: 'utf-8' });
-			updateTestSol(tests[i].id, output);
+			//updateTestSol(tests[i].id, output);
 		}
 		else if (lang== 'java') {
 			fs.writeFileSync('test.java', ccode);
 			output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/java.cfg', { encoding: 'utf-8' });  
 		}
 		if(!output.includes("AC")){
+			console.log("WORNG", output);
+			console.log("CHECKER IS ", check);
 			fverdict = "WA";
 			break;
 		}

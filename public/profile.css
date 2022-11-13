@@ -81,6 +81,7 @@ li.sl:hover {
 .statement {
     color:white;
     font-size: 150%;
+    width: 100%;    
     font-family: 'Lucida Sans';
 }
 .option-buttons {
