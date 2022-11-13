@@ -1,4 +1,4 @@
-const {grabProblem, insertSubmission, grabStatus, grabTests, updateTestSol, grabChecker} = require("./displayProblem");
+const {grabProblem, insertSubmission, grabStatus, grabTests, updateTestSol, grabChecker} = require("./sql");
 const execSync = require('child_process').execSync;
 const fs = require('fs');
 

@@ -43,6 +43,7 @@ async function checkAdmin(id){
 					res(false);
 				}
 				if(results.rows.length==0){
+					console.log("OOPS");
 					res(false);
 				}else{
 					res(true);
@@ -290,6 +291,7 @@ async function grabProblem(id) {
 					resolve(false);
 				}else{
 					let ret = {
+						cid: results.rows[0].contestid,
 						tl: results.rows[0].tl,
 						ml: results.rows[0].ml,
 						sol: results.rows[0].solution,
@@ -326,22 +328,22 @@ async function insertSubmission(id, verdict, runtime, memory) {
 		});
 	});
 }
-async function createSubmission(user, code, problem, language) {
+async function createSubmission(user, code, problem, language, cid) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
 			if (err) {
 				console.log("Error getting client");
 				resolve(false);
 			}
-			let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname) values ($1, $2, $3, $4, -1, -1, 'RN', 'doesnotexist') RETURNING id`;
-			let vals = [user, code, problem, language];
+			let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest) values ($1, $2, $3, $4, -1, -1, 'RN', 'doesnotexist', $5) RETURNING id`;
+			let vals = [user, code, problem, language, cid];
 			client.query(qry, vals, (err, results) => {
 				release();
 				if (err) {
-					console.log("an error occured while querying");
+					console.log("an error occured while querying", err);
 					resolve(false);
 				}
-				if (results.rows.length == 0) {
+				else if (results.rows.length == 0) {
 					resolve(false);
 				}
 				else {
@@ -437,6 +439,28 @@ async function addTest(tid,pts, pid, tval){
 			let qry = `INSERT INTO test (points,pid, test)
 			VALUES ($1, $2, $3) RETURNING id;`;
 			client.query(qry, [pts, pid, tval], (err, results)=>{
+				release();
+				if(err){
+					console.log(err);
+					console.log("HE");
+					console.log("error while query");
+					res(false);
+				}
+				res(true);
+			});
+		});
+	});
+}
+async function updateTest(tid,pts, pid, tval){
+	return new Promise((res, rej)=>{
+		pl.connect((err, client, release)=>{
+			if(err){
+				console.log("Error adding problem");
+				res(false);
+			}
+			console.log(tval, pid);
+			let qry = `UPDATE test SET points=$1, pid=$2, tval=$3 WHERE id=$4;`;
+			client.query(qry, [pts, pid, tval, test], (err, results)=>{
 				release();
 				if(err){
 					console.log(err);
@@ -549,6 +573,44 @@ async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, sec
 		});
 	});
 }
+async function grabUsers(){
+        return new Promise((res, rej)=>{
+                pl.connect((err, client, release)=>{
+                        if(err){
+                                console.log("Error getting prolbems");
+                                res(false);
+                        }
+                        let qry = "SELECT * FROM users;";
+                        client.query(qry, (err, results)=>{
+                                release();
+                                if(results.rows.length==0){
+                                        res(false);
+                                }else{
+                                        res(results.rows);
+                                }
+                        });
+                });
+        });
+}
+async function grabContestProblems(cid) {
+	return new Promise((res, rej)=>{
+                pl.connect((err, client, release)=>{
+                        if(err){
+                                console.log("Error getting prolbems");
+                                res(false);
+                        }
+                        let qry = `SELECT * FROM problems WHERE contestid = $1`;
+                        client.query(qry, [cid], (err, results)=>{
+                                release();
+                                if(results.rows.length==0){
+                                        res(false);
+                                }else{
+                                        res(results.rows);
+                                }
+                        });
+                });
+        });
+}
 module.exports = {
 	grab: (id) => {
 		return grab(id);
@@ -577,8 +639,8 @@ module.exports = {
 	insertSubmission: (id, verdict, runtime, memory) => {
 		return insertSubmission(id, verdict, runtime, memory);
 	},
-	createSubmission: (user, code, problem, language) => {
-		return createSubmission(user, code, problem, language);
+	createSubmission: (user, code, problem, language, cid) => {
+		return createSubmission(user, code, problem, language, cid);
 	},
 	updateTestSol: (id, sol)=>{
 		return updateTestSol(id, sol);
@@ -598,13 +660,22 @@ module.exports = {
 	addTest: (tid, pts, pid, test)=>{
 		return addTest(tid, pts, pid, test);
 	},
+	updateTest: (tid, pts, pid, test)=>{
+		return updateTest(tid, pts, pid, test);
+	},
 	addSol: (pid, code, lang)=>{
 		return addSol(pid, code,lang);
 	},
 	getProblems: () =>{
 		return getProblems();
 	},
-	checkAdmin: (id) => {
+	checkAdmin: (id) =>{
 		return checkAdmin(id);
+	},
+	grabUsers: () => {
+		return grabUsers();
+	},
+	grabContestProblems: (cid) => {
+		return grabContestProblems(cid);
 	}
 }

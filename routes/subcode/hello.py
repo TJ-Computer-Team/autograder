@@ -1,1 +1,1 @@
-print("WTF");
+print("help");

@@ -16,9 +16,12 @@
     "filereader": "^0.10.3",
     "http": "^0.0.1-security",
     "install": "^0.13.0",
+    "katex": "^0.16.3",
+    "latex.js": "^0.12.4",
     "pg": "^8.7.3",
     "pm2": "^5.2.0",
-    "simple-oauth2": "^4.3.0"
+    "simple-oauth2": "^4.3.0",
+    "svgdom": "^0.1.10"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"

@@ -1,5 +1,7 @@
-const execSync = require('child_process').execSync;
-// import { execSync } from 'child_process';  // replace ^ if using ES modules
+const katex = require('katex')
 
-const output = execSync('sudo ./nsjail/nsjail --config nsjail/configs/python.cfg', { encoding: 'utf-8' });  // the default is 'buffer'
-console.log('Output was:\n', output);
+const latexString = 'e = mc^2'
+
+const html = katex.renderToString(latexString)
+
+console.log(html);

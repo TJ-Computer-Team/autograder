@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, addSol, makePublic, updateChecker} = require("./displayProblem");
+const {grab, grabProblem, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, updateTest, addSol, makePublic, updateChecker, grabUsers, grabContestProblems} = require("./sql");
 const {queue, compileTests} = require("./runTests");
 
 const {processFunction, getToken} = require("../oauth");
@@ -11,7 +11,6 @@ const session = require('express-session');
 const FileReader = require('filereader');
 const csvtojson = require('csvtojson');
 const upload = require('express-fileupload');
-
 router.use(session({
 	secret: process.env.SECRET_KEY,
 	resave: false,
@@ -64,6 +63,70 @@ router.get("/contests/:id", checkLoggedIn, (req, res) => {
 	let cid = req.params.id;
 	res.render("contest", {title: vals.title, problems: vals.problems, user: req.session.userid, cid: cid});
 });
+router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
+	let cid = req.params.id;
+	let subs = await grabSubs(undefined, cid);
+	let users = await grabUsers();
+	let problems = await grabContestProblems(cid);
+	
+	let load = [];
+	for (let i=0; i<users.length; i++) {
+		let tmp = [];
+		for (let j=0; j<problems.length; j++) {
+			tmp.push(0);
+		}
+		row = {
+			name: users[i].display_name,
+			id: users[i].id,
+			solved: 0,
+			problems: tmp
+		}
+		load.push(row);
+	}
+	for (let i=0; i<subs.length; i++) {
+		let ind, pind;
+		for (let j=0; j<load.length; j++) {
+			if (load[j].id == subs[i].user) {
+				ind = j;
+				break;
+			}
+		}
+		for (let j=0; j<problems.length; j++) {
+                        if (problems[j].pid == subs[i].problemid) {
+                                pind = j;
+                                break;
+			}		
+		}
+
+		if (subs[i].verdict == "AC") {
+			if (load[ind].problems[pind] != 1) {
+				load[ind].solved += 1;
+			}
+			load[ind].problems[pind] = 1;
+		}
+		else {
+			if (load[ind].problems[pind] != 1) {
+				load[ind].problems[pind] -= 1;
+			}
+		}
+	}
+	load.sort(function(a,b){
+  		return a.solved < b.solved ? 1 : -1;
+	});
+
+	res.render("standings", {user: req.session.userid, cid: cid, pnum: problems.length, load: load});
+});
+router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
+        let user = req.query.user;
+        let contest = req.query.contest;
+        let admin = await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
+        if (user == undefined && contest == undefined && !admin) {
+                user = req.session.userid;
+        }
+        let submissions = await grabSubs(user, contest);
+	let cid = req.params.id;
+        res.render("contestStatus", {user: req.session.userid, cid: cid, submissions: submissions});
+});
 router.get("/problemset", checkLoggedIn, async (req, res) => {
 	let page = req.query.page;
 	if (page == undefined) page = 0;
@@ -75,8 +138,6 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.
 	let vals = await grab(req.params.id);
 	res.render("gradeProblem", {title: vals.title, statement: vals.statement, id: vals.id});
 });
-
-
 router.get("/submit", checkLoggedIn, (req, res) => {
 	res.render("gradeSubmit", {problemid: req.query.problem});
 });
@@ -99,7 +160,10 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 	}
 	let file = req.body.code;
 
-	let sid = await createSubmission(req.session.userid, file, pid, language);
+	let cid = await grabProblem(pid);
+	cid = cid.cid;
+
+	let sid = await createSubmission(req.session.userid, file, pid, language, cid);
 	await queue(pid, sid);
 	res.redirect("/grade/status");
 });
@@ -173,7 +237,11 @@ router.post("/addTest", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AN
 			"pts":pts
 		};
 		console.log(ret);
-		addTest(tid, pts, pid, test);
+		if(tid==-1){
+			addTest(-1, pts, pid, test);
+		}else{
+			updateTest(tid, pts, pid, test);
+		}
 		res.render("addTests", ret);
 	}
 });
@@ -255,6 +323,7 @@ router.post("/addSol", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND
 		res.render("addSol", ret);
 	}
 });
+
 router.post("/create", checkLoggedIn, async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
 	if(admin){
