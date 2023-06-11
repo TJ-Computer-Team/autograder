@@ -1,86 +1,74 @@
 <!DOCTYPE HTML>
 <HTML LANG="EN">
 <HEAD>
-    <META CHARSET="UTF-8">
-    <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
-    <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
-    <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS" />
-        <script type="module">
-                import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
-                customElements.define("latex-js", LaTeXJSComponent)
-        </script>
-
-        <style>
-                latex-js {
-                display: inline-block;
-                }
-        </style>
-    <TITLE>create problem</TITLE>
+  <META CHARSET="UTF-8">
+  <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
+  <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
+  <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS"/>
+    <script type="module">
+      import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
+      customElements.define("latex-js", LaTeXJSComponent)
+    </script>
+    <style>
+      latex-js {
+        display: inline-block;
+      }
+    </style>
+  <TITLE>Create Problem</TITLE>
 </HEAD>
 <BODY>
-    <script type="text/javascript">
-	    async function getProblem(e) {
-			const response = await fetch('/admin/getProblem?id='+e.target.value);
-			let data = await response.json();
-			document.getElementById('pname').value=data.title;
-			document.getElementById('cid').value=data.contestid;
-			document.getElementById('checkid').value=data.checkerid;
-			document.getElementById('tl').value=data.tl;
-			document.getElementById('ml').value=data.ml;
-			document.getElementById('state').innerHTML=data.statement;
-
-				console.log(data.tl);
-				console.log(data);
-	    }
-
+  <script type="text/javascript">
+    async function getProblem(e) {
+      const response = await fetch('/admin/getProblem?id='+e.target.value);
+      let data = await response.json();
+      document.getElementById('pname').value=data.title;
+      document.getElementById('cid').value=data.contestid;
+      document.getElementById('checkid').value=data.checkerid;
+      document.getElementById('tl').value=data.tl;
+      document.getElementById('ml').value=data.ml;
+      document.getElementById('state').innerHTML=data.statement;
+      console.log(data.tl);
+      console.log(data);
+    }
 	</script>
-
-        <form action="/admin/create" method="POST">
-          <p><label for="pid">problem id</label></p>
-	  <input type = "number" id="pid" name="pid" value = <%=pid%> onchange="getProblem(event)">
-          <br>
-          <p><label for="pname">problem name</label></p>
-	  <input type = "text" id="pname" name="pname" value=<%=pname%>>
-          <br>
-          <p><label for="cid">contest id</label></p>
-	  <input type = "number" id="cid" name="cid" value=<%=cid%>>
-          <br>
-          <p><label for="checkid">check id</label></p>
-	  <input type = "number" id="checkid" name="checkid" value=<%=checkid%>>
-          <br>
-          <p><label for="pts">points</label></p>
-	  <input type = "number" id="pts" name="pts" value=<%=pts%>>
-          <br>
-          <p><label for="tl">time limit</label></p>
-	  <input type = "number" id="tl" name="tl" value=<%=tl%>>
-          <br>
-          <p><label for="ml">memory limit</label></p>
-	  <input type = "number" id="ml" name="ml" value=<%=ml%>>
-          <br>
-          <p><label for="secret">secret</label></p>
-	  <input type = "checkbox" id="secret" name="secret" value="secret" <%=secret%>>
-	  <label for ="test">I this problem is finished</label>
-          <br>
-          <!--make sure to change the max and min for everything -->
-          <br>
-          <p><label for="state">statement in latex</label></p>
-	  <textarea id="state" name="state" rows="4" cols="50"><%=state%></textarea>
-          <br>
-          <input type="submit" name="submit" value="Submit">
-        </form>  
+  <form action="/admin/create" method="POST">
+    <p><label for="pid">Problem ID</label></p>
+    <input type="number" id="pid" name="pid" value=<%=pid%> onchange="getProblem(event)">
+    <br>
+    <p><label for="pname">Problem Name</label></p>
+    <input type="text" id="pname" name="pname" value=<%=pname%>>
+    <br>
+    <p><label for="cid">Contest ID</label></p>
+    <input type="number" id="cid" name="cid" value=<%=cid%>>
+    <br>
+    <p><label for="checkid">Check ID</label></p>
+    <input type="number" id="checkid" name="checkid" value=<%=checkid%>>
+    <br>
+    <p><label for="pts">Points</label></p>
+    <input type="number" id="pts" name="pts" value=<%=pts%>>
+    <br>
+    <p><label for="tl">Runtime Limit</label></p>
+    <input type="number" id="tl" name="tl" value=<%=tl%>>
+    <br>
+    <p><label for="ml">Memory Limit</label></p>
+    <input type="number" id="ml" name="ml" value=<%=ml%>>
+    <br>
+    <p><label for="secret">Secret</label></p>
+    <input type="checkbox" id="secret" name="secret" value="secret" <%=secret%>>
+    <label for ="test">Problem is finished</label>
+    <br>
+    <!--make sure to change the max and min for everything -->
+    <br>
+    <p><label for="state">statement in latex</label></p>
+    <textarea id="state" name="state" rows="4" cols="50"><%=state%></textarea>
+    <br>
+    <input type="submit" name="submit" value="Submit">
+  </form>
 	<h1>Compiling LaTeX</h1>
-
-  <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/" id ="lat">
+  <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/" id="lat">
     \documentclass[20pt]{letter}
-
-   \begin{document}
+    \begin{document}
     <%= state%>
     \end{document}
   </latex-js>
-
-
-
-
-
 </BODY>
-
