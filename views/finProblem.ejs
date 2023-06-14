@@ -4,27 +4,20 @@
     <META CHARSET="UTF-8">
     <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
     <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
-    <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS" />
-    <TITLE>finish problem</TITLE>
+    <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS"/>
+    <TITLE>Finish Problem</TITLE>
 </HEAD>
 <BODY>
-        <form action="/admin/compileTests" method="POST">
-          <p><label for="pid">problem id</label></p>
-	  <input type = "number" id="pid" name="pid" value = <%=pid%>>
-          <br>
-          <input type="submit" value="Compile the tests">
-        </form>  
-
-        <form action="/admin/finProblem" method="POST">
-          <p><label for="pid">problem id</label></p>
-	  <input type = "number" id="pid" name="pid" value = <%=pid%>>
-          <br>
-          <input type="submit" value="Make problem public">
-        </form>  
-
-
-
-
-
+  <form action="/admin/compileTests" method="POST">
+    <p><label for="pid">Problem ID</label></p>
+    <input type="number" id="pid" name="pid" value=<%=pid%>>
+    <br>
+    <input type="submit" value="Compile the tests">
+  </form>
+  <form action="/admin/finProblem" method="POST">
+    <p><label for="pid">Problem ID</label></p>
+    <input type="number" id="pid" name="pid" value=<%=pid%>>
+    <br>
+    <input type="submit" value="Make problem public">
+  </form>  
 </BODY>
-

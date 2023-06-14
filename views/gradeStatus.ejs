@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../profile.css" />
+    <link rel="stylesheet" type="text/css" href="../profile.css"/>
     <title>My Submissions</title>
 </head>
 <body>
@@ -22,49 +22,49 @@
         <div class="title">Submissions</div>
     </div>
     <div class='main-block' id="submissions">
-	<table>
-		<tr>
-			<th>Submission</th>
-			<th>User</th>
-			<th>Problem</th>
-			<th>Runtime</th>
-			<th>Verdict</th>
-		</tr>
-		<% for (let i = locals.submissions.length-1; i>=0; i--) { %>
-		<tr>
-			<td>
-				<a href = <%="/grade/status/"+locals.submissions[i].id%>>
-					#<%=locals.submissions[i].id%>
-				</a>
-			</td>
-			<td>
-				<a href = <%="/grade/profile/"+locals.submissions[i].user%>>
-                                        <%=locals.submissions[i].user%>
-                                </a>
-			</td>
-			<td>
-				<a href = <%="/grade/problemset/"+locals.submissions[i].problemid%>>
-					<%=locals.submissions[i].problemname%>
-				</a>
-			</td>
-			<td>
-				<%=locals.submissions[i].runtime%>ms
-			</td>
-			<td>
-				<%=locals.submissions[i].verdict%>
-			</td>
-		</tr>
-		<% } %>
-	</table>
-        <ul class="sl">
-            <% for (let i = locals.submissions.length-1; i>=0; i--) { %>
-                <li class="sl"> 
-                    <a href = <%="/grade/status/"+locals.submissions[i].id%>>
-                        <div class="problem-text"><%=locals.submissions[i].problemname%> -- <%=locals.submissions[i].runtime%>ms -- <%=locals.submissions[i].verdict%></div>
-                    </a>
-                </li>
-            <% } %>
-        </ul>
+		<table>
+			<tr>
+				<th>Submission</th>
+				<th>User</th>
+				<th>Problem</th>
+				<th>Runtime</th>
+				<th>Verdict</th>
+			</tr>
+			<% for (let i=locals.submissions.length-1; i>=0; i--) { %>
+			<tr>
+				<td>
+					<a href = <%="/grade/status/"+locals.submissions[i].id%>>
+						#<%=locals.submissions[i].id%>
+					</a>
+				</td>
+				<td>
+					<a href = <%="/grade/profile/"+locals.submissions[i].user%>>
+						<%=locals.submissions[i].user%>
+					</a>
+				</td>
+				<td>
+					<a href = <%="/grade/problemset/"+locals.submissions[i].problemid%>>
+						<%=locals.submissions[i].problemname%>
+					</a>
+				</td>
+				<td>
+					<%=locals.submissions[i].runtime%> ms
+				</td>
+				<td>
+					<%=locals.submissions[i].verdict%>
+				</td>
+			</tr>
+			<% } %>
+		</table>
+		<ul class="sl">
+			<% for (let i = locals.submissions.length-1; i>=0; i--) { %>
+				<li class="sl"> 
+					<a href = <%="/grade/status/"+locals.submissions[i].id%>>
+						<div class="problem-text"><%=locals.submissions[i].problemname%> -- <%=locals.submissions[i].runtime%>ms -- <%=locals.submissions[i].verdict%></div>
+					</a>
+				</li>
+			<% } %>
+		</ul>
     </div>
 </body>
 </html>
