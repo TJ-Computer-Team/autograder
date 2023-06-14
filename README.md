@@ -1,5 +1,4 @@
-# autograder
-ICT Autograder
+# TJ Computer Team Autograder
 
 Prospective Webmasters, these things may interest you.
 
