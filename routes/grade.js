@@ -169,6 +169,7 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 	await queue(pid, sid);
 	res.redirect("/grade/status");
 });
+
 router.get("/status", checkLoggedIn, async (req, res) => {
 	let user = req.query.user;
 	let contest = req.query.contest;
