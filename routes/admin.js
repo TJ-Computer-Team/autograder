@@ -68,8 +68,9 @@ router.post("/addCheck", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUT
 	}
 });
 router.get("/addTest", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
-	console.log("HI");
+	//console.log("HI");
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	//let admin = true;
 	if(admin){
 		res.render("addTests", {tid:0, pts:100, pid:0, test:""});
 	}

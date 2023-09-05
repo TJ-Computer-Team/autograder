@@ -19,8 +19,8 @@ html {
 .main {
   padding-left: 3%;
   padding-right: 3%;
-  padding-top: 4%;
-  padding-bottom: 4%;
+  padding-top: 3%;
+  padding-bottom: 3%;
   width: 50%;
   margin-left: auto;
   margin-right: auto;
@@ -33,7 +33,7 @@ html {
   padding-bottom: 3%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 0vh;
+  margin-top: auto;
   margin-bottom: auto;
   background-color: black;
   border-radius: 3vw;
