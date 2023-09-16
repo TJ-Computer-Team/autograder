@@ -37,7 +37,7 @@ async function processFunction(CODE, req, res2) {
             let user_data = res.data;
             req.session.id = user_data.id;
             req.session.accessToken = accessToken;
-            req.session.loggedin = true;
+            
             vals = {
                 user_data: user_data,
                 req: req,

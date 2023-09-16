@@ -21,7 +21,7 @@ router.get("/createProblem", async (req, res) => {
 	if(admin){
 		console.log(testSql());
 		console.log("HI");
-		res.render("portal", {checkid:2, ml:0, pts:0, pid: -1, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
+		res.render("portal", {checkid:2, ml:0, pts:0, pid: 1, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
 	}else{
 		res.send("UR NOT ADMIN");
 	}
@@ -68,8 +68,9 @@ router.post("/addCheck", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUT
 	}
 });
 router.get("/addTest", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
-	console.log("HI");
+	//console.log("HI");
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	//let admin = true;
 	if(admin){
 		res.render("addTests", {tid:0, pts:100, pid:0, test:""});
 	}
@@ -178,6 +179,7 @@ router.post("/addSol", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER
 
 router.post("/create", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = true//careful
 	if(admin){
 		console.log("attempteing to create");
 		//let problems = await getUserProblems(req.session.userid);

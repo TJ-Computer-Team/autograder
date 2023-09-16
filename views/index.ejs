@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICT</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICT</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
+
 <body>
-    <canvas width='0' height='0' id="animation" class="animation-area"></canvas>
-    <script type="text/javascript" src="animate.js"></script>
-    <br><br><br><br><br><br><br><br>
-    <section class="main">
-        <div class="bgbox"></div>
-        <div class="title">Welcome to <strong><em>ICT</em></strong></div>
-        <div class="cnt_buttons"> 
-            <a class="button_link" id='login' href=<%=locals.loginurl%>>
-                <div class="button">
-                    Grader
-                </div>
-            </a>
-            <a class="button_link" id='login' href="https://docs.google.com/spreadsheets/d/14N4ShvcWBcewWoE3TrGP6lyy0c-ftfuueElo2KeJcTk/edit">
-                <div class="button">
-                    Eight Period Schedule
-                </div>
-            </a>
-        </div>
-    </section>
+  <canvas width='0' height='0' id="animation" class="animation-area"></canvas>
+  <script type="text/javascript" src="animate.js"></script>
+  <br><br><br><br><br>
+  <section class="main">
+    <div class="bgbox">
+      <div class="title"><strong><em>TJCT Grader</em></strong></div>
+      <br>
+      <div class="cnt_buttons">
+        <a class="button_link" id='login' href=<%=locals.loginurl%>>
+          <div class="button">
+            Enter
+          </div>
+        </a>
+        <a class="button_link" id='login' href="https://activities.tjhsst.edu/ict/">
+          <div class="button">
+            Back
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="subbox">
+      <div class="subtext">Welcome to the automatic grader for TJ Computer Team. Please note that this website is hosted
+        external to Director. Please email tjctgrader@gmail.com and  message Johnny Liu, Daniel Qiu, and Gabriel Xu if
+        you have any questions. </div>
+    </div>
+  </section>
+
 </body>
+
 </html>

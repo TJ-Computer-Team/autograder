@@ -29,6 +29,7 @@ async function testSql() {
 	});
 }
 async function checkAdmin(id){
+	/*
 	return new Promise((res, rej)=>{
 		pl.connect((err, client, release)=>{
 			if(err){
@@ -51,6 +52,8 @@ async function checkAdmin(id){
 			});
 		});
 	});
+	*/
+	return true;
 }
 async function grab(id) {
 	return new Promise((resolve, reject) => {
@@ -157,7 +160,7 @@ async function grabSubs(user, contest) {
 				qry = "SELECT * FROM submissions";
 			}
 			else if (contest == undefined) {
-				qry = "SELECT * FROM submissions WHERE submissions.usr = $1";
+				qry = "SELECT * FROM submissions WHERE submissions.user = $1";
 				params.push(user);
 			}
 			else if (user == undefined) {
@@ -285,8 +288,8 @@ async function grabProblem(id) {
 				console.log("Error getting client");
 				resolve(false);
 			}
-			console.log("IDD");
-			console.log(id);
+			//console.log("IDD");
+			//console.log(id);
 			let qry = "SELECT * FROM problems WHERE pid = $1";
 			client.query(qry,[id], (err, results) => {
 				release();
@@ -443,7 +446,7 @@ async function addTest(tid,pts, pid, tval){
 				console.log("Error adding problem");
 				res(false);
 			}
-			console.log(tval, pid);
+			//console.log(tval, pid);
 			let qry = `INSERT INTO test (points,pid, test)
 			VALUES ($1, $2, $3) RETURNING id;`;
 			client.query(qry, [pts, pid, tval], (err, results)=>{
@@ -468,7 +471,7 @@ async function updateTest(tid,pts, pid, tval){
 			}
 			console.log(tval, pid);
 			let qry = `UPDATE test SET points=$1, pid=$2, tval=$3 WHERE id=$4;`;
-			client.query(qry, [pts, pid, tval, test], (err, results)=>{
+			client.query(qry, [pts, pid, tval, 1], (err, results)=>{
 				release();
 				if(err){
 					console.log(err);
@@ -556,8 +559,8 @@ async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, sec
 			}
 			console.log(pid);
 			// pid | name | contestid | checkerid | solution | statement | tl | ml | interactive | secret 
-			let qry = `INSERT INTO problems (pid, name, contestid, checkerid,solution, statement, tl, ml, interactive, secret)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (pid)
+			let qry = `INSERT INTO problems (pid, name, contestid, checkerid,solution, statement, tl, ml, interactive, secret, points)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 1000) ON CONFLICT (pid)
 			DO UPDATE SET 
 				name = excluded.name,
 				contestid= excluded.contestid,
@@ -566,7 +569,8 @@ async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, sec
 				tl= excluded.tl,
 				ml= excluded.ml,
 				interactive= excluded.interactive,
-				secret= excluded.secret
+				secret= excluded.secret,
+				points = 1000
 
 			`;
 			client.query(qry, [pid, pname, cid, checkid, sol, state, tl, ml, inter, secret], (err, results)=>{

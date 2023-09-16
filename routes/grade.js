@@ -25,6 +25,11 @@ router.get("/login", async (req, res)=>{
 	let data = await processFunction(CODE, req, res);
 	await check(data.user_data, data.req, data.res);
 });
+
+router.get("/info", checkLoggedIn, async (req, res) => {
+	res.render("info");
+});
+
 router.post("/logout", (req, res)=> {
 	req.session.destroy();
 	res.redirect("/");
@@ -169,6 +174,7 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 	await queue(pid, sid);
 	res.redirect("/grade/status");
 });
+
 router.get("/status", checkLoggedIn, async (req, res) => {
 	let user = req.query.user;
 	let contest = req.query.contest;
