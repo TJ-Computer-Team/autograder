@@ -2,6 +2,7 @@ const {grabProblem, insertSubmission, grabStatus, grabTests, updateTestSol, grab
 const execSync = require('child_process').execSync;
 const axios = require('axios');
 const fs = require('fs');
+const querystring = require('querystring');
 
 
 let tasks = [], tasksS = [];
@@ -24,7 +25,6 @@ async function run() {
         let sub = tasksS.shift();
         console.log(task, sub);
         let res = await grabProblem(task);
-        //let tests = await grabTests(task);
         let checkid = res.checkid;
         let tl = res.tl;
         let ml = res.ml;
@@ -33,12 +33,13 @@ async function run() {
 
         let language = res.language;
 
-        let output = undefined, fverdict = "AC", runtime = 420, memory = 100;
+        let output = undefined, fverdict = "AC", runtime = 111, memory = 100;
 
         console.log("\n\n\n-------------------");
 
 
-        await axios.get('http://10.150.0.3:8080/wow')
+
+        await axios.post('http://10.150.0.3:8080/run', querystring.stringify({lang: language, problemid: String(task), code: userCode}))
         .then(res => {
                 console.log(res);
         }).catch((error) => {
@@ -46,16 +47,8 @@ async function run() {
                 console.log(error);
         });
 
-        await axios.post('http://10.150.0.3:8080/run', {lang: "python", problemid: "1", code: "print('HELLO WORLD')"})
-        .then(res => {
-                console.log(res);
-        }).catch((error) => {
-		console.log("ERROR OOPS");
-                console.log(error);
-        });
-
-        console.log("THIS IS FAKE RUNNING. FIRST \n\n\n\n");
-        console.log("SECOND \n\n\n\n");
+        //console.log("THIS IS FAKE RUNNING. FIRST \n\n\n\n");
+        //console.log("SECOND \n\n\n\n");
 
 
         insertSubmission(sub, fverdict, runtime, memory);

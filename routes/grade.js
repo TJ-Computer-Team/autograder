@@ -48,10 +48,33 @@ router.get("/profile/:id", checkLoggedIn, async (req, res) => {
 });
 
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
 	res.redirect("/grade/profile");
 });
-router.get("/contests", checkLoggedIn, (req, res) => {
+
+router.get("/attendance", async (req, res) => {
+	if (req.session.loggedin) {
+		deviceClass = 'main';
+		if (req.session.mobile) deviceClass = 'phone';
+		res.render("attendance", {name: vals.name, username: vals.username, device: deviceClass});
+	}
+	else {
+		res.redirect("/");
+	}
+});
+
+router.post("/attendanceComplete", async (req, res) => {
+        if (req.session.loggedin) {
+        	let pass = req.body.pass;
+		let block = req.body.block;
+		res.send("Attendance complete, thank you.");
+	}
+	else {
+		res.redirect("/");
+	}
+});
+
+router.get("/contests", checkLoggedIn, async (req, res) => {
 	res.render('contests');
 });
 router.get("/contests/:id", checkLoggedIn, async (req, res) => {
@@ -145,7 +168,12 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.
 	res.render("gradeProblem", {title: vals.title, statement: vals.statement, id: vals.id});
 });
 router.get("/submit", checkLoggedIn, (req, res) => {
-	res.render("gradeSubmit", {problemid: req.query.problem});
+	if (!req.session.admin) {
+		res.redirect("/grade/profile")
+	}
+	else {
+		res.render("gradeSubmit", {problemid: req.query.problem});
+	}
 });
 
 router.post("/status", checkLoggedIn, async (req, res) => { //eventually change to post to submit
@@ -161,7 +189,7 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 
 	let pid = req.body.problemid;
 	if(pid ==""){
-		res.send("WHAT PROBLEM STUPID");
+		res.send("You did not input any problem id");
 		return;
 	}
 	let file = req.body.code;
@@ -194,7 +222,12 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
 
 function checkLoggedIn(req, res, next) {
 	if (req.session.loggedin) {
-		next();
+		if (req.session.mobile) {
+			res.redirect("/grade/attendance");
+		}
+		else {
+			next();
+		}
 	}
 	else {
 		res.redirect("/");

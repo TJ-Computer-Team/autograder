@@ -8,6 +8,8 @@ const adminRouter= require("./routes/admin");
 
 const {populate} = require("./profile")
 
+const useragent = require("express-useragent");
+
 app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: true}));
 app.use(session({
@@ -21,15 +23,32 @@ app.use("/admin", adminRouter);
 app.set('view engine', 'ejs');
 
 app.get("/", async (req, res) => {
-    res.render("index", {loginurl: "/grade/authlogin"});
+    let source = req.headers['user-agent']
+    let ua = useragent.parse(source);
+    
+    if (ua.isMobile) {
+	req.session.mobile = true;
+	//res.send("We have detected that you are on mobile. Please note that the only feature currently available on mobile is attendance.")
+	res.render("phone", {loginurl: "/grade/authlogin"});
+    }
+    else {
+	req.session.mobile = false;
+    	res.render("index", {loginurl: "/grade/authlogin"});
+    }
 });
 
 app.get("/start", async (req, res) => {	
 	if (req.session.user_data == undefined) {
 		res.redirect("/");
 	} else {
-		res.render("firstTime", {name:req.session.user_data.display_name, username:req.session.user_data.ion_username});
+		deviceClass = 'main'
+		if (req.session.mobile) {
+			deviceClass = 'phone';
+		}
+		res.render("firstTime", {name:req.session.user_data.display_name, username:req.session.user_data.ion_username, device: deviceClass});
 	}
+
+
 });
 
 app.post("/confirm", async (req, res) => {

@@ -22,10 +22,16 @@ async function check(user_data, req, res) {
 			req.session.name = results.rows[0].display_name;
 			req.session.username = results.rows[0].username;
 			req.session.userid = results.rows[0].id;
-			//req.session.admin = results.rows[0].admin;
-			req.session.admin = true;
+			req.session.admin = results.rows[0].admin;
+			//req.session.admin = true;
 			req.session.loggedin = true;
-			res.redirect("/grade/profile");
+
+			if (req.session.mobile) {
+				res.redirect("/grade/attendance");
+			}
+			else {
+				res.redirect("/grade/profile");
+			}	
 		}
 	}
 	catch (error) {
@@ -48,8 +54,14 @@ async function populate(user_data, req, res) {
 		req.session.username = user_data.ion_username;
 		req.session.userid = user_data.id;
 		req.session.loggedin = true;
-
-		res.redirect("/grade/profile");
+		req.session.admin = false;
+		
+	        if (req.session.mobile) {
+               		res.redirect("/grade/attendance");
+                }
+                else {
+                        res.redirect("/grade/profile");
+                }
 	}
 	catch (error) {
 		console.log(error);

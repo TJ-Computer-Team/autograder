@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../profile.css"/>
+    <title>Problemset</title>
+</head>
+<body>
+    <br>
+    <div class='main-block'>
+        <div class="title">Admin Panel - Edit/Create Problems</div>
+    </div>
+    <div class='main-block' id="problems">
+        <ul class="sl">
+            <% for (let i=locals.problems.length-1; i>=0; i--) { %>
+                <li class="sl">		    
+                    <a href = <%="/admin/createProblem?pid=" + locals.problems[i].pid%>>
+                        <div class="problem-text">Edit --> ID: <%=locals.problems[i].pid%>, Name: <%=locals.problems[i].name%></div>
+                    </a>
+                </li>
+            <% } %>
+	    <li class="sl">
+                <a href = <%="/admin/createProblem?pid=" + (locals.problems.length+1)%>>
+		     <div class="problem-text">Create New Problem</div>
+		</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

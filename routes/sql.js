@@ -233,54 +233,6 @@ async function grabStatus(id) {
 		});
 	});
 }
-async function grabTests(id) {
-	return new Promise((resolve, reject) => {
-		pl.connect((err, client, release) => {
-			if (err) {
-				console.log("Error getting client");
-				resolve(false);
-			}
-			let qry = "SELECT * FROM test WHERE pid= $1";
-			client.query(qry, [id], (err, results) => {
-				release();
-				if (err) {
-					console.log("an error occured while querying");
-					resolve(false);
-				}
-				if (results.rows.length == 0) {
-					resolve(false);
-				}
-				else {
-					resolve(results.rows);
-				}
-			});
-		});
-	});
-}
-async function updateTestSol(id, ans) {
-	return new Promise((resolve, reject) => {
-		pl.connect((err, client, release) => {
-			if (err) {
-				console.log("Error getting client");
-				resolve(false);
-			}
-			let qry = `UPDATE test SET ans= $1 WHERE id = $2;`;
-			client.query(qry,[ans, id], (err, results) => {
-				release();
-				if (err) {
-					console.log("an error occured while querying");
-					resolve(false);
-				}
-				if (results.rows.length == 0) {
-					resolve(false);
-				}
-				else {
-					resolve(false);
-				}
-			});
-		});
-	});
-}
 async function grabProblem(id) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
@@ -439,7 +391,7 @@ async function getUserProblems(){
 		});
 	});
 }
-async function addTest(tid,pts, pid, tval){
+async function addTest(tid,pid, tval){
 	return new Promise((res, rej)=>{
 		pl.connect((err, client, release)=>{
 			if(err){
@@ -450,28 +402,6 @@ async function addTest(tid,pts, pid, tval){
 			let qry = `INSERT INTO test (points,pid, test)
 			VALUES ($1, $2, $3) RETURNING id;`;
 			client.query(qry, [pts, pid, tval], (err, results)=>{
-				release();
-				if(err){
-					console.log(err);
-					console.log("HE");
-					console.log("error while query");
-					res(false);
-				}
-				res(true);
-			});
-		});
-	});
-}
-async function updateTest(tid,pts, pid, tval){
-	return new Promise((res, rej)=>{
-		pl.connect((err, client, release)=>{
-			if(err){
-				console.log("Error adding problem");
-				res(false);
-			}
-			console.log(tval, pid);
-			let qry = `UPDATE test SET points=$1, pid=$2, tval=$3 WHERE id=$4;`;
-			client.query(qry, [pts, pid, tval, 1], (err, results)=>{
 				release();
 				if(err){
 					console.log(err);
@@ -654,9 +584,6 @@ module.exports = {
 	createSubmission: (user, code, problem, language, problemname, cid) => {
 		return createSubmission(user, code, problem, language, problemname, cid);
 	},
-	updateTestSol: (id, sol)=>{
-		return updateTestSol(id, sol);
-	},
 	testSql: () => {
 		return testSql();
 	},
@@ -668,12 +595,6 @@ module.exports = {
 	},
 	updateChecker: (checkid, code, lang)=>{
 		return updateChecker(checkid, code, lang);
-	},
-	addTest: (tid, pts, pid, test)=>{
-		return addTest(tid, pts, pid, test);
-	},
-	updateTest: (tid, pts, pid, test)=>{
-		return updateTest(tid, pts, pid, test);
 	},
 	addSol: (pid, code, lang)=>{
 		return addSol(pid, code,lang);

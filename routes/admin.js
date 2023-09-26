@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const axios = require('axios');
+const querystring = require('querystring');
 const router = express.Router({ mergeParams: true });
 const {grab, grabProblem, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, updateTest, addSol, makePublic, updateChecker, grabUsers, grabContestProblems} = require("./sql");
 const {queue, compileTests} = require("./runTests");
@@ -11,24 +13,40 @@ const FileReader = require('filereader');
 const csvtojson = require('csvtojson');
 const upload = require('express-fileupload');
 
-router.get("/", (req, res) => {
-	res.send("admin panel");
+router.get("/", async (req, res) => {
+	//res.send("admin panel -- goto /createProblem");
+	//let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+        if(req.session.admin){
+		let page = req.query.page;
+        	if (page == undefined) page = 0;
+        	let start = page*5; //write multipage later
+        	let vals = await grabAllProblems()
+		res.render("admin", {problems: vals});
+	}
+	else {
+		res.redirect("/");
+	}
 });
 router.get("/createProblem", async (req, res) => {
+	let pid = req.query.pid;
+        //FISH OUT THE REST OF THE INFORMATION FOR THAT PROBLEM HERE
+	if (!pid) {
+		pid = -1;
+	}
 	console.log(req.session);
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
-	admin = true;
+	admin = req.session.admin;
 	if(admin){
 		console.log(testSql());
 		console.log("HI");
-		res.render("portal", {checkid:2, ml:0, pts:0, pid: 1, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
+		res.render("portal", {checkid:2, ml:0, pts:0, pid: pid, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
 	}else{
 		res.send("UR NOT ADMIN");
 	}
 });
 router.get("/getProblem", async (req, res)=>{
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
-	admin=true;
+	admin=req.session.admin;
 	if(admin){
 		console.log(req.query);
 		console.log(req.query.id);
@@ -41,8 +59,12 @@ router.get("/getProblem", async (req, res)=>{
 	}
 });
 router.get("/addChecker", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
-	console.log("HI");
+	let cid = req.query.cid;
+	if (cid == undefined) {
+		cid = -1;
+	}
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		res.render("addChecker", {cid:0, code:""});
 	}
@@ -81,20 +103,20 @@ router.post("/addTest", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTE
 		console.log("attempteing to create");
 		let pid= req.body.pid;
 		let tid= req.body.tid;
-		let pts= req.body.pts;
 		let test= req.body.test;
 		let ret = {
 			"pid": pid,
 			"test":test,
-			"tid": tid,
-			"pts":pts
+			"tid": tid
 		};
+		await axios.post('http://10.150.0.3:8080/addTest', querystring.stringify(ret))
+		.then(res => {
+			console.log(res);
+		}).catch((error) => {
+			console.log("ERROR OOPS");
+			console.log(error);
+		});
 		console.log(ret);
-		if(tid==-1){
-			addTest(-1, pts, pid, test);
-		}else{
-			updateTest(tid, pts, pid, test);
-		}
 		res.render("addTests", ret);
 	}
 });
@@ -179,7 +201,7 @@ router.post("/addSol", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER
 
 router.post("/create", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
-	admin = true//careful
+	admin = req.session.admin;
 	if(admin){
 		console.log("attempteing to create");
 		//let problems = await getUserProblems(req.session.userid);

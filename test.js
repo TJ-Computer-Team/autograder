@@ -6,9 +6,9 @@ axios.get('http://10.150.0.3:8080/wow')
                 console.log(error);
         });
 
-axios.post('http://10.150.0.3:8080/penis', {"wow": "hi"})
+axios.post('http://10.150.0.3:8080/lol', {"wow": "hi"})
        .then(res => {
-                //console.log(res);
+               console.log(res);
         }).catch((error) => {
                //console.log(error);
         });

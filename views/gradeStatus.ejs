@@ -57,15 +57,6 @@
 			</tr>
 			<% } %>
 		</table>
-		<ul class="sl">
-			<% for (let i = locals.submissions.length-1; i>=0; i--) { %>
-				<li class="sl"> 
-					<a href = <%="/grade/status/"+locals.submissions[i].id%>>
-						<div class="problem-text"><%=locals.submissions[i].problemname%> -- <%=locals.submissions[i].runtime%>ms -- <%=locals.submissions[i].verdict%></div>
-					</a>
-				</li>
-			<% } %>
-		</ul>
     </div>
 </body>
 </html>
