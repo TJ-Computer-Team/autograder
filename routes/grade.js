@@ -154,7 +154,7 @@ router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
         }
         let submissions = await grabSubs(user, contest);
 	let cid = req.params.id;
-        res.render("contestStatus", {user: req.session.userid, cid: cid, submissions: submissions});
+        res.render("contestStatus", {user: req.session.username, cid: cid, submissions: submissions});
 });
 router.get("/problemset", checkLoggedIn, async (req, res) => {
 	let page = req.query.page;
@@ -164,11 +164,14 @@ router.get("/problemset", checkLoggedIn, async (req, res) => {
 	res.render("gradeProblemset", {problems: vals});
 });
 router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.id
-	let vals = await grab(req.params.id);
-	res.render("gradeProblem", {title: vals.title, statement: vals.statement, id: vals.id});
+	let vals = await grabProblem(req.params.id);
+	vals.title = vals.name;
+	vals.pid = req.params.id;
+	console.log(vals);
+	res.render("gradeProblem", vals);
 });
 router.get("/submit", checkLoggedIn, (req, res) => {
-	if (!req.session.admin) {
+	if (false && !req.session.admin) {
 		res.redirect("/grade/profile")
 	}
 	else {
@@ -198,7 +201,12 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 	let cid = problem.cid;
 	let problemname = problem.name;
 
-	let sid = await createSubmission(req.session.userid, file, pid, language, problemname, cid);
+	let today = new Date();
+	let timestamp = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + "," + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	console.log(timestamp);
+	
+	let sid = await createSubmission(req.session.userid, file, pid, language, problemname, cid, timestamp);
+	console.log(sid)
 	await queue(pid, sid);
 	res.redirect("/grade/status");
 });
@@ -207,8 +215,9 @@ router.get("/status", checkLoggedIn, async (req, res) => {
 	let user = req.query.user;
 	let contest = req.query.contest;
 	let admin = await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
+	admin = req.session.admin;
 	console.log(user, contest, admin);
-	if (user == undefined && contest == undefined && !admin) {
+	if (user == undefined && contest == undefined && !admin) { //& !admin
 		user = req.session.userid;
 	}
 	let submissions = await grabSubs(user, contest);

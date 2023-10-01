@@ -24,26 +24,33 @@
         </ul>
     </div>
     <div class="main-block">
-        <div class="title"><strong><%=locals.title%> (problem id=<%=locals.id%>)</strong></div>
+        <div class="title"><strong><%=locals.title%> (problem id=<%=locals.pid%>)</strong></div>
     </div>
     <div class="main-block">
-        <div class="problem-text">
-        $a^2 + b^2 = c^2$<br>
-	$\int_{-\infty}^{\infty} e^{-x^2} \,dx = \pi^{1/2}$<br>
+        <div class="info">
         <%=locals.statement%>
         </div>
     </div>
     <div class="main-block">
-	<div class="info"><strong>Input Format</strong></div><br>
+	<div class="info"><strong>Input Format</strong>
+	<br>
+	<%=locals.inputtxt%>
+	</div>
     </div>
     <div class="main-block">
-	<div class="info"><strong>Output Format</strong></div><br>
+	<div class="info"><strong>Output Format</strong>
+	<br>
+        <%=locals.outputtxt%>
+	</div>
     </div>
     <div class="main-block">
-	<div class="info"><strong>Samples</strong></div><br>
+	<div class="info"><strong>Samples</strong>
+	<br>
+        <%=locals.samples%>
+	</div>
     </div>
     <div class="option-buttons">
-        <a href = <%="/grade/submit?problem="+locals.id%>>
+        <a href = <%="/grade/submit?problem="+locals.pid%>>
             <div class="button">Submit</div>
         </a>
         <a href = "/grade/problemset">

@@ -8,9 +8,9 @@
   <TITLE>Create Problem</TITLE>
 </HEAD>
 <BODY>
-  <form action="/grade/addCheck" method="POST">
-    <p><label for="pid">Checker ID</label></p>
-    <input type = "number" id="cid" name="cid" value=<%=cid%>>
+  <form action="/admin/addCheck" method="POST">
+    <p><label for="pid">Problem ID</label></p>
+    <input type = "number" id="pid" name="pid" value=<%=pid%>>
     <br>
     <p><label for="code">Code</label></p>
     <textarea id="code" name="code" rows="4" cols="50"><%=code%></textarea>

@@ -33,13 +33,37 @@ router.get("/createProblem", async (req, res) => {
 	if (!pid) {
 		pid = -1;
 	}
-	console.log(req.session);
+	//console.log(req.session);
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
 	admin = req.session.admin;
 	if(admin){
-		console.log(testSql());
-		console.log("HI");
-		res.render("portal", {checkid:2, ml:0, pts:0, pid: pid, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
+		//console.log(testSql());
+		//console.log("HI");
+		payload = await grabProblem(pid);
+		if (!payload) {
+			payload = {
+				pid: pid,
+				pname: undefined,
+				cid: undefined,
+				state: undefined,
+				checkid: undefined,
+				pts: 1000,
+				tl: 1000,
+				ml: 256,
+				secret: true,
+				inputtxt: undefined,
+				outputtxt: undefined,
+				samples: undefined
+			}
+		}
+		else {
+		payload.pid = pid;
+		payload.pname = payload.name;
+		payload.state = payload.statement;
+		console.log(payload)
+		}
+		res.render("portal", payload);
+		//res.render("portal", {checkid:2, ml:0, pts:0, pid: pid, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
 	}else{
 		res.send("UR NOT ADMIN");
 	}
@@ -66,26 +90,29 @@ router.get("/addChecker", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROU
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
 	admin = req.session.admin;
 	if(admin){
-		res.render("addChecker", {cid:0, code:""});
+		res.render("addChecker", {pid:0, code:""});
 	}
 });
 router.post("/addCheck", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		console.log("attempteing to create");
-		let cid = req.body.cid;
+		let pid = req.body.pid;
 		let code = req.body.code;
 		let lang = req.body.lang;
 		let ret = {
-			"cid": cid,
+			"pid": pid,
 			"code": code
 		};
 		console.log(ret);
-		if(cid==-1){
-			addChecker(cid, code, lang);
-		}else{
-			updateChecker(cid, code, lang);
-		}
+		await axios.post('http://10.150.0.3:8080/addChecker', querystring.stringify(ret))
+		.then(res => {
+			console.log(res);
+		}).catch((error) => {
+			console.log("ERROR OOPS");
+			console.log(error);
+		});
 		res.render("addChecker", ret);
 	}
 });
@@ -93,12 +120,14 @@ router.get("/addTest", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER
 	//console.log("HI");
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
 	//let admin = true;
+	admin = req.session.admin;
 	if(admin){
 		res.render("addTests", {tid:0, pts:100, pid:0, test:""});
 	}
 });
 router.post("/addTest", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		console.log("attempteing to create");
 		let pid= req.body.pid;
@@ -123,12 +152,14 @@ router.post("/addTest", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTE
 router.get("/finProblem", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	console.log("HI");
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		res.render("finProblem", {"pid":0});
 	}
 });
 router.post("/finProblem", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		let pid = req.body.pid;
 		let ret = {
@@ -141,12 +172,14 @@ router.post("/finProblem", async(req, res)=>{//CHANGE GET TO POST AND FIX THE RO
 router.get("/compileTests", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	console.log("HI");
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		res.render("finProblem", {"pid":0});
 	}
 });
 router.post("/compileTests",  async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		let pid = req.body.pid;
 		let ret = {
@@ -158,6 +191,7 @@ router.post("/compileTests",  async(req, res)=>{//CHANGE GET TO POST AND FIX THE
 });
 router.post("/addTest",  async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		console.log("attempteing to create");
 		let pid= req.body.pid;
@@ -177,12 +211,14 @@ router.post("/addTest",  async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUT
 });
 router.get("/addSol",  async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		res.render("addSol", {pid:0, code:""});
 	}
 });
 router.post("/addSol", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
 	let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+	admin = req.session.admin;
 	if(admin){
 		console.log("attempteing to create");
 		let pid= req.body.pid;
@@ -214,7 +250,10 @@ router.post("/create", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER
 		let ml= req.body.ml;
 		let secret = req.body.secret;
 		let checkid = req.body.checkid;
-		console.log(secret);
+		let inputtxt = req.body.inputtxt;
+		let outputtxt = req.body.outputtxt;
+		let samples = req.body.samples;
+		console.log(req.body);
 		let ret = {
 			"pts": pts,
 			"pid": pid,
@@ -224,11 +263,15 @@ router.post("/create", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER
 			"tl":tl,
 			"ml":ml,
 			"secret":"",
-			"checkid": checkid
+			"checkid": checkid,
+			"inputtxt":inputtxt,
+			"outputtxt":outputtxt,
+			"samples":samples
 		};
-		console.log(ret);
+		//console.log(ret);
 		//async function addProblem(pname,cid,checkid, sol, state, tl, ml, inter, secret){
-		addProblem(pid, pname, cid,checkid, '', state, tl, ml,false,false, pid); 
+		//console.log(inputtxt, outputtxt, samples);
+		await addProblem(pid, pname, cid,checkid, '', state, tl, ml, false, false, inputtxt, outputtxt, samples); 
 		res.render("portal", ret);
 	}else{
 		res.send("UR NOT ADMIN");

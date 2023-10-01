@@ -160,7 +160,7 @@ async function grabSubs(user, contest) {
 				qry = "SELECT * FROM submissions";
 			}
 			else if (contest == undefined) {
-				qry = "SELECT * FROM submissions WHERE submissions.user = $1";
+				qry = "SELECT * FROM submissions WHERE submissions.usr = $1";
 				params.push(user);
 			}
 			else if (user == undefined) {
@@ -190,7 +190,7 @@ async function grabSubs(user, contest) {
 							verdict: results.rows[i].verdict,
 							runtime: results.rows[i].runtime,
 							problemname: results.rows[i].problemname,
-							problemid: results.rows[i].problemid
+							problemid: results.rows[i].problemid,
 						}
 						retarr.push(ret);
 					}
@@ -225,7 +225,9 @@ async function grabStatus(id) {
 						problemname: results.rows[0].problemname,
 						problemid: results.rows[0].problemid,
 						code: results.rows[0].code,
-						language: results.rows[0].language
+						language: results.rows[0].language,
+						insight: results.rows[0].insight,
+						timestamp: results.rows[0].timestamp
 					}
 					resolve(ret);
 				}
@@ -241,7 +243,7 @@ async function grabProblem(id) {
 				resolve(false);
 			}
 			//console.log("IDD");
-			//console.log(id);
+			console.log(id);
 			let qry = "SELECT * FROM problems WHERE pid = $1";
 			client.query(qry,[id], (err, results) => {
 				release();
@@ -259,29 +261,37 @@ async function grabProblem(id) {
 						ml: results.rows[0].ml,
 						sol: results.rows[0].solution,
 						lang: results.rows[0].sollang,
-						checkid: results.rows[0].checkerid
+						checkid: results.rows[0].checkerid,
+						pts: results.rows[0].points,
+						secret: results.rows[0].secret,
+						statement: results.rows[0].statement,
+						inputtxt: results.rows[0].inputtxt,
+						outputtxt: results.rows[0].outputtxt,
+						samples: results.rows[0].samples
 					}
+					console.log(results.rows);
 					resolve(ret);
 				}
 			});
 		});
 	});
 }
-async function insertSubmission(id, verdict, runtime, memory) {
+async function insertSubmission(id, verdict, runtime, memory, insight) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
 			if (err) {
 				console.log("Error getting client");
 				resolve(false);
 			}
-			let qry = `UPDATE submissions SET verdict = $1, runtime = $2,memory = $3 WHERE id = $4;`;
-			client.query(qry,[verdict, runtime, memory, id], (err, results) => {
+			let qry = `UPDATE submissions SET verdict = $1, runtime = $2,memory = $3, insight = $4 WHERE id = $5;`;
+			console.log(verdict, insight);
+			client.query(qry,[verdict, runtime, memory, insight, id], (err, results) => {
 				release();
 				if (err) {
-					console.log("an error occured while querying");
+					console.log("an error occured while querying", err);
 					resolve(false);
 				}
-				if (results.rows.length == 0) {
+				else if (results.rows.length == 0) {
 					resolve(false);
 				}
 				else {
@@ -291,15 +301,16 @@ async function insertSubmission(id, verdict, runtime, memory) {
 		});
 	});
 }
-async function createSubmission(user, code, problem, language, problemname, cid) {
+async function createSubmission(user, code, problem, language, problemname, cid, timestamp) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
 			if (err) {
 				console.log("Error getting client");
 				resolve(false);
 			}
-			let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest) values ($1, $2, $3, $4, -1, -1, 'RN', $5, $6) RETURNING id`;
-			let vals = [user, code, problem, language, problemname, cid];
+			console.log("WMOOO");
+			let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest, timestamp) values ($1, $2, $3, $4, -1, -1, 'RN', $5, $6, $7) RETURNING id`;
+			let vals = [user, code, problem, language, problemname, cid, timestamp];
 			client.query(qry, vals, (err, results) => {
 				release();
 				if (err) {
@@ -310,6 +321,7 @@ async function createSubmission(user, code, problem, language, problemname, cid)
 					resolve(false);
 				}
 				else {
+					console.log("YAY");
 					resolve(results.rows[0].id);
 				}
 			});
@@ -480,17 +492,17 @@ async function addSol(pid, code, lang){//FIX
 		});
 	});
 }
-async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, secret){
+async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples){
 	return new Promise((res, rej)=>{
 		pl.connect((err, client, release)=>{
 			if(err){
 				console.log("Error adding problem");
 				res(false);
 			}
-			console.log(pid);
+			console.log(pid, secret, inputtxt, outputtxt, samples);
 			// pid | name | contestid | checkerid | solution | statement | tl | ml | interactive | secret 
-			let qry = `INSERT INTO problems (pid, name, contestid, checkerid,solution, statement, tl, ml, interactive, secret, points)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 1000) ON CONFLICT (pid)
+			let qry = `INSERT INTO problems (pid, name, contestid, checkerid,solution, statement, tl, ml, interactive, secret, inputtxt, outputtxt, samples, points)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 1000) ON CONFLICT (pid)
 			DO UPDATE SET 
 				name = excluded.name,
 				contestid= excluded.contestid,
@@ -500,10 +512,12 @@ async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, sec
 				ml= excluded.ml,
 				interactive= excluded.interactive,
 				secret= excluded.secret,
-				points = 1000
-
+				points = 1000,
+				inputtxt = excluded.inputtxt,
+				outputtxt = excluded.outputtxt,
+				samples = excluded.samples
 			`;
-			client.query(qry, [pid, pname, cid, checkid, sol, state, tl, ml, inter, secret], (err, results)=>{
+			client.query(qry, [pid, pname, cid, checkid, sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples], (err, results)=>{
 				release();
 				if(err){
 					console.log(err);
@@ -578,17 +592,17 @@ module.exports = {
 	grabProfile: (id)=>{
 		return grabProfile(id);
 	},
-	insertSubmission: (id, verdict, runtime, memory) => {
-		return insertSubmission(id, verdict, runtime, memory);
+	insertSubmission: (id, verdict, runtime, memory, insight) => {
+		return insertSubmission(id, verdict, runtime, memory, insight);
 	},
-	createSubmission: (user, code, problem, language, problemname, cid) => {
-		return createSubmission(user, code, problem, language, problemname, cid);
+	createSubmission: (user, code, problem, language, problemname, cid, timestamp) => {
+		return createSubmission(user, code, problem, language, problemname, cid, timestamp);
 	},
 	testSql: () => {
 		return testSql();
 	},
-	addProblem: (pid, pname,cid, checkid,sol, state, tl, ml, inter, secret) => {
-		return addProblem(pid, pname,cid,checkid, sol,state, tl, ml, inter, secret);
+	addProblem: (pid, pname,cid, checkid,sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples) => {
+		return addProblem(pid, pname,cid,checkid, sol,state, tl, ml, inter, secret, inputtxt, outputtxt, samples);
 	},
 	addChecker: (checkid, code, lang)=>{
 		return addChecker(checkid, code, lang);

@@ -7,17 +7,13 @@
     <link rel="stylesheet" type="text/css" href="../../profile.css"/>
     <title>Problem</title>
     <script>
-	function auto_grow() {
-		element = document.getElementById("usercode");
-		element.style.height = "5px";
-                element.style.height = (element.scrollHeight) + "px";
-		element = document.getElementById("feedback");
-		element.style.height = "5px";
-		element.style.height = (element.scrollHeight) + "px";
+	function auto_grow(element) {
+	element.style.height = "200px";
+  		element.style.height = (element.scrollHeight) + "px";
 	}
     </script>
 </head>
-<body onload="auto_grow()">
+<body>
     <div class="navbar">
         <ul class="nb">
             <li class="nb"><a href="/grade/profile">Home</a></li>
@@ -29,18 +25,15 @@
         </ul>
     </div>
     <div class="main-block">
-        <div class="title">Problem: <%=locals.submission.problemname%>, Runtime: <%=locals.submission.runtime%>ms, Verdict: <%=locals.submission.verdict%>, Time: <%=locals.submission.timestamp%></div>
+        <div class="title">Problem Name: <%=locals.submission.problemname%>, Runtime: <%=locals.submission.runtime%>ms, Verdict: <%=locals.submission.verdict%></div>
 	<br>
-        <textarea id="usercode" style="width: 100%; font-size:1.5em" rows="4", cols="50" readonly><%=locals.submission.code%></textarea>
+	
+        <textarea onload="auto_grow()" style="width: 100%; font-size:1.5em" rows="4", cols="50" readonly><%=locals.submission.code%></textarea>
+	
         <br>
-	<% if (locals.submission.verdict == "AC") {%>
 	<div class="info">
 	    <%-locals.submission.insight%>
 	</div>
-	<% } else { %>
-	    <textarea id="feedback" style="width: 100%; font-size:1.5em" rows="4", cols="50" readonly><%=locals.submission.insight%></textarea>
-	<% } %>
-
     </div>
     <div class="option-buttons">
         <a href=<%="/grade/problemset/"+locals.submission.problemid%>>

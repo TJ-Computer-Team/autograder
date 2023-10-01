@@ -33,7 +33,7 @@ async function run() {
 
         let language = res.language;
 
-        let output = undefined, fverdict = "AC", runtime = 111, memory = 100;
+        let output = undefined, fverdict = "ER", runtime = -1, memory = 100;
 
         console.log("\n\n\n-------------------");
 
@@ -41,18 +41,24 @@ async function run() {
 
         await axios.post('http://10.150.0.3:8080/run', querystring.stringify({lang: language, problemid: String(task), code: userCode}))
         .then(res => {
-                console.log(res);
-        }).catch((error) => {
+		return res['data']
+        }).then(res =>{
+		console.log(res)
+		console.log(res.verdict)
+		insertSubmission(sub, res.verdict, res.tl, memory, res.output);
+		run();
+
+	}).catch((error) => {
 		console.log("ERROR OOPS");
                 console.log(error);
+		insertSubmission(sub, "ERROR", res.tl, memory, res.output);
+		run();
         });
 
         //console.log("THIS IS FAKE RUNNING. FIRST \n\n\n\n");
         //console.log("SECOND \n\n\n\n");
 
 
-        insertSubmission(sub, fverdict, runtime, memory);
-        run();
 }
 
 module.exports = {

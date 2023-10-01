@@ -4,7 +4,7 @@
   <META CHARSET="UTF-8">
   <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
   <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
-  <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS"/>
+  <link rel="stylesheet" type="text/css" href="../admin.css"/>
     <script type="module">
       import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
       customElements.define("latex-js", LaTeXJSComponent)
@@ -17,6 +17,7 @@
   <TITLE>Create Problem</TITLE>
 </HEAD>
 <BODY>
+  <div class='main-block'>
   <script type="text/javascript">
     async function getProblem(e) {
       const response = await fetch('/admin/getProblem?id='+e.target.value);
@@ -30,13 +31,14 @@
       console.log(data.tl);
       console.log(data);
     }
-	</script>
+  </script>
+  <div class='info'>
   <form action="/admin/create" method="POST">
     <p><label for="pid">Problem ID</label></p>
     <input type="number" id="pid" name="pid" value=<%=pid%> onchange="getProblem(event)">
     <br>
     <p><label for="pname">Problem Name</label></p>
-    <input type="text" id="pname" name="pname" value=<%=pname%>>
+    <input type="text" id="pname" name="pname" value="<%=pname%>">
     <br>
     <p><label for="cid">Contest ID</label></p>
     <input type="number" id="cid" name="cid" value=<%=cid%>>
@@ -55,21 +57,23 @@
     <br>
     <p><label for="secret">Secret</label></p>
     <input type="checkbox" id="secret" name="secret" value="secret" <%=secret%>>
-    <label for ="test">Problem is finished</label>
     <br>
     <!--make sure to change the max and min for everything -->
     <br>
-    <p><label for="state">statement in latex</label></p>
+    <p><label for="state">statement</label></p>
     <textarea id="state" name="state" rows="4" cols="50"><%=state%></textarea>
     <br>
-    <input type="submit" name="submit" value="Submit">
+    <p><label for="inputtxt">input format descrition</label></p>
+    <textarea id="inputtxt" name="inputtxt" rows="4" cols="50"><%=inputtxt%></textarea>
+    <br>
+    <p><label for="outputtxt">output format description</label></p>
+    <textarea id="outputtxt" name="outputtxt" rows="4" cols="50"><%=outputtxt%></textarea>
+    <br>
+    <p><label for="samples">sample testcases explanation</label></p>
+    <textarea id="samples" name="samples" rows="4" cols="50"><%=samples%></textarea>
+    <br>
+    <input type="submit" name="submit" value="Save">
   </form>
-	<h1>Compiling LaTeX</h1>
-  <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/" id="lat">
-    \documentclass[20pt]{letter}
-    \begin{document}
-    <%= state%>
-    \end{document}
-  </latex-js>
-  
+  </div>
+  </div>
 </BODY>

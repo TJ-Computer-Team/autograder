@@ -11,7 +11,7 @@ const {populate} = require("./profile")
 const useragent = require("express-useragent");
 
 app.use(express.static("./public"));
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: false}));
 app.use(session({
 	secret: process.env.SECRET_KEY,
 	resave: false,

@@ -9,7 +9,7 @@ async function check(user_data, req, res) {
 			database: "autograder"
 		});
 		await cl.connect();
-		let results = await cl.query("SELECT * FROM users WHERE id = " + user_data.id);//HIGHLY UNSAFE
+		let results = await cl.query("SELECT * FROM users WHERE id = ($1)", [user_data.id]);
 		if (results.rows.length == 0) {
 			await cl.end();
 			req.session.user_data = user_data;
