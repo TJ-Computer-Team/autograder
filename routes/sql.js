@@ -17,7 +17,7 @@ async function testSql() {
 			console.log("Error getting client");
 			return;
 		}
-		let qry = "SELECT * FROM users;";
+		let qry = "SELECT * FROM submissions WHERE id>270;";
 		client.query(qry, (err, result) => {
 			release();
 			if (err) {
@@ -157,18 +157,18 @@ async function grabSubs(user, contest) {
 			let qry = undefined;
 			let params = [];
 			if (contest == undefined && user == undefined) {
-				qry = "SELECT * FROM submissions";
+				qry = "SELECT * FROM submissions ORDER BY id ASC;";
 			}
 			else if (contest == undefined) {
-				qry = "SELECT * FROM submissions WHERE submissions.usr = $1";
+				qry = "SELECT * FROM submissions WHERE submissions.usr = $1 ORDER BY id ASC;";
 				params.push(user);
 			}
 			else if (user == undefined) {
-				qry = "SELECT * FROM submissions WHERE submissions.contest = $1";
+				qry = "SELECT * FROM submissions WHERE submissions.contest = $1 ORDER BY id ASC;";
 				params.push(contest);
 			}
 			else {
-				qry = "SELECT * FROM submissions WHERE submissions.usr = $1 AND submissions.contest = $2";
+				qry = "SELECT * FROM submissions WHERE submissions.usr = $1 AND submissions.contest = $2 ORDER BY id ASC;";
 				params.push(user);
 				params.push(contest);
 			}
@@ -204,14 +204,12 @@ async function grabStatus(id) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
 			if (err) {
-				console.log("Error getting client");
 				resolve(false);
 			}
 			let qry = "SELECT * FROM submissions WHERE id = $1";
 			client.query(qry, [id], (err, results) => {
 				release();
 				if (err) {
-					console.log("an error occured while querying");
 					resolve(false);
 				}
 				if (results.rows.length == 0) {
@@ -239,16 +237,12 @@ async function grabProblem(id) {
 	return new Promise((resolve, reject) => {
 		pl.connect((err, client, release) => {
 			if (err) {
-				console.log("Error getting client");
 				resolve(false);
 			}
-			//console.log("IDD");
-			console.log(id);
 			let qry = "SELECT * FROM problems WHERE pid = $1";
 			client.query(qry,[id], (err, results) => {
 				release();
 				if (err) {
-					console.log(results);
 					console.log(err);
 				}
 				if (results.rows.length == 0) {
@@ -269,7 +263,6 @@ async function grabProblem(id) {
 						outputtxt: results.rows[0].outputtxt,
 						samples: results.rows[0].samples
 					}
-					console.log(results.rows);
 					resolve(ret);
 				}
 			});
@@ -284,7 +277,6 @@ async function insertSubmission(id, verdict, runtime, memory, insight) {
 				resolve(false);
 			}
 			let qry = `UPDATE submissions SET verdict = $1, runtime = $2,memory = $3, insight = $4 WHERE id = $5;`;
-			console.log(verdict, insight);
 			client.query(qry,[verdict, runtime, memory, insight, id], (err, results) => {
 				release();
 				if (err) {
@@ -308,7 +300,6 @@ async function createSubmission(user, code, problem, language, problemname, cid,
 				console.log("Error getting client");
 				resolve(false);
 			}
-			console.log("WMOOO");
 			let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest, timestamp) values ($1, $2, $3, $4, -1, -1, 'RN', $5, $6, $7) RETURNING id`;
 			let vals = [user, code, problem, language, problemname, cid, timestamp];
 			client.query(qry, vals, (err, results) => {
@@ -321,7 +312,6 @@ async function createSubmission(user, code, problem, language, problemname, cid,
 					resolve(false);
 				}
 				else {
-					console.log("YAY");
 					resolve(results.rows[0].id);
 				}
 			});
@@ -355,23 +345,6 @@ async function grabProfile(id) {
                         });
                 });
         });
-}
-async function testSql() {
-	pl.connect((err, client, release) => {
-		if (err) {
-			console.log("Error getting client");
-			return;
-		}
-		let qry = "SELECT * FROM users;";
-		client.query(qry, (err, result) => {
-			release();
-			if (err) {
-				console.log("an error occured while querying");
-				return false;
-			}
-			console.log(result.rows);
-		});
-	});
 }
 async function getProblems(){
 	return new Promise((res, rej)=>{
@@ -416,8 +389,6 @@ async function addTest(tid,pid, tval){
 			client.query(qry, [pts, pid, tval], (err, results)=>{
 				release();
 				if(err){
-					console.log(err);
-					console.log("HE");
 					console.log("error while query");
 					res(false);
 				}
@@ -437,8 +408,6 @@ async function updateChecker(checkid, checkercode, lang){
 			client.query(qry, [checkercode, lang, checkid], (err, results)=>{
 				release();
 				if(err){
-					console.log(err);
-					console.log("HE");
 					console.log("error while query");
 					res(false);
 				}
@@ -459,8 +428,6 @@ async function addChecker(checkid, checkercode, lang){
 			client.query(qry, [checkercode, lang], (err, results)=>{
 				release();
 				if(err){
-					console.log(err);
-					console.log("HE");
 					console.log("error while query");
 					res(false);
 				}
@@ -478,12 +445,9 @@ async function addSol(pid, code, lang){//FIX
 			}
 			let qry = `UPDATE problems SET solution=$1, sollang=$3
 			WHERE pid=$2`;
-			console.log("lang", lang);
 			client.query(qry, [code, pid, lang], (err, results)=>{
 				release();
 				if(err){
-					console.log(err);
-					console.log("HE");
 					console.log("error while query");
 					res(false);
 				}

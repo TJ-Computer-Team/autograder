@@ -1,4 +1,4 @@
-const {grabProblem, insertSubmission, grabStatus, grabTests, updateTestSol, grabChecker} = require("./sql");
+const {testSql, grabProblem, insertSubmission, grabStatus, grabTests, updateTestSol, grabChecker} = require("./sql");
 const execSync = require('child_process').execSync;
 const axios = require('axios');
 const fs = require('fs');
@@ -43,8 +43,6 @@ async function run() {
         .then(res => {
 		return res['data']
         }).then(res =>{
-		console.log(res)
-		console.log(res.verdict)
 		insertSubmission(sub, res.verdict, res.tl, memory, res.output);
 		run();
 
@@ -55,8 +53,6 @@ async function run() {
 		run();
         });
 
-        //console.log("THIS IS FAKE RUNNING. FIRST \n\n\n\n");
-        //console.log("SECOND \n\n\n\n");
 
 
 }
