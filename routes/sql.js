@@ -216,8 +216,9 @@ async function grabStatus(id) {
 					resolve(false);
 				}
 				else {
+					console.log(results.rows[0]);
 					let ret = {
-						user: id,
+						user: results.rows[0].usr,
 						verdict: results.rows[0].verdict,
 						runtime: results.rows[0].runtime,
 						problemname: results.rows[0].problemname,

@@ -221,12 +221,16 @@ router.get("/status", checkLoggedIn, async (req, res) => {
 		user = req.session.userid;
 	}
 	let submissions = await grabSubs(user, contest);
-	res.render("gradeStatus", {submissions: submissions});
+	res.render("gradeStatus", {submissions: submissions, viewAsAdmin: admin});
 });
 router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
 	let vals = await grabStatus(req.params.id);
-
-	res.render("status", {submission: vals});
+	if (vals.user == req.session.userid || req.session.admin) {
+		res.render("status", {submission: vals});
+	}
+	else {
+		res.send("You do not have permission to view this submission.");
+	}
 });
 
 function checkLoggedIn(req, res, next) {

@@ -22,6 +22,10 @@ app.use("/admin", adminRouter);
 
 app.set('view engine', 'ejs');
 
+app.get("/test", async (req, res) => {
+	res.status(200).send("test");
+});
+
 app.get("/", async (req, res) => {
     let source = req.headers['user-agent']
     let ua = useragent.parse(source);
@@ -29,11 +33,13 @@ app.get("/", async (req, res) => {
     if (ua.isMobile) {
 	req.session.mobile = true;
 	//res.send("We have detected that you are on mobile. Please note that the only feature currently available on mobile is attendance.")
+	res.status(200);
 	res.render("phone", {loginurl: "/grade/authlogin"});
     }
     else {
 	req.session.mobile = false;
-    	res.render("index", {loginurl: "/grade/authlogin"});
+	//res.status(200);
+    	res.status(200).render("index", {loginurl: "/grade/authlogin"});
     }
 });
 
