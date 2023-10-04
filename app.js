@@ -60,7 +60,7 @@ app.get("/start", async (req, res) => {
 app.post("/confirm", async (req, res) => {
 	user_data = req.session.user_data;
 	user_data.email = req.body.email;
-	user_data.pass = req.body.pass;
+	user_data.pass = req.body.pass; //this feature is not being used anymore
 	try {
 	if (req.body.email.length > 100 || req.body.pass.length > 100) {
 		res.redirect("/")
