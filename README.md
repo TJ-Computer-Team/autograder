@@ -1,7 +1,7 @@
 # TJ Computer Team Autograder
 
 TJ Computer Team Members: Check out the grader!
-[tjctgrader.org](tjctgrader.org)
+[https://tjctgrader.org/](https://tjctgrader.org/)
 
 Please contact us through tjctgrader@gmail.com if you have any questions or concerns.
 
