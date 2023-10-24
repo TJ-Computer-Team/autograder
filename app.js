@@ -63,14 +63,15 @@ app.get("/start", async (req, res) => {
 app.post("/confirm", async (req, res) => {
 	user_data = req.session.user_data;
 	user_data.email = req.body.email;
-	user_data.pass = "1234";
+
+	user_data.pass = "1234"; //filler key
+	//user_data.pass = req.body.pass; //this feature is not being used anymore
+
 	try {
 	if (req.body.email.length > 100) {
 		res.send("you input stuff that was too long");
 	} 
 	else {
-		//console.log(user_data.email);
-		//console.log(user_data.pass);
 		populate(user_data, req, res);
 	}
 	}
