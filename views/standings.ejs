@@ -19,7 +19,7 @@
     </ul>
   </div>
   <div class="main-block">
-    <div class="title">Contest Title</div>
+	  <div class="title"><%=locals.title%></div>
   </div>
   <div class="cnav">
     <ul class="cnb">
@@ -36,6 +36,7 @@
       <tr>
         <th>#</th>
         <th>Name</th>
+	<th>Penalty</th>
         <th>Solved</th>
         <% for (let i=1; i<=locals.pnum; i++) { %>
           <th><%=i%></th>   
@@ -44,7 +45,8 @@
       <% for (let i=0; i<locals.load.length; i++) { %>
         <tr>
           <td class="centertext"><%=i+1%></td>
-          <td class="centertext"><%=locals.load[i].name%></td>
+	  <td class="centertext"><a href="/grade/profile/<%=locals.load[i].id%>"><%=locals.load[i].name%></a></td>
+	  <td class="centertext"><%=locals.load[i].penalty%></td>
           <td class="centertext"><%=locals.load[i].solved%></td>
           <% for (let j=0; j<locals.pnum; j++) { %>
             <td class="centertext"><%=locals.load[i].problems[j]%></td>

@@ -10,7 +10,7 @@ let running = false;
 function queue(pid, sid) {
 	tasks.push(pid);
 	tasksS.push(sid);
-	console.log(pid, sid);
+	//console.log(pid, sid);
 	if (!running) {
 		run();
 		running = true;
@@ -44,13 +44,13 @@ async function run() {
 		return res['data']
         }).then(res =>{
 		insertSubmission(sub, res.verdict, res.tl, memory, res.output);
-		run();
+		setTimeout(run(), 1000);
 
 	}).catch((error) => {
-		console.log("ERROR OOPS");
+		console.log("ERROR WITH GRADING SERVER");
                 console.log(error);
-		insertSubmission(sub, "ERROR", res.tl, memory, res.output);
-		run();
+		insertSubmission(sub, "ERROR", res.tl, memory, "grading server error");
+		setTimeout(run(), 1000);
         });
 
 

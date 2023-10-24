@@ -10,6 +10,9 @@ const {populate} = require("./profile")
 
 const useragent = require("express-useragent");
 
+var favicon=require('serve-favicon');
+app.use(favicon("./public/images/favicon.ico"));
+
 app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: false}));
 app.use(session({
@@ -60,10 +63,10 @@ app.get("/start", async (req, res) => {
 app.post("/confirm", async (req, res) => {
 	user_data = req.session.user_data;
 	user_data.email = req.body.email;
-	user_data.pass = req.body.pass;
+	user_data.pass = "1234";
 	try {
-	if (req.body.email.length > 100 || req.body.pass.length > 100) {
-		res.redirect("/")
+	if (req.body.email.length > 100) {
+		res.send("you input stuff that was too long");
 	} 
 	else {
 		//console.log(user_data.email);
@@ -72,7 +75,7 @@ app.post("/confirm", async (req, res) => {
 	}
 	}
 	catch (error) {
-		res.redirect("/");
+		res.send("ERROR" + error);
 	}
 });
 

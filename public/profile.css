@@ -16,12 +16,12 @@ body {
     line-height: 3em;
 }   
 .title {
-    font-size: 250%;
+    font-size: 2.5em;
     color: white;
     font-family: 'Lucida Sans';
 }
 .info {
-    font-size: 200%;
+    font-size: 1.25em;
     color: white;
     font-family: 'Lucida Sans';
 }
@@ -41,7 +41,7 @@ body {
 }
 .problem-text {
     color:white;
-    font-size: 200%;
+    font-size: 1.5em;
     padding-left: 2%;
     font-family: 'Lucida Sans';
 }
@@ -70,9 +70,19 @@ li.sl {
 li.sl:hover {
     background-color: rgb(51, 145, 234);
 }
+li.slg {
+    width: 100%;
+    background-color: rgb(74, 74, 74);
+    border-radius: 1vw;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
 .statement {
     color:white;
-    font-size: 150%;
+    font-size: 1.5em;
     width: 100%;    
     font-family: 'Lucida Sans';
 }
@@ -93,7 +103,7 @@ li.sl:hover {
     background-color: rgb(65, 136, 203);
     text-align: center;
     color:black;
-    font-size: 200%; 
+    font-size: 1.5em; 
     font-family: 'Lucida Sans';
     position: relative;
 }
@@ -201,13 +211,14 @@ table {
 	border-collapse: collapse;
 }
 th {
-    font-size: 2.5vw;
+    font-size: 1.75em;
     border: 1px solid;
     border-color: black;
 }
 td {
-	font-size: 2vw;
-	padding-left: 0.5vw;
+	font-size: 1.25em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
 	text-decoration: none;	
 	border: 1px solid;
 	border-color: black;

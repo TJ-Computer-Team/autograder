@@ -29,7 +29,7 @@
         </ul>
     </div>
     <div class="main-block">
-        <div class="title">Problem: <%=locals.submission.problemname%>, Runtime: <%=locals.submission.runtime%>ms, Verdict: <%=locals.submission.verdict%>, Time: <%=locals.submission.timestamp%></div>
+        <div class="title">Problem: <%=locals.submission.problemname%>, Runtime: <%=locals.submission.runtime%>ms, Verdict: <%=locals.submission.verdict%>, Time: <%=locals.submission.timestamp%><% if (locals.submission.admin) { %> - Viewing as Admin <% } %></div>
 	<br>
         <textarea id="usercode" style="width: 100%; font-size:1.5em" rows="4", cols="50" readonly><%=locals.submission.code%></textarea>
         <br>

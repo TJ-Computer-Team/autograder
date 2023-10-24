@@ -8,15 +8,19 @@
   <TITLE>Create Problem</TITLE>
 </HEAD>
 <BODY>
+  Add tests here. Currently this supports only exact input and output. That is, the checker will look for exact match.
   <form action="/admin/addTest" method="POST">
     <p><label for="tid">Test ID</label></p>
     <input type="number" id="tid" name="tid" value=<%=tid%>>
     <br>
     <p><label for="pid">Problem ID</label></p>
-    <input type="number" id="pid" name="pid" valu=<%=pid%>>
+    <input type="number" id="pid" name="pid" value=<%=pid%>>
     <br>
-    <p><label for="test">Test Input</label></p>
-    <textarea id="test" name="test" rows="4" cols="50"><%=test%></textarea>
+    <p><label for="in">Test Input</label></p>
+    <textarea id="in" name="in" rows="4" cols="50"><%=test%></textarea>
+    <br>
+    <p><label for="out">Test Output</label></p>
+    <textarea id="out" name="out" rows="4" cols="50"><%=out%></textarea>
     <br>
     <input type="submit" value="Submit">
   </form>  

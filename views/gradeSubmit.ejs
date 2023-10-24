@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en"><head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,7 +25,7 @@
         <form action="/grade/status" method="POST">
             <div class="problem-text">
                 <label class="indent" for="problemid">Problem ID</label>
-                <input type="number" id="problemid" name="problemid" value="min=&quot;1&quot;" max="100">
+                <input type="number" id="problemid" name="problemid" value=<%=locals.problemid%> max="100">
             </div>
             <div class="problem-text">
                 <select id="lang" name="lang">
@@ -33,7 +34,7 @@
                     <option value="python">Python</option>
                 </select>
                 <br>
-                <textarea id="codeinput" name="code" rows="30" cols="80" spellcheck="false">Insert Code Here</textarea>
+                <textarea id="codeinput" name="code" rows="30" cols="80" spellcheck="false" placeholder="Insert code here"></textarea>
             </div>
             <div class="option-buttons">
                 <button class="button" type="submit">Submit</button>
@@ -57,7 +58,7 @@
       this.selectionEnd = start + 1;
   }
 });
-	</script>
+</script>
 
 </body></html>
 

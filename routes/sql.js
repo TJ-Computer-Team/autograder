@@ -100,7 +100,7 @@ async function grabChecker(id) {
 			client.query(qry, [id], (err, results) => {
 				release();
 				if (err) {
-					console.log("an error occured while querying");
+					console.log("an error occured while querying for checker");
 					resolve(false);
 				}
 				if (results.rows.length == 0) {
@@ -134,7 +134,7 @@ async function grabAllProblems(cid) {
 			client.query(qry, params, (err, results) => {
                                 release();
                                 if (err) {
-                                        console.log("an error occured while querying");
+                                        console.log("an error occured while querying for problems");
                                         resolve(false);
                                 }
                                 if (results.rows.length == 0) {
@@ -175,11 +175,10 @@ async function grabSubs(user, contest) {
 			client.query(qry, params, (err, results) => {
 				release();
 				if (err) {
-					console.log("an error occured while querying", err);
-					resolve(false);
-				}
-				if (results.rows.length == 0) {
-					resolve(false);
+					console.log("an error occured while querying for submissions", err);
+					resolve([]);
+				}else if (results.rows.length == 0) {
+					resolve([]);
 				}
 				else {
 					retarr = [];
@@ -191,6 +190,7 @@ async function grabSubs(user, contest) {
 							runtime: results.rows[i].runtime,
 							problemname: results.rows[i].problemname,
 							problemid: results.rows[i].problemid,
+							timestamp: results.rows[i].timestamp
 						}
 						retarr.push(ret);
 					}

@@ -56,7 +56,7 @@
     <input type="number" id="ml" name="ml" value=<%=ml%>>
     <br>
     <p><label for="secret">Secret</label></p>
-    <input type="checkbox" id="secret" name="secret" value="secret" <%=secret%>>
+    <input type="checkbox" id="secret" name="secret" value=true <%if (secret) { %>checked <% } %>>
     <br>
     <!--make sure to change the max and min for everything -->
     <br>

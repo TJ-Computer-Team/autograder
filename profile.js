@@ -23,7 +23,9 @@ async function check(user_data, req, res) {
 			req.session.username = results.rows[0].username;
 			req.session.userid = results.rows[0].id;
 			req.session.admin = results.rows[0].admin;
-			//req.session.admin = true;
+			if (req.session.admin) {
+				req.session.name = "[Admin] " + req.session.name;
+			}
 			req.session.loggedin = true;
 
 			if (req.session.mobile) {
@@ -65,7 +67,8 @@ async function populate(user_data, req, res) {
 	}
 	catch (error) {
 		console.log(error);
-		res.redirect("/");
+		//res.redirect("/");
+		res.send(error);
 	}
 }
 

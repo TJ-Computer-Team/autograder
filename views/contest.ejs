@@ -15,6 +15,7 @@
       <li class="nb"><a href="/grade/contests">Contests</a></li>
       <li class="nb"><a href="/grade/problemset">Problemset</a></li>
       <li class="nb"><a href="/grade/submit">Submit</a></li>
+      <li class="nb"><a href="/grade/info">Rules and Info</a></li>
     </ul>
   </div>
   <div class="main-block">
@@ -22,7 +23,7 @@
   </div>
   <div class="cnav">
     <ul class="cnb">
-      <li class="cnb"><a class="cactive" href="/grade/profile">Problems</a></li>
+      <li class="cnb"><a class="cactive" href="/grade/contests/<%=locals.cid%>">Problems</a></li>
       <li class="cnb"><a href="/grade/submit">Submit Code</a></li>
       <li class="cnb"><a href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.user%>&contest=<%=locals.cid%>">My Submissions</a></li>
       <li class="cnb"><a href="/grade/contests/<%=locals.cid%>/status?contest=<%=locals.cid%>">All Submissions</a></li>
@@ -39,14 +40,24 @@
       <% for (let i=0; i<locals.problems.length; i++) { %>
       <tr>
         <td class="centertext"><%=i+1%></td>
+	<% if (locals.problems[i].available) { %>
         <td class="centertext"><a href="/grade/problemset/<%=locals.problems[i].pid%>"><%=locals.problems[i].name%></a></td>
-        <td class="centertext">0</td>
+        <% } else { %>
+	<td class="centertext">Problem Not Availabele</td>
+	<% } %>
+	<td class="centertext"><%=locals.problems[i].solves%></td>
       </tr>
       <% } %>
     </table>
   </div>
   <div class="main-block">
     <div class="problem-text">Announcements and Clarifications</div>
+    <div class="info">
+        <a href="https://docs.google.com/document/d/1WTDflYyvEfOu_SqD4JCCLIc1sGOUQR4csXpeqPxLXzg/edit?usp=sharing">Help Document Here</a>
+    </div>
+    <div class="info">
+	Editorials can be found on the main <a href="https://activities.tjhsst.edu/ict/resources">website</a>
+    </div>
   </div>
   <div class="option-buttons">
     <a href="/grade/submit">
