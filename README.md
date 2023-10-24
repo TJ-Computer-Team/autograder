@@ -1,7 +1,7 @@
 # TJ Computer Team Autograder
 
 TJ Computer Team Members: You can find all information about In-Houses and the club here:
-[https://tjctgrader.org/](https://activities.tjhsst.edu/ict/)
+[https://activities.tjhsst.edu/ict/](https://activities.tjhsst.edu/ict/)
 
 Please contact us through tjctgrader@gmail.com if you have any questions or concerns.
 
