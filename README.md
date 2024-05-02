@@ -1,6 +1,6 @@
 ## TJ Computer Team Autograder
 
-TJ Computer Team Members: You can find all information about in-Houses and the club here: https://activities.tjhsst.edu/ict/.
+TJ Computer Team Members: You can find all information about in-houses and the club here: https://activities.tjhsst.edu/ict/.
 This grader website can be accessed at https://tjctgrader.org/.
 Please contact us through tjctgrader@gmail.com if you have any questions or concerns.
 
