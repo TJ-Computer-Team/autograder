@@ -18,4 +18,4 @@ Routes folder: Main grader code
 To run this locally, download the files, install Node.js and use npm to install the necessary packages. Then, run:
 ```node app.js```.
 
-Current Developers: Daniel Qiu, Johnny Liu, & Gabriel Xu
+Current Developers: Daniel Qiu, Johnny Liu, and Gabriel Xu
