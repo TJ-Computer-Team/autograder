@@ -13,11 +13,15 @@ const upload = require('express-fileupload');
 
 function getContestStart(cid) {	
         let contestStart;
-	let startStr; // in UTC timezone, +4 to EST
+	let startStr; // in UTC timezone, +4 from EST
         if (cid == 1)
 		startStr="2023-10-06T18:30:00Z";
         else if (cid==2)
 		startStr="2023-10-27T18:30:00Z";
+	else if (cid==3)
+		startStr="2024-01-12T19:30:00Z"; // changed to +5, probably cause of daylight saving stuff
+	else if (cid==4)
+		startStr="2024-02-23T19:30:00Z";
 	else
 		startStr="";
 	contestStart=new Date(startStr).getTime();
@@ -30,9 +34,18 @@ function getContestEnd(cid) {
 		endStr="3023-10-06T20:00:00Z";
         else if (cid==2)
 		endStr="2023-10-27T20:00:00Z";
+	else if (cid==3)
+		endStr="2024-01-12T21:00:00Z";
+	else if (cid==4)
+		endStr="2024-02-23T21:00:00Z";
 	else endStr="";
 	contestEnd=new Date(endStr).getTime();
 	return contestEnd;
+}
+function getLateTakers(cid) {
+	if(cid==3) return [1001731, 1001623, 1001620, 1001475, 1002158, 1001944, 1001092, 1002595, 1001904, 1001642];// anush devkar, armaan ahmed, anusha agarwal, kanishk sivanadam, max zhao, rishikesh narayana, samarth bhargav, nathan liang, esha m, navya arora
+	if(cid==4) return [1002636, 1001207, 1001608, 1002135];//svaran, avni, arjun, olivia
+	else return [];
 }
 
 router.get("/authlogin", async (req, res) => {
@@ -118,18 +131,19 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 	}
 	var ordered=[];
 	for(let i=0; i<problems.length; i++) {
-		if(!problems[i].secret || req.session.admin) {
+		if(true) {
 			ordered.push(problems[i]);
 			ordered[ordered.length-1].solves=0;
-			ordered[ordered.length-1].available= (!problems[i].secret || req.session.admin);
+			ordered[ordered.length-1].available = (!problems[i].secret || req.session.admin);
 			ordered[ordered.length-1].users=[];
 		}
 	}
 
         let subs = await grabSubs(undefined, cid);
         let users = await grabUsers();
-
+	// let subs=  [];
         for (let i=0; i<subs.length; i++) {
+		if (parseInt(subs[i].timestamp)>getContestEnd(cid)) continue;
                 let ind, pind;
                 for (let j=0; j<users.length; j++) {
                         if (users[j].id == subs[i].user) {
@@ -143,16 +157,26 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
                                 break;
                         }
                 }
-                if (subs[i].verdict == "AC") {
+		if (pind==undefined) {
+			console.log("error - cannot find matching problem for submission in rendering solve count");
+			continue;
+		}
+		if (ind==undefined) {
+			console.log("error - cannot find matching user for submission in rendering solve count");
+			continue;
+		}
+                if (subs[i].verdict == "Accepted" || subs[i].verdict=="AC") {
 			if (ordered[pind].users.includes(ind)) continue;
 			ordered[pind].solves+=1;
 			ordered[pind].users.push(ind);
                 }
 	}
 	ordered.sort(function(a, b) {
-		return a.pid>b.pid? 1:-1;
+		if (a.points==b.points)
+			return a.pid>b.pid? 1:-1;
+		return a.points>b.points? 1:-1;
 	});
-
+	
 	if(ordered.length>0)
 		res.render("contest", {title: vals.title, problems: ordered, user: req.session.userid, cid: cid, timeStatus: vals.timeStatus});
 	else
@@ -166,7 +190,6 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
 	problems.sort(function(a, b) {
 		return a.pid>b.pid? 1 : -1;
 	});
-
         let contestStart=getContestStart(cid);
 	let contestEnd=getContestEnd(cid);
 
@@ -185,12 +208,28 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
                 }
                 load.push(row);
         }
-
         subs.sort(function(a, b) {
                 return parseInt(a.timestamp)>parseInt(b.timestamp)? 1 : -1;
         });
+	
         for (let i=0; i<subs.length; i++) {
-		if(parseInt(subs[i].timestamp)>contestEnd) continue;
+		let contestEnd2=contestEnd;
+		let contestStart2=contestStart;
+		if(cid==3) {
+			if([1002379].includes(subs[i].user)) contestEnd2+=50*60000; // shaurya bisht
+			if([1001533].includes(subs[i].user)) contestEnd2+=((4*24)*60+30)*60000; // yicong wang
+			if(getLateTakers(3).includes(subs[i].user)) {
+				contestEnd2+=(2*24+20)*60*60000;
+			}
+		}
+		else if(cid==4) {
+			if(getLateTakers(4).includes(subs[i].user)) {
+				contestEnd2+=(3*24+4)*60*60000;
+				contestStart2+=((3*24+4)*60-5)*60000;
+			}
+		}
+		if(parseInt(subs[i].timestamp)>contestEnd2) continue;
+		//console.log("timestamps:", subs[i].timestamp, contestEnd);
                 let ind, pind;
                 for (let j=0; j<load.length; j++) {
                         if (load[j].id == subs[i].user) {
@@ -204,15 +243,15 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
                                 break;
                         }
                 }
-                if (subs[i].verdict == "AC") {
+                if (subs[i].verdict == "Accepted" || subs[i].verdict=="AC") {
                         if (load[ind].problems[pind]>=1) {
                                 continue;
                         }
-                        load[ind].solved += 1;
+                        load[ind].solved +=problems[pind].points;
                         if (Number.isInteger(parseInt(subs[i].timestamp))) {
                                 let time = parseInt(subs[i].timestamp);
-                                if (time > contestStart) {
-                                        load[ind].penalty += parseInt((time-contestStart)/36000);
+                                if (true||time > contestStart2) {
+                                        load[ind].penalty += parseInt((time-contestStart2)/60000); // convert milliseconds to minutes
                                 }
                                 else {
                                         console.log("error, timestamp before contest start")
@@ -231,25 +270,26 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
                                 load[ind].problems[pind] -= 1;
                         }
                 }
-		if (subs[i].user==1000762)
-			console.log("johnny", subs[i].timestamp, subs[i].problemid);
-		if (subs[i].user==1000849)
-			console.log("daniel", subs[i].timestamp, subs[i].problemid);
         }
         let load2 = [];
         for (let i=0; i<load.length; i++) {
                 let val = load[i];
                 if (val.solved > 0) {
-                        load2.push(val);
+			if(val.penalty<0) val.penalty=0;
+                        if(val.penalty>0) load2.push(val);
                 }
         }
         load2.sort(function(a,b){
                 if (a.solved==b.solved) return a.penalty > b.penalty ? 1 : -1;
                 return a.solved < b.solved ? 1 : -1;
         });
-
-        res.render("standings", {title: "In House #"+cid, user: req.session.userid, cid: cid, pnum: problems.length, load: load2});
-});
+	for (let i=0; i<load2.length; i++) {
+		if(i>0 && load2[i].solved==load2[i-1].solved && load2[i].penalty==load2[i-1].penalty) load2[i].rank=load2[i-1].rank;
+		else load2[i].rank=i+1;
+	}
+	res.render("standings", {title: "In-House #"+cid, user:
+		req.session.userid, cid: cid, pnum: problems.length, load:
+		load2}); });
 router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
         let user = req.query.user;
         let contest = req.query.contest;
@@ -261,7 +301,7 @@ router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
 	if (contest != undefined) contest=Number(contest);
         let submissions = await grabSubs(user, contest);
 	let cid = req.params.id;
-        res.render("contestStatus", {title: "In House #"+cid, user: req.session.userid, cid: cid, submissions: submissions});
+        res.render("contestStatus", {title: "In-House #"+cid, user: req.session.userid, cid: cid, submissions: submissions});
 });
 router.get("/problemset", checkLoggedIn, async (req, res) => {
 	let page = req.query.page;
@@ -282,9 +322,35 @@ router.get("/problemset", checkLoggedIn, async (req, res) => {
 });
 router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.id
 	let vals = await grabProblem(req.params.id);
+	let contestStart=getContestStart(vals.cid);
+	let userid=req.session.userid;
+	if(vals.cid==3) {
+		if([1002379].includes(userid)) contestStart+=50*60000; // shaurya bisht
+		if([1001533].includes(userid)) contestStart+=((4*24)*60+30)*60000; // yicong wang
+		if(getLateTakers(3).includes(userid)) contestStart+=(2*24+20)*60*60000;
+	}
+	else if(vals.cid==4) {
+		if(getLateTakers(4).includes(userid)) contestStart+=(3*24+4)*60*60000; // 6:30 pm on monday
+	}
+
 	vals.title = vals.name;
 	vals.pid = req.params.id;
+	if(!req.session.admin && (new Date()).getTime()<=contestStart) {
+		console.log(userid, "has tried to access problem early for contest", vals.cid, "at time", new Date().getTime());
+		res.send("contest has not started");
+		return;
+	}
+
 	console.log(vals);
+
+	let back  = req.query.back;
+	if (back) {
+		vals.back = back;
+	}
+	else {
+		vals.back = "/grade/problemset";
+	}
+
 	if (req.session.admin || !vals.secret) {
 		console.log("trying to render problem");
 		res.render("gradeProblem", vals);
@@ -294,8 +360,9 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.
 	}
 });
 router.get("/submit", checkLoggedIn, (req, res) => {
-	if (false && !req.session.admin) {
-		res.redirect("/grade/profile")
+	if (false) {
+		res.send("contest ended");
+		//res.redirect("/grade/profile")
 	}
 	else {
 		res.render("gradeSubmit", {problemid: req.query.problem});
@@ -304,6 +371,7 @@ router.get("/submit", checkLoggedIn, (req, res) => {
 
 router.post("/status", checkLoggedIn, async (req, res) => { //eventually change to post to submit
 	//sends file to another website
+	
 
 	let language = req.body.lang;
 	console.log(language);
@@ -323,14 +391,15 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 
 	let problem = await grabProblem(pid);
 	let cid = problem.cid;
+
 	let problemname = problem.name;
 
 	let today = new Date();
 	let timestamp = today.getTime();
-	
+
 	let contestStart=getContestStart(cid);
 	let contestEnd=getContestEnd(cid);
-	if (timestamp<=contestStart) {
+	if (!req.session.admin && timestamp<=contestStart) {
 		res.send("contest currently unavailable");
 	}
 
@@ -338,6 +407,7 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 	console.log("submission id:", sid);
 	await queue(pid, sid);
 	res.redirect("/grade/status");
+	
 });
 
 router.get("/status", checkLoggedIn, async (req, res) => {
@@ -356,9 +426,11 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
 	let vals = await grabStatus(req.params.id);
 	if (vals.user == req.session.userid || req.session.admin) {
 		if (!req.session.admin && vals.insight[0] == 'D') {
-			vals.insight = "You cannot view feedback (not a sample testcase).";
+			//vals.insight = "You cannot view feedback (not a sample testcase).";
+			vals.insight = vals.insight.substring(67);
 		}
 		vals.admin = req.session.admin;
+
 		res.render("status", {submission: vals});
 	}
 	else {

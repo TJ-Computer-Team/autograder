@@ -35,15 +35,21 @@
       <tr>
         <th>#</th>
         <th>Name</th>
+	<% if (locals.problems[0].points != 1000) { %>
+	<th>Points</th>
+	<% } %>
         <th>Solved</th>
       </tr>
       <% for (let i=0; i<locals.problems.length; i++) { %>
       <tr>
         <td class="centertext"><%=i+1%></td>
 	<% if (locals.problems[i].available) { %>
-        <td class="centertext"><a href="/grade/problemset/<%=locals.problems[i].pid%>"><%=locals.problems[i].name%></a></td>
+        <td class="centertext"><a href="/grade/problemset/<%=locals.problems[i].pid%>?back=https://tjctgrader.org/grade/contests/<%=locals.cid%>"><%=locals.problems[i].name%></a></td>
         <% } else { %>
 	<td class="centertext">Problem Not Availabele</td>
+	<% } %>
+	<% if (locals.problems[0].points != 1000) { %>
+	<td class="centertext"><%=locals.problems[i].points%></td>
 	<% } %>
 	<td class="centertext"><%=locals.problems[i].solves%></td>
       </tr>

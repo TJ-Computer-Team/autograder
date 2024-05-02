@@ -23,7 +23,7 @@ async function run() {
         }
         let task = tasks.shift();
         let sub = tasksS.shift();
-        console.log(task, sub);
+        console.log("running task:", task, sub);
         let res = await grabProblem(task);
         let checkid = res.checkid;
         let tl = res.tl;
@@ -35,26 +35,25 @@ async function run() {
 
         let output = undefined, fverdict = "ER", runtime = -1, memory = 100;
 
-        console.log("\n\n\n-------------------");
+        //console.log("\n\n\n-------------------");
 
-
+	// DOESNT WORK await sleep(1000);
 
         await axios.post('http://10.150.0.3:8080/run', querystring.stringify({lang: language, problemid: String(task), code: userCode}))
         .then(res => {
 		return res['data']
         }).then(res =>{
 		insertSubmission(sub, res.verdict, res.tl, memory, res.output);
-		setTimeout(run(), 1000);
+		//setTimeout(run(), 1000);
+		run();
 
 	}).catch((error) => {
-		console.log("ERROR WITH GRADING SERVER");
-                console.log(error);
-		insertSubmission(sub, "ERROR", res.tl, memory, "grading server error");
-		setTimeout(run(), 1000);
+		//console.log("ERROR WITH GRADING SERVER");
+                //console.log(error);
+		insertSubmission(sub, "ERROR", res.tl, memory, "grading server error:\n" + error);
+		//setTimeout(run(), 1000);
+		run();
         });
-
-
-
 }
 
 module.exports = {
@@ -63,5 +62,8 @@ module.exports = {
 	},
 	compileTests: (pid) => {
 		return compileTests(pid);
+	},
+	getQueue: () => {
+		return tasksS; 
 	}
 }

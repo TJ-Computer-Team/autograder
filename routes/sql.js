@@ -190,7 +190,8 @@ async function grabSubs(user, contest) {
 							runtime: results.rows[i].runtime,
 							problemname: results.rows[i].problemname,
 							problemid: results.rows[i].problemid,
-							timestamp: results.rows[i].timestamp
+							timestamp: results.rows[i].timestamp,
+							language: results.rows[i].language
 						}
 						retarr.push(ret);
 					}
@@ -281,7 +282,7 @@ async function insertSubmission(id, verdict, runtime, memory, insight) {
 			client.query(qry,[verdict, runtime, memory, insight, id], (err, results) => {
 				release();
 				if (err) {
-					console.log("an error occured while querying", err);
+					console.log("an error occured while querying to insert submission", err);
 					resolve(false);
 				}
 				else if (results.rows.length == 0) {
@@ -306,7 +307,7 @@ async function createSubmission(user, code, problem, language, problemname, cid,
 			client.query(qry, vals, (err, results) => {
 				release();
 				if (err) {
-					console.log("an error occured while querying", err);
+					console.log("an error occured while querying to create submission", err);
 					resolve(false);
 				}
 				else if (results.rows.length == 0) {
@@ -457,7 +458,7 @@ async function addSol(pid, code, lang){//FIX
 		});
 	});
 }
-async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples){
+async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples, points){
 	return new Promise((res, rej)=>{
 		pl.connect((err, client, release)=>{
 			if(err){
@@ -465,9 +466,9 @@ async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, sec
 				res(false);
 			}
 			console.log(pid, secret, inputtxt, outputtxt, samples);
-			// pid | name | contestid | checkerid | solution | statement | tl | ml | interactive | secret 
+			// pid | name | contestid | checkerid | solution | statement | tl | ml | interactive | secret | points 
 			let qry = `INSERT INTO problems (pid, name, contestid, checkerid,solution, statement, tl, ml, interactive, secret, inputtxt, outputtxt, samples, points)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 1000) ON CONFLICT (pid)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) ON CONFLICT (pid)
 			DO UPDATE SET 
 				name = excluded.name,
 				contestid= excluded.contestid,
@@ -477,12 +478,12 @@ async function addProblem(pid, pname,cid,checkid, sol, state, tl, ml, inter, sec
 				ml= excluded.ml,
 				interactive= excluded.interactive,
 				secret= excluded.secret,
-				points = 1000,
+				points = excluded.points,
 				inputtxt = excluded.inputtxt,
 				outputtxt = excluded.outputtxt,
 				samples = excluded.samples
 			`;
-			client.query(qry, [pid, pname, cid, checkid, sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples], (err, results)=>{
+			client.query(qry, [pid, pname, cid, checkid, sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples, points], (err, results)=>{
 				release();
 				if(err){
 					console.log(err);
@@ -566,8 +567,8 @@ module.exports = {
 	testSql: () => {
 		return testSql();
 	},
-	addProblem: (pid, pname,cid, checkid,sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples) => {
-		return addProblem(pid, pname,cid,checkid, sol,state, tl, ml, inter, secret, inputtxt, outputtxt, samples);
+	addProblem: (pid, pname,cid, checkid,sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples, points) => {
+		return addProblem(pid, pname,cid,checkid, sol,state, tl, ml, inter, secret, inputtxt, outputtxt, samples, points);
 	},
 	addChecker: (checkid, code, lang)=>{
 		return addChecker(checkid, code, lang);

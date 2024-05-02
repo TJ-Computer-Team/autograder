@@ -4,7 +4,7 @@ const axios = require('axios');
 const querystring = require('querystring');
 const router = express.Router({ mergeParams: true });
 const {grab, grabProblem, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, updateTest, addSol, makePublic, updateChecker, grabUsers, grabContestProblems} = require("./sql");
-const {queue, compileTests} = require("./runTests");
+const {queue, compileTests, getQueue} = require("./runTests");
 
 const {processFunction, getToken} = require("../oauth");
 const {check} = require("../profile");
@@ -20,12 +20,20 @@ router.get("/", async (req, res) => {
                 let page = req.query.page;
                 if (page == undefined) page = 0;
                 let start = page*5; //write multipage later
-                let vals = await grabAllProblems()
+                let vals = await grabAllProblems();
+
+		vals.sort(function(a, b) {
+			return a.pid>b.pid? 1:-1;
+		});
+
                 res.render("admin", {problems: vals});
         }
         else {
                 res.redirect("/");
         }
+});
+router.get("/queue", async (req, res) => {
+	res.send(getQueue());
 });
 router.get("/createProblem", async (req, res) => {
         let pid = req.query.pid;
@@ -65,7 +73,7 @@ router.get("/createProblem", async (req, res) => {
                 res.render("portal", payload);
                 //res.render("portal", {checkid:2, ml:0, pts:0, pid: pid, tl:0, pname:"problem name", cid:-1, secret:"", state:"We must evaluate the integral $\\int_1^\\infty \\left(\\frac{\\log x}{x}\\right)^{2011} dx$."});
         }else{
-                res.send("UR NOT ADMIN");
+                res.send("YOU ARE NOT AN ADMIN");
         }
 });
 router.get("/getProblem", async (req, res)=>{
@@ -222,7 +230,7 @@ router.post("/create", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER
         let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
         admin = req.session.admin;
         if(admin){
-                console.log("attempteing to create");
+                console.log("attempting to create a problem");
                 //let problems = await getUserProblems(req.session.userid);
                 let pts= req.body.pts;
                 let pid = req.body.pid;//TAKE CARE OF THISS!!!!
@@ -251,14 +259,14 @@ router.post("/create", async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER
                         "outputtxt":outputtxt,
                         "samples":samples
                 };
-		console.log(secret);
+		//console.log(secret);
                 //console.log(ret);
                 //async function addProblem(pname,cid,checkid, sol, state, tl, ml, inter, secret){
                 //console.log(inputtxt, outputtxt, samples);
-                await addProblem(pid, pname, cid,checkid, '', state, tl, ml, false, secret, inputtxt, outputtxt, samples); 
+                await addProblem(pid, pname, cid,checkid, '', state, tl, ml, false, secret, inputtxt, outputtxt, samples, pts); 
                 res.render("portal", ret);
         }else{
-                res.send("UR NOT ADMIN");
+                res.send("YOU ARE NOT AN ADMIN");
         }
 });
 router.get("/disableAdmin",  async(req, res)=>{//CHANGE GET TO POST AND FIX THE ROUTER !!!!
