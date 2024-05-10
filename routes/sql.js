@@ -118,18 +118,23 @@ async function grabChecker(id) {
 		});
 	});
 }
-async function grabAllProblems(cid) {
+async function grabAllProblems(isAdmin, cid) {
         return new Promise((resolve, reject) => {
                 pl.connect((err, client, release) => {
                         if (err) {
                                 console.log("Error getting client");
                                 resolve(false);
                         }
-                        let qry = "SELECT * FROM problems";
+                        let qry = "SELECT * FROM problems WHERE (problems.secret IS NULL OR problems.secret = false OR problems.secret = $1)";
                         let params = [];
 			if (cid != undefined) {
-				qry  = "SELECT * FROM problems WHERE problems.contestid = $1";
+				qry  = "SELECT * FROM problems WHERE problems.contestid = $1 AND (problems.secret IS NULL OR problems.secret = false OR problems.secret = $2)";
 				params = [cid]
+			}
+			if(isAdmin){
+				params.push(true)
+			}else{
+				params.push(null)
 			}
 			client.query(qry, params, (err, results) => {
                                 release();
@@ -191,7 +196,8 @@ async function grabSubs(user, contest) {
 							problemname: results.rows[i].problemname,
 							problemid: results.rows[i].problemid,
 							timestamp: results.rows[i].timestamp,
-							language: results.rows[i].language
+							language: results.rows[i].language,
+							contest: results.rows[i].contest
 						}
 						retarr.push(ret);
 					}
@@ -217,7 +223,7 @@ async function grabStatus(id) {
 					resolve(false);
 				}
 				else {
-					console.log(results.rows[0]);
+					//console.log(results.rows[0]);
 					let ret = {
 						user: results.rows[0].usr,
 						verdict: results.rows[0].verdict,
@@ -533,6 +539,31 @@ async function grabContestProblems(cid) {
                 });
         });
 }
+async function validateUser(id, password) {
+	return new Promise((resolve, reject) => {
+                pl.connect((err, client, release) => {
+                        if (err) {
+                                console.log("Error getting client");
+                                resolve(false);
+                        }
+                        let qry = `SELECT * FROM users WHERE id = $1 AND pass = $2`;
+                        client.query(qry, [id, password], (err, results) => {
+                                release();
+                                if (err) {
+                                        console.log("an error occured while querying");
+					console.log(err);
+                                        resolve(false);
+                                }
+                                if (results.rows.length == 0) {
+                                        resolve(false);
+                                }
+                                else {
+					resolve(true);
+                                }
+                        });
+                });
+        });
+}
 module.exports = {
 	grab: (id) => {
 		return grab(id);
@@ -540,8 +571,8 @@ module.exports = {
 	grabChecker: (id) => {
 		return grabChecker(id);
 	},
-	grabAllProblems: (cid) => {
-		return grabAllProblems(cid);
+	grabAllProblems: (isAdmin, cid) => {
+		return grabAllProblems(isAdmin, cid);
 	},
 	grabSubs: (user, contest) => {
 		return grabSubs(user, contest);
@@ -590,5 +621,8 @@ module.exports = {
 	},
 	grabContestProblems: (cid) => {
 		return grabContestProblems(cid);
+	},
+	validateUser: (id, password) => {
+		return validateUser(id, password);
 	}
 }

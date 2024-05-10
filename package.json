@@ -15,6 +15,7 @@
     "express-session": "^1.17.3",
     "express-useragent": "^1.0.15",
     "filereader": "^0.10.3",
+    "formidable": "^3.5.1",
     "http": "^0.0.1-security",
     "install": "^0.13.0",
     "katex": "^0.16.3",

@@ -7,20 +7,22 @@ const querystring = require('querystring');
 
 let tasks = [], tasksS = [];
 let running = false;
+let queuePaused = false;
 function queue(pid, sid) {
 	tasks.push(pid);
 	tasksS.push(sid);
 	//console.log(pid, sid);
-	if (!running) {
+	if (!running && !queuePaused) {
 		run();
 		running = true;
 	}
 }
 async function run() {
-        if (tasks.length == 0) {
+        running = true;
+	if (tasks.length == 0) {
                 running = false;
                 return;
-        }
+        } else {
         let task = tasks.shift();
         let sub = tasksS.shift();
         console.log("running task:", task, sub);
@@ -45,15 +47,16 @@ async function run() {
         }).then(res =>{
 		insertSubmission(sub, res.verdict, res.tl, memory, res.output);
 		//setTimeout(run(), 1000);
-		run();
+		if (!queuePaused) run();
 
 	}).catch((error) => {
 		//console.log("ERROR WITH GRADING SERVER");
                 //console.log(error);
 		insertSubmission(sub, "ERROR", res.tl, memory, "grading server error:\n" + error);
 		//setTimeout(run(), 1000);
-		run();
+		if (!queuePaused) run();
         });
+	}
 }
 
 module.exports = {
@@ -64,6 +67,29 @@ module.exports = {
 		return compileTests(pid);
 	},
 	getQueue: () => {
-		return tasksS; 
+		payload = {
+			tasks: tasksS,
+			paused: queuePaused,
+		}
+		return payload; 
+	},
+	toggleQueue: (status) => {
+		queuePaused = status;
+		return;
+	},
+	run: () => {
+		run();
+		return;
+	},
+	skip: (sid) => {
+		for (let i=0; i<tasks.length; i++) {
+			if (tasksS[i] == sid) {
+				tasksS.splice(i, 1);
+				tasks.splice(i, 1);
+				insertSubmission(sid, "SKIPPED", 0, 0, "Your submission was maunally skipped by an admin.");
+				break;
+			}
+		}
+		return;
 	}
 }

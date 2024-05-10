@@ -23,6 +23,7 @@ async function check(user_data, req, res) {
 			req.session.username = results.rows[0].username;
 			req.session.userid = results.rows[0].id;
 			req.session.admin = results.rows[0].admin;
+			req.session.tjioi = Math.floor(parseInt(req.session.userid)/100)==2024;
 			if (req.session.admin) {
 				req.session.name = "[Admin] " + req.session.name;
 			}
@@ -33,7 +34,7 @@ async function check(user_data, req, res) {
 			}
 			else {
 				res.redirect("/grade/profile");
-			}	
+			}
 		}
 	}
 	catch (error) {

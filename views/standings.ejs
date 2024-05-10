@@ -49,7 +49,13 @@
 	  <td class="centertext"><%=locals.load[i].solved%></td>
           <td class="centertext"><%=locals.load[i].penalty%></td>
           <% for (let j=0; j<locals.pnum; j++) { %>
-            <td class="centertext"><%=locals.load[i].problems[j]%></td>
+	    <% if(locals.load[i].problems[j]>0) { %>
+            	<td class="centertext" style="color:lime;" ><%=locals.load[i].problems[j]%></td>
+	    <% } else if(locals.load[i].problems[j]<0) { %>
+            	<td class="centertext" style="color:red;" ><%=locals.load[i].problems[j]%></td>
+	    <% } else { %>
+            	<td class="centertext" ><%=locals.load[i].problems[j]%></td>
+	    <% } %>
           <% } %>
         </tr>
       <% } %>

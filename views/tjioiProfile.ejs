@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../profile.css"/>
+    <title>Profile</title>
+</head>
+<body>
+    <div class="navbar">
+        <ul class="nb">
+            <li class="nb"><a class="active" href="/grade/profile">Home</a></li>
+            <li class="nb"><a href="/grade/status">Submissions</a></li>
+            <li class="nb"><a href="/grade/contests">Contests</a></li>
+            <li class="nb"><a href="/grade/problemset">Problemset</a></li>
+            <li class="nb"><a href="/grade/submit">Submit</a></li>
+	    <li class="nb"><a href="/grade/info">Rules and Info</a></li>
+	    <div class ="topnav-right">
+            <li class="nb">
+                    <form action="/grade/logout" method="POST">
+                        <button class="logoutbtn" type="submit">Log Out</button>
+                    </form>
+            </li>
+            </div>
+	    
+        </ul>
+    </div>
+    <div class="container">
+    <div class="info-block">
+        <div class="title"><strong>Profile</strong></div>   
+	<div class="info">Name: <%=locals.name%></div>
+	<div class="info">Username: <%=locals.username%></div>
+    </div>
+    <div class="info-block">
+        <div class="info">Hi! Feel free to look around the website and access the practice contest when it opens. If you find any technical problems, please let an organizer know.</div>
+    </div>
+    <div class="info-block">
+        <div class="title"><strong>Schedule</strong></div>
+	<div class="info" id="schedule">
+	<table>
+            <tr>
+              <th>9:30-10:00</th>
+              <th>Arrival and check-in</th>
+            </tr>
+            <tr>
+              <th>10:00-11:30</th>
+              <th>Set-up, opening ceremony, practice round, etc.</th>
+            </tr>
+            <tr>
+              <th>11:30-12:30</th>
+              <th>Lunch</th>
+            </tr>
+            <tr>
+              <th>12:30-3:30</th>
+              <th>Coding time</th>
+            </tr>
+            <tr>
+              <th>3:30-4:00</th>
+              <th>Award ceremony</th>
+            </tr>
+          </table>
+	</div>
+    </div>
+    </div>
+    
+</body>
+</html>

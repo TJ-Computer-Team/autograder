@@ -22,6 +22,7 @@
     <div class='main-block'>
         <div class="title">Contests</div>
     </div>
+    <% if(!locals.tjioi) { %>
     <div class='main-block' id="problems">
         <ul class="sl">
 	    <li class="sl">
@@ -52,5 +53,23 @@
 	    </li>
         </ul>
     </div>
+    <% } else { %>
+    <div class='main-block' id="problems">
+        <ul class="sl">
+	    <li class="sl">
+		<a href=<%="/grade/contests/202401"%>>
+		     <div class="problem-text">TJIOI Practice Contest</div>
+		</a>
+	    </li>
+        </ul>
+        <ul class="sl">
+	    <li class="sl">
+		<a href=<%="/grade/contests/202402"%>>
+		     <div class="problem-text">TJIOI 2024</div>
+		</a>
+	    </li>
+        </ul>
+    </div>
+    <% } %>
 </body>
 </html>

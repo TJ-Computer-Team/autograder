@@ -8,6 +8,7 @@ const fr = 0, fg = 0, fb = 255;
 const lr = 232, lg = 0, lb = 228;
 
 let visited = [];
+let cntT = 0;
 
 function bfs(start) {
     let ptr = 0;
@@ -20,7 +21,19 @@ function bfs(start) {
     from.push(-1);
     vis[start] = true;
     let alt = false;
+    
     let intid = setInterval(function () {
+    	let titleText = document.getElementById('title');
+	
+	if (cntT < 40) {
+		titleText.innerHTML = "<strong><em>TJCT Grader</em></strong>";
+		cntT += 1;
+	} else {
+		titleText.innerHTML = "<strong><em>TJIOI 2024</em></strong>";
+		if (cntT >= 80) cntT = 0;
+		cntT += 1;
+	}
+
         if (!alt && from[ptr] != -1) {
             let cur = q[ptr];
             let prev = from[ptr];

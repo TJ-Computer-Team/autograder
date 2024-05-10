@@ -4,7 +4,7 @@ const axios = require('axios');
 const querystring = require('querystring');
 const router = express.Router({ mergeParams: true });
 const {grab, grabProblem, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, updateTest, addSol, makePublic, updateChecker, grabUsers, grabContestProblems} = require("./sql");
-const {queue, compileTests, getQueue} = require("./runTests");
+const {queue, compileTests, getQueue, toggleQueue, run, skip} = require("./runTests");
 
 const {processFunction, getToken} = require("../oauth");
 const {check} = require("../profile");
@@ -20,7 +20,8 @@ router.get("/", async (req, res) => {
                 let page = req.query.page;
                 if (page == undefined) page = 0;
                 let start = page*5; //write multipage later
-                let vals = await grabAllProblems();
+                let vals = await grabAllProblems(req.session.admin);
+		console.log(vals)
 
 		vals.sort(function(a, b) {
 			return a.pid>b.pid? 1:-1;
@@ -32,8 +33,49 @@ router.get("/", async (req, res) => {
                 res.redirect("/");
         }
 });
+
+router.get("/skip", async (req, res) => {
+	let admin = req.session.admin;
+	if (admin) {
+		let sid = req.query.sid;
+		await skip(sid);
+		res.redirect("/admin/queue");
+	} else {
+		res.redirect("/");
+	}
+});
+
+router.get("/togglepause", async (req, res) => {
+	let admin = req.session.admin;
+	if (admin) {
+		let current = req.query.paused;
+		//console.log(current);
+		if (current == 'false') {
+			//pause the thing
+			toggleQueue(true);
+		} else {
+			//unpause
+			toggleQueue(false);
+			run();
+		}
+		
+		res.redirect("/admin/queue");
+	} else {
+		res.redirect("/");
+	}
+});
+
 router.get("/queue", async (req, res) => {
-	res.send(getQueue());
+	let admin = req.session.admin;
+	if (admin) {
+		let payload = getQueue();
+		let tasks = payload.tasks;
+		let paused = payload.paused;
+		
+		res.render("adminqueue", {submissions: tasks, paused: paused});
+	} else {
+		res.redirect("/");
+	}
 });
 router.get("/createProblem", async (req, res) => {
         let pid = req.query.pid;
@@ -52,10 +94,10 @@ router.get("/createProblem", async (req, res) => {
                         payload = {
                                 pid: pid,
                                 pname: undefined,
-                                cid: undefined,
+                                cid: -1 ,
                                 state: undefined,
-                                checkid: undefined,
-                                pts: 1000,
+                                checkid: -1,
+                                pts: 1,
                                 tl: 1000,
                                 ml: 256,
                                 secret: true,
@@ -274,4 +316,5 @@ router.get("/disableAdmin",  async(req, res)=>{//CHANGE GET TO POST AND FIX THE 
         if(admin) req.session.admin = false;
 	res.redirect("/");
 });
+
 module.exports = router;

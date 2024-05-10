@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../profile.css"/>
+    <link rel="stylesheet" type="text/css" href="/../profile.css"/>
     <title>My Submissions</title>
 </head>
 <body>
@@ -20,7 +20,7 @@
     </div>
     <br>
     <div class='main-block'>
-        <div class="title">Submissions<% if (locals.viewAsAdmin == true) { %> - viewing as Admin <% } %></div>
+        <div class="title">Submissions<% if (locals.viewAsAdmin == true) { %> - Viewing as Admin <% } %></div>
     </div>
     <div class='main-block' id="submissions">
 		<table>
@@ -33,11 +33,11 @@
 				<th>Runtime</th>
 				<th>Verdict</th>
 			</tr>
-			<% for (let i=locals.submissions.length-1; i>=0; i--) { %>
+			<% for (let i=locals.submissions.length-1-(locals.page-1)*100; i>=Math.max(locals.submissions.length-locals.page*100, 0); i--) { %>
 			<tr>
 				<td>
 					<a href = <%="/grade/status/"+locals.submissions[i].id%>>
-						#<%=locals.submissions[i].id%>
+						View #<%=locals.submissions[i].id%>
 					</a>
 				</td>
 				<% if (locals.viewAsAdmin == true) { %>
@@ -61,6 +61,7 @@
 			</tr>
 			<% } %>
 		</table>
+    	<a href=<%= "/grade/status/?page="+(parseInt(locals.page)+1) %>>Next Page</a>
     </div>
 </body>
 </html>

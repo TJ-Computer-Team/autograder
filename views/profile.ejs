@@ -16,17 +16,21 @@
             <li class="nb"><a href="/grade/problemset">Problemset</a></li>
             <li class="nb"><a href="/grade/submit">Submit</a></li>
 	    <li class="nb"><a href="/grade/info">Rules and Info</a></li>
+	    <div class ="topnav-right">
+	    <li class="nb">
+		    <form action="/grade/logout" method="POST">
+			<button class="logoutbtn" type="submit">Log Out</button>
+		    </form>
+	    </li>
+	    </div>
+
         </ul>
     </div>
     <div class="info-block">
-        <div class="title"><strong>Profile</strong></div>    
-        <div class="info">Name: <%=locals.name%></div>
-        <div class="info">Username: <%=locals.username%></div>
+        <div class="title"><strong>Profile</strong></div>   
+	<div class="info">Name: <%=locals.name%></div>
+	<div class="info">Username: <%=locals.username%></div>
     </div>
-    <form class="logout" action="/grade/logout" method="POST">
-        <div class="option-buttons">
-            <button class="button" type="submit">Log Out</button>
-        </div>
-    </form>
+    
 </body>
 </html>

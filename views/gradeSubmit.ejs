@@ -19,19 +19,35 @@
     </div>
     <div class="main-block">
         <div class="title">Submit</div>
-        <div class="problem-text">java users, make sure you are using package "subcode" and naming the class "test"</div>
+        <div class="problem-text">Java users, make sure you are using package "subcode" and naming the class "test"</div>
     </div>
     <div class="main-block">
         <form action="/grade/status" method="POST">
             <div class="problem-text">
-                <label class="indent" for="problemid">Problem ID</label>
-                <input type="number" id="problemid" name="problemid" value=<%=locals.problemid%> max="100">
+                <select id="problemid" name="problemid">
+	      <% for (let i=0; i<locals.problem.length; i++) { %>
+	      <option value= <%= locals.problem[i].pid %> > <%= locals.problem[i].name %> </option>
+		<% } %>	
+		</select>
+		<br>
             </div>
             <div class="problem-text">
                 <select id="lang" name="lang">
+		<% if( locals.lastlang == "cpp"){ %>
                     <option value="cpp">C++</option>
+		<% }else{ %>
+                    <option value="cpp" selected>C++</option>
+		<% } %>
+		<% if( locals.lastlang == "java"){ %>
+                    <option value="java" selected>Java</option>
+		<% }else{ %>
                     <option value="java">Java</option>
+		<% } %>
+		<% if( locals.lastlang == "python"){ %>
+                    <option value="python" selected>Python</option>
+		<% }else{ %>
                     <option value="python">Python</option>
+		<% } %>
                 </select>
                 <br>
                 <textarea id="codeinput" name="code" rows="30" cols="80" spellcheck="false" placeholder="Insert code here"></textarea>

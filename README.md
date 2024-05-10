@@ -1,18 +1,25 @@
-# TJ Computer Team Autograder
+## TJ Computer Team Autograder
 
-TJ Computer Team Members: You can find all information about In-Houses and the club here:
-[https://activities.tjhsst.edu/ict/](https://activities.tjhsst.edu/ict/)
-
+TJ Computer Team Members: You can find all information about in-houses and the club here: https://activities.tjhsst.edu/ict/.
+This grader website can be accessed at https://tjctgrader.org/.
 Please contact us through tjctgrader@gmail.com if you have any questions or concerns.
 
-Prospective Webmasters, these things may interest you.
+This repository contains most of the website that deals with how pages are rendered to users. The part of the website that runs code and judges it can be found at this repository: https://github.com/scienceqiu/coderunner.
 
-This repository contains most of the frontend. The backend can be found at this repository: [https://github.com/scienceqiu/coderunner](https://github.com/scienceqiu/coderunner).
+### Getting Started
 
-Public: Homepage Animation, mainly visual
-Routes: Main grader code
+Public folder: Homepage Animation, mainly visual
+
+Routes folder: Main grader code
 - admin.js = admin functions
 - grade.js = main functions
 - runTests.js = portal to VM2 (where the code gets run)
+- sql.js = functions to interact with database
 
-Current Developers: Daniel Qiu, Johnny Liu, & Gabriel Xu
+Views folder: EJS files that are rendered to users
+
+To run this locally, download the files, install Node.js and use npm to install the necessary packages. Then, run:
+```node app.js```.
+
+Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
+

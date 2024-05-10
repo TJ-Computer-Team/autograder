@@ -12,10 +12,10 @@
 <body>
   <canvas width='0' height='0' id="animation" class="animation-area"></canvas>
   <script type="text/javascript" src="animate.js"></script>
-  <br><br><br><br><br>
+  <br><br><br>
   <section class="main">
     <div class="bgbox">
-      <div class="title"><strong><em>TJCT Grader</em></strong></div>
+      <div id="title" class="title"><strong><em>TJCT Grader</em></strong></div>
       <br>
       <div class="cnt_buttons">
         <a class="button_link" id='login' href=<%=locals.loginurl%>>
@@ -29,7 +29,16 @@
           </div>
         </a>
       </div>
+      <br>
+      <div class="cnt_buttons">
+        <a class="button_link" id='login' href='/grade/tjioilogin'>
+          <div class="button">
+            TJIOI Login
+          </div>
+        </a>
+      </div>
     </div>
+    
     <div class="subbox">
       <div class="subtext">Welcome to the automatic grader for TJ Computer Team. Please note that this website is hosted
         external to Director. Please email tjctgrader@gmail.com and  message Johnny Liu, Daniel Qiu, and Gabriel Xu if

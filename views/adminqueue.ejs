@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../profile.css"/>
+    <title>Problemset</title>
+</head>
+<body>
+    <br>
+    <div class='main-block'>
+        <div class="title">Admin Panel - Queue Manager</div>
+    </div>
+    <div class='main-block' id="problems">
+	<table>
+	<tr>
+        <th>Press to go to submission</th>
+        <th>Press to skip submission</th>
+      	</tr>
+      	
+	<% for (let i=0; i<locals.submissions.length; i++) { %>
+        <tr>
+        
+	<td class="centertext"> 
+		<a href = <%="/grade/status/" + locals.submissions[i]%>>
+                        <div class="problem-text">Submission ID <%=locals.submissions[i]%></div>
+                </a>
+	</td>
+	<td class="centertext">
+		<a href = <%="/admin/skip?sid=" + locals.submissions[i]%>>
+                        <div class="problem-text">Skip</div>
+                </a>
+	</td>
+
+        </tr>
+        <% } %>
+    	</table>
+    </div>
+    <div class="option-buttons">
+	<div class="problem-text">Queue is currently paused: <%=locals.paused%></div>
+        <button class="button">
+    	<a href = "/admin/togglePause?paused=<%=locals.paused%>">
+        	<div class="problem-text">Pause / Unpause Queue</div>
+        </a>
+	</button>
+
+	</div>
+</body>
+</html>

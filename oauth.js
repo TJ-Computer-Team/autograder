@@ -1,4 +1,3 @@
-
 const { AuthorizationCode } = require('simple-oauth2');
 const axios = require('axios');
 const config = {
