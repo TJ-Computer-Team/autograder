@@ -20,6 +20,11 @@ Views folder: EJS files that are rendered to users
 
 To run this locally, download the files, install Node.js and use npm to install the necessary packages. Then, run:
 ```node app.js```.
+<<<<<<< HEAD
 
 Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 
+=======
+
+Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
+>>>>>>> 959371d94876ba2b40593bd7df5eb02c51da9bdf
