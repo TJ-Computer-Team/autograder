@@ -22,4 +22,3 @@ To run this locally, download the files, install Node.js and use npm to install 
 ```node app.js```.
 
 Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
-
