@@ -32,7 +32,7 @@ app.get("/test", async (req, res) => {
 app.get("/", async (req, res) => {
     let source = req.headers['user-agent']
     let ua = useragent.parse(source);
-    
+
     if (ua.isMobile) {
 	req.session.mobile = true;
 	//res.send("We have detected that you are on mobile. Please note that the only feature currently available on mobile is attendance.")
