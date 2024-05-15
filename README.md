@@ -22,6 +22,8 @@ To run this locally, download the files, install Node.js and use npm to install 
 ```node app.js```.
 
 Developers (contact if there are any questions/issues):
+
 2023-2024: Gabriel Xu, Daniel Qiu, Johnny Liu
+
 2022-2023: Johnny Liu, Daniel Qiu
 
