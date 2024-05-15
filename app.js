@@ -1,8 +1,8 @@
 require('dotenv').config();
+const session = require('express-session');
 const express = require("express");
 const app = express();
 const port = 3000;
-const session = require('express-session');
 const gradeRouter = require("./routes/grade");
 const adminRouter= require("./routes/admin");
 
@@ -91,6 +91,5 @@ app.post("/confirm", async (req, res) => {
 		res.send("ERROR" + error);
 	}
 });
-
 console.log("start");
 app.listen(port);

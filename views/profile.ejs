@@ -14,7 +14,6 @@
             <li class="nb"><a href="/grade/status">Submissions</a></li>
             <li class="nb"><a href="/grade/contests">Contests</a></li>
             <li class="nb"><a href="/grade/problemset">Problemset</a></li>
-            <li class="nb"><a href="/grade/submit">Submit</a></li>
 	    <li class="nb"><a href="/grade/info">Rules and Info</a></li>
 	    <div class ="topnav-right">
 	    <li class="nb">
@@ -26,11 +25,22 @@
 
         </ul>
     </div>
+    
+ <div id="particles-js" class="particles-js">   
+</div>
+    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+    /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+particlesJS.load('particles-js', '../particles.json', function() {
+  console.log('callback - particles.js config loaded');
+});
+    </script>
     <div class="info-block">
         <div class="title"><strong>Profile</strong></div>   
 	<div class="info">Name: <%=locals.name%></div>
 	<div class="info">Username: <%=locals.username%></div>
     </div>
+
     
 </body>
 </html>
