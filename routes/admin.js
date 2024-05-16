@@ -317,4 +317,38 @@ router.get("/disableAdmin",  async(req, res)=>{//CHANGE GET TO POST AND FIX THE 
 	res.redirect("/");
 });
 
+router.get("/uploadfiletest", async (req, res) => {
+        res.render("danielorz.ejs")
+});
+
+router.post('/uploadfiletest', function (req, res) {
+	let sampleFile = req.files;
+        console.log(sampleFile.files);
+	let filename = sampleFile.name;
+        console.log(filename);
+  	if (!req.files || Object.keys(req.files).length === 0) {
+    		return res.status(400).send('No files were uploaded.');
+  	}
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+
+  // Use the mv() method to place the file somewhere on your server
+  //sampleFile.mv('/somewhere/on/your/server/filename.jpg', function(err) {
+   // if (err)
+    //  return res.status(500).send(err);
+
+
+	//await axios.post('http://10.150.0.3:8080/polygon', querystring.stringify({lang: language, problemid:>
+        //.then(res => {
+        //        
+        //}).then(res =>{
+
+        //}).catch((error) => {
+        //        console.log("ERROR WITH GRADING SERVER");
+        //        console.log(error);
+        //});
+    	//res.send('File uploaded!');
+  //});
+});
+
 module.exports = router;

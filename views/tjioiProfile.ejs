@@ -26,11 +26,22 @@
 	    
         </ul>
     </div>
-    <div class="container">
+ <div id="particles-js" class="particles-js">   
+</div>
+    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+    /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+particlesJS.load('particles-js', '../particles.json', function() {
+  console.log('callback - particles.js config loaded');
+});
+    </script>
+    <div class="container"> 
+
+    
     <div class="info-block">
-        <div class="title"><strong>Profile</strong></div>   
-	<div class="info">Name: <%=locals.name%></div>
-	<div class="info">Username: <%=locals.username%></div>
+    <div class="title"><strong>Profile</strong></div>   
+    <div class="info">Name: <%=locals.name%></div>
+    <div class="info">Username: <%=locals.username%></div>
     </div>
     <div class="info-block">
         <div class="info">Hi! Feel free to look around the website and access the practice contest when it opens. If you find any technical problems, please let an organizer know.</div>

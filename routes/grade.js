@@ -11,7 +11,9 @@ const FileReader = require('filereader');
 const csvtojson = require('csvtojson');
 const upload = require('express-fileupload');
 const formidable = require('formidable').formidable;
+
 const lastSubmission = new Map();
+router.use(upload());
 
 function getContestStart(cid) {	
         let contestStart;
@@ -25,7 +27,7 @@ function getContestStart(cid) {
 	else if (cid==4)
 		startStr="2024-02-23T19:30:00Z";
 	else if (cid==202401)
-		startStr="2024-05-09T16:30:00Z"; // back to +4
+		startStr="2024-05-11T14:00:00Z"; // back to +4
 	else if (cid==202402)
 		startStr="2024-05-11T16:30:00Z";
 	else
@@ -46,7 +48,7 @@ function getContestEnd(cid) {
 		endStr="2024-02-23T21:00:00Z";
 	else if (cid==202401)
 		endStr="2024-05-11T15:30:00Z";
-	else if (cid==202402)
+	else if (cid==202402 || cid == "202402")
 		endStr="2024-05-11T19:30:00Z";
 	else endStr="";
 	contestEnd=new Date(endStr).getTime();
@@ -57,6 +59,31 @@ function getLateTakers(cid) {
 	//if(cid==4) return [1002636, 1001207, 1001608, 1002135];//svaran, avni, arjun, olivia
 	return [];
 }
+
+router.get("/uploadfiletest", async (req, res) => {
+	res.render("danielorz.ejs")
+});
+
+router.post('/uploadfiletest', function (req, res) {
+	
+  let sampleFile = req.files;
+	console.log(sampleFile.files);
+let filename = sampleFile.name;
+	console.log(filename);
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+
+  // Use the mv() method to place the file somewhere on your server
+  //sampleFile.mv('/somewhere/on/your/server/filename.jpg', function(err) {
+   // if (err)
+    //  return res.status(500).send(err);
+
+    res.send('File uploaded!');
+  //});
+});
 
 router.get("/authlogin", async (req, res) => {
 	if (req.session.loggedin) {
@@ -163,33 +190,21 @@ router.get("/contests", checkLoggedIn, async (req, res) => {
 router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 	let cid = req.params.id;
 	let problems = await grabContestProblems(cid);
-        var timeMessage="Good Luck!";
+	if (problems== undefined){
+		problems = []
+	}
 	let time = (new Date()).getTime();
 	let contestStart = getContestStart(req.params.id);
 	let contestEnd = getContestEnd(req.params.id);
-	let timeLeft=0;
-	if (time < contestStart) {
-		timeLeft=contestStart-time;
-		timeMessage="Contest starts in: ";
-	} else if (time < contestEnd) {
-		timeLeft=contestEnd-time;
-		timeMessage="Contest ends in: ";
-	}
-	if(timeLeft>0) {
-		timeLeft=parseInt(timeLeft/1000);
-		let seconds=timeLeft%60;
-		timeLeft=parseInt(timeLeft/60);
-		let minutes=timeLeft%60;
-		timeLeft=parseInt(timeLeft/60);
-		let hours=timeLeft;
-		if(minutes<10) minutes="0"+minutes;
-		if(seconds<10) seconds="0"+seconds;
-		timeMessage+=""+hours+":"+minutes+":"+seconds;
-	}
-
 	let title = "In-House #"+cid;
 	if (cid==202401) title="Practice Contest";
 	else if(cid==202402) title="TJIOI 2024";
+	let timeMessage = contestEnd;
+	let timeType="end";
+	if (time < contestStart) {
+		timeType="start";
+		timeMessage = contestStart;
+	}
 	var ordered=[];
 	for(let i=0; i<problems.length; i++) {
 		if(true) {
@@ -239,12 +254,12 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 	});
 	
 	if(ordered.length>0)
-		res.render("contest", {title: title, problems: ordered, user: req.session.userid, cid: cid, timeStatus: timeMessage});
+		res.render("contest", {title: title, problems: ordered, user: req.session.userid, cid: cid, timeStatus: timeMessage, timeType: timeType});
 	else
 		res.redirect('/grade/contests');
 });
 router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
-        let cid = req.params.id;
+	let cid = req.params.id;
         let subs = await grabSubs(undefined, cid);
         let users = await grabUsers();
         let problems = await grabContestProblems(cid);
@@ -357,7 +372,7 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
 router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
         let user = req.query.user;
         let contest = req.query.contest;
-        let admin = await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
+        let admin = req.session.admin; //await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
         if (user == undefined && contest == undefined && !admin) {
                 user = req.session.userid;
         }
@@ -368,6 +383,16 @@ router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
 	let title="In-House #"+cid;
 	if (cid == 202401) title="Practice Contest";
 	else if (cid == 202402) title="TJIOI 2024";
+
+	
+	if (contest != undefined) {
+                let contestStart=getContestStart(cid);
+                submissions=submissions.filter(function(elem) {
+                        return req.session.admin || (elem.timestamp > contestStart);
+                });
+        }
+	
+
         res.render("contestStatus", {title: title, user: req.session.userid, cid: cid, submissions: submissions});
 });
 router.get("/problemset", checkLoggedIn, async (req, res) => {
@@ -428,17 +453,22 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.
 	}
 });
 router.get("/submit", checkLoggedIn, async (req, res) => {
-	if (false) {
-		res.send("contest ended");
-		//res.redirect("/grade/profile")
+	user = req.query.user
+	last = await grabSubs(user)
+	problems = await grabAllProblems(req.session.admin);
+	let problemname;
+	for (let i=0; i<problems.length; i++) {
+		if (problems[i].pid == req.query.problem) problemname = problems[i].name;
 	}
-	else {
-		user = req.query.user
-		last = await grabSubs(user)
-		problems = await grabAllProblems(req.session.admin)
-		lastSub = last[last.length-1].language
-		res.render("gradeSubmit", {problemid: req.query.problem, lastlang: lastSub, problem: problems});
-	}
+	problems = problems.filter(function (elem) {
+		return req.session.tjioi ^ elem.contestid < 202400;
+	});
+	problems.sort(function(a, b) {
+		if (a.pid < b.pid) return -1;
+		return 1; 
+	});
+	lastSub = last[last.length-1].language;
+	res.render("gradeSubmit", {problemid: req.query.problem, problemname: problemname, lastlang: lastSub, problem: problems});
 });
 
 router.post("/status", checkLoggedIn, async (req, res) => { //eventually change to post to submit
@@ -468,6 +498,24 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 
 	let today = new Date();
 	let timestamp = today.getTime();
+
+	if(req.files && Object.keys(req.files).length !=0){
+		  let sampleFile = req.files.files;
+		reg = /^.*\.(py|java|cpp)$/i
+		language= sampleFile.name.match(reg)
+		if(language==null){
+			res.send("please change file extension");
+			return;
+		}
+		language = language[1]
+
+		if(language=="py"){
+			language = 'python';
+		}
+		console.log(language);
+		file = sampleFile.data.toString()
+		console.log(file);
+	}
 
 	let contestStart=getContestStart(cid);
 	let contestEnd=getContestEnd(cid);
@@ -502,6 +550,17 @@ router.get("/status", checkLoggedIn, async (req, res) => {
 		user = req.session.userid;
 	}
 	let submissions = await grabSubs(user, contest);
+
+	/*
+	if (contest != undefined) {
+		let contestStart=getContestStart(parseInt(contest));
+		submissions=submissions.filter(function(elem) {
+			return req.session.admin || (elem.timestamp > contestStart);
+		});
+		res.send("SDKL:ASKD:LSA");
+	}
+	*/
+
 	submissions=submissions.filter(function(elem) {
 		return req.session.tjioi ^ elem.contest<202400;
 	});
@@ -512,7 +571,7 @@ router.get("/status", checkLoggedIn, async (req, res) => {
 router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
 	let vals = await grabStatus(req.params.id);
 	if (vals.user == req.session.userid || req.session.admin) {
-		if (!req.session.admin && vals.insight[0] == 'D') {
+		if (!req.session.admin &&vals.insight!=undefined && vals.insight[0] == 'D') {
 			vals.insight = "You cannot view feedback (not a sample testcase).";
 			//vals.insight = vals.insight.substring(67);
 		}
@@ -526,12 +585,8 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
 });
 
 function checkLoggedIn(req, res, next) {
-	/*
-	if (!req.session.admin) {
-		res.send("The TJ Computer Team Grader will be down for maintenance in preparation for TJIOI. We hope to see you there!");
-	}
-	else {
-	*/
+	
+	
 	if (req.session.loggedin) {
 		if (req.session.mobile) {
 			res.redirect("/grade/attendance");
@@ -543,7 +598,6 @@ function checkLoggedIn(req, res, next) {
 	else {
 		res.redirect("/");
 	}
-	//}
 }
 
 module.exports = router;

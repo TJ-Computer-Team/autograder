@@ -17,16 +17,26 @@
 	    <li class="nb"><a href="/grade/info">Rules and Info</a></li>
         </ul>
     </div>
+ <div id="particles-js" class="particles-js">   
+</div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+    /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+particlesJS.load('particles-js', '../particles.json', function() {
+  console.log('callback - particles.js config loaded');
+});
+    </script>
     <div class="main-block">
         <div class="title">Submit</div>
         <div class="problem-text">Java users, make sure you are using package "subcode" and naming the class "test"</div>
     </div>
     <div class="main-block">
-        <form action="/grade/status" method="POST">
+        <form action="/grade/status" method="POST" enctype="multipart/form-data">
             <div class="problem-text">
-                <select id="problemid" name="problemid">
-	      <% for (let i=0; i<locals.problem.length; i++) { %>
-	      <option value= <%= locals.problem[i].pid %> > <%= locals.problem[i].name %> </option>
+		<select id="problemid" name="problemid">
+	        <% for (let i=0; i<locals.problem.length; i++) { %>
+			<option value=<%= locals.problem[i].pid %> <% if(locals.problem[i].pid==locals.problemid) { %> selected  <% } %> > <%= locals.problem[i].pid + " - " + locals.problem[i].name %> </option>
 		<% } %>	
 		</select>
 		<br>
@@ -50,8 +60,12 @@
 		<% } %>
                 </select>
                 <br>
-                <textarea id="codeinput" name="code" rows="30" cols="80" spellcheck="false" placeholder="Insert code here"></textarea>
+                <textarea id="codeinput" name="code" rows="20" cols="150" spellcheck="false" placeholder="Insert code here"></textarea>
             </div>
+	    <div class="problem-text">
+	    OR USE FILE UPLOAD HERE
+	    </div>
+	    <input type='file' name='files'>
             <div class="option-buttons">
                 <button class="button" type="submit">Submit</button>
             </div>
@@ -59,7 +73,7 @@
     </div>
 
 <script type="text/javascript">
-		document.getElementById('codeinput').addEventListener('keydown', function(e) {
+  document.getElementById('codeinput').addEventListener('keydown', function(e) {
   if (e.key == 'Tab') {
     e.preventDefault();
     var start = this.selectionStart;

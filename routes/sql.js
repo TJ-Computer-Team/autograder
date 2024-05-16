@@ -159,6 +159,12 @@ async function grabSubs(user, contest) {
 				console.log("Error getting client");
 				resolve(false);
 			}
+			if(isNaN(contest)){
+				contest = undefined;
+			}
+			if(isNaN(user)){
+				user = undefined;
+			}
 			let qry = undefined;
 			let params = [];
 			if (contest == undefined && user == undefined) {
@@ -528,7 +534,8 @@ async function grabContestProblems(cid) {
                                 res(false);
                         }
                         let qry = `SELECT * FROM problems WHERE contestid = $1`;
-                        client.query(qry, [cid], (err, results)=>{
+                        console.log("CID HERE", cid);
+			client.query(qry, [cid], (err, results)=>{
                                 release();
                                 if(results.rows.length==0){
                                         res(false);
@@ -566,10 +573,13 @@ async function validateUser(id, password) {
 }
 module.exports = {
 	grab: (id) => {
-		return grab(id);
+		if (Number(id))
+			return grab(id);
+		return;
 	},
 	grabChecker: (id) => {
-		return grabChecker(id);
+		if (Number(id))
+			return grabChecker(id);
 	},
 	grabAllProblems: (isAdmin, cid) => {
 		return grabAllProblems(isAdmin, cid);
@@ -578,16 +588,24 @@ module.exports = {
 		return grabSubs(user, contest);
 	},
 	grabStatus: (id) => {
-		return grabStatus(id);
+		if (Number(id))
+			return grabStatus(id);
+		return;
 	},
 	grabProblem: (id) => {
-		return grabProblem(id);
+		if (Number(id))
+			return grabProblem(id);
+		return;
 	},
 	grabTests: (id)=>{
-		return grabTests(id);
+		if (Number(id))
+			return grabTests(id);
+		return;
 	},
 	grabProfile: (id)=>{
-		return grabProfile(id);
+		if (Number(id))
+			return grabProfile(id);
+		return;
 	},
 	insertSubmission: (id, verdict, runtime, memory, insight) => {
 		return insertSubmission(id, verdict, runtime, memory, insight);
@@ -620,7 +638,9 @@ module.exports = {
 		return grabUsers();
 	},
 	grabContestProblems: (cid) => {
-		return grabContestProblems(cid);
+		if (Number(cid))
+			return grabContestProblems(cid);
+		return;
 	},
 	validateUser: (id, password) => {
 		return validateUser(id, password);
