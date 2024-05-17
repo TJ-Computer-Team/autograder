@@ -1,18 +1,20 @@
 html {
-  background: rgb(4, 0, 65);
-  background: linear-gradient(
-    15deg,
-    rgba(4, 0, 65, 1) 0%,
-    rgba(1, 17, 100, 1) 50%,
-    rgba(0, 38, 168, 1) 100%
-  );
+  background: rgb(25, 25, 35);
   background-attachment: fixed;
 }
-
 body {
   margin: 0;
   padding: 0;
+  font-family: monospace !important;
+  color: white;
 }
+p {
+  margin: 0;
+}
+button {
+  font: inherit;
+}
+
 
 .particles-js {
   background-size: cover;
@@ -21,6 +23,55 @@ body {
   height: 100%;
   z-index: -1000;
 }
+.particles-js-canvas-el {
+  position: absolute;
+}
+
+#mainContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#subContent {
+  flex: 1;
+}
+
+.info-block {
+  position: relative;
+  top: 15%;
+
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.4);
+
+  border-color: rgba(0, 0, 0, 0.4);
+  border-style: solid;
+  border-width: 4px;
+  border-radius: 0.75vw;
+
+  width: 40%;
+  margin: auto;
+  padding: 6em;
+  z-index: 1000;
+
+  display:flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: auto;
+  text-align: center;
+  font-size: 3em;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.userinfo {
+  margin: 0.5em;
+  font-size: 1.7em;
+  /* font-family: "Lucida Sans"; */
+}
+
 .topnav-right {
   float: right;
 }
@@ -32,24 +83,14 @@ body {
   height: 90%;
 }
 
-.info-block {
-  background-color: rgb(0, 0, 0, 0.5);
-  width: 40%;
-  margin: 2% auto auto auto;
-  backdrop-filter: blur(10px);
-  padding: 4%;
-  border-radius: 0.5vw;
-  line-height: 2.5em;
-  z-index: 1000;
-}
-
 .navbar {
-  background-color: rgb(22, 22, 22, 0.7);
+  background-color: rgb(0, 51, 126, 0.7);
   backdrop-filter: blur(10px);
   margin: 0;
   padding: 0;
   position: sticky;
-  font-family: "Lucida Sans";
+  font-size: 1.2em;
+  /* font-family: "Lucida Sans"; */
 }
 
 ul.nb {
@@ -59,18 +100,6 @@ ul.nb {
   overflow: hidden;
 }
 
-.title {
-  font-size: 2.5em;
-  color: white;
-  font-family: "Lucida Sans";
-  z-index: -1;
-}
-.info {
-  font-size: 1.25em;
-  color: white;
-  font-family: "Lucida Sans";
-  z-index: -1;
-}
 .centertext {
   text-align: center;
 }
@@ -82,8 +111,6 @@ ul.nb {
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-  font-family: "Lucida sans";
-  font-size: 100%;
 }
 .logoutbtn:hover:not(.active) {
   background-color: rgb(62, 62, 62);
@@ -107,7 +134,7 @@ ul.nb {
   color: white;
   font-size: 1.5em;
   padding-left: 2%;
-  font-family: "Lucida Sans";
+  /* font-family: "Lucida Sans"; */
 }
 a {
   text-decoration: none;
@@ -148,7 +175,7 @@ li.slg {
   color: white;
   font-size: 1.5em;
   width: 100%;
-  font-family: "Lucida Sans";
+  /* font-family: "Lucida Sans"; */
 }
 .option-buttons {
   display: flex;
@@ -167,8 +194,6 @@ li.slg {
   background-color: rgb(65, 136, 203);
   text-align: center;
   color: black;
-  font-size: 1.5em;
-  font-family: "Lucida Sans";
   position: relative;
 }
 .button:hover {
@@ -190,7 +215,7 @@ input[type="file"] {
   box-sizing: border-box;
   font-size: 100%;
   margin: 1%;
-  font-family: "Lucida Sans";
+  /* font-family: "Lucida Sans"; */
 }
 .indent {
   margin: 1%;
@@ -211,7 +236,7 @@ input[type="file"] {
   border-radius: 2vw;
   line-height: 1em;
   text-decoration: none;
-  font-family: "Lucida Sans";
+  /* font-family: "Lucida Sans"; */
 }
 ul.cnb {
   list-style-type: none;
@@ -256,7 +281,7 @@ table {
   width: 100%;
   color: white;
   background-color: rgb(77, 119, 159);
-  font-family: "Lucida Sans";
+  /* font-family: "Lucida Sans"; */
   margin-left: auto;
   margin-right: auto;
   border-radius: 0.5vw;
