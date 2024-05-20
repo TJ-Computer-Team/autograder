@@ -16,42 +16,25 @@
       <div class="navbar">
         <ul class="nb">
           <li id="logoHolder" class="nb"><img class="logo" src="/images/logo.svg"></li>
-          <li class="nb"><a class="active" href="/grade/profile">Home</a></li>
-          <li class="nb"><a href="/grade/status">Submissions</a></li>
-          <li class="nb"><a href="/grade/contests">Contests</a></li>
-          <li class="nb"><a href="/grade/problemset">Problemset</a></li>
+          <li class="nb"><a class="active" href="/grade/profile"><p>Home</p></a></li>
+          <li class="nb"><a href="/grade/status"><p>Submissions</p></a></li>
+          <li class="nb"><a href="/grade/contests"><p>Contests</p></a></li>
+          <li class="nb"><a href="/grade/problemset"><p>Problemset</p></a></li>
           <li class="nb"><a href="/grade/info">Rules and Info</a></li>
-          <div class="topnav-right">
-            <li class="nb">
-              <form action="/grade/logout" method="POST">
-                <button class="logoutbtn" type="submit">Log Out</button>
-              </form>
-            </li>
-          </div>
+          <li class="nb topnav-right">
+            <form style="height: 100%;" action="/grade/logout" method="POST">
+              <button class="logoutbtn" type="submit">Log Out</button>
+            </form>
+          </li>
         </ul>
       </div>
+
       <div id="subContent">
         <div class="info-block">
           <div class="title"><p>Profile</p></div>
           <div class="userinfo">Name: <%=locals.name%></div>
           <div class="userinfo">Username: <%=locals.username%></div>
-          <table>
-            <tr>
-              <th>
-                <div class="info">Stats</div>
-              </th>
-            </tr>
-            <tr>
-              <td>
-                Contests: 1
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Rating: 100000
-              </td>
-            </tr>
-          </table>
+          <div class="statsInfo"></div>
         </div>
       </div>
     </div>

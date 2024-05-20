@@ -8,6 +8,10 @@ body {
   font-family: monospace !important;
   color: white;
 }
+a {
+  text-decoration: none;
+  color: rgb(66, 221, 245);
+}
 p {
   margin: 0;
 }
@@ -54,7 +58,7 @@ button {
   padding: 6em;
   z-index: 1000;
 
-  display:flex;
+  display: flex;
   flex-direction: column;
 }
 
@@ -69,18 +73,20 @@ button {
 .userinfo {
   margin: 0.5em;
   font-size: 1.7em;
-  /* font-family: "Lucida Sans"; */
 }
 
-.topnav-right {
-  float: right;
+.statsInfo {
+  flex: 1;
 }
-.container {
-  display: inline-flex;
-  align-content: stretch;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 90%;
+
+.navbar {
+  background-color: rgb(0, 51, 126, 0.7);
+  backdrop-filter: blur(10px);
+  margin: 0;
+  padding: 0;
+  position: sticky;
+  font-size: 1.2em;
+  height: 50px;
 }
 
 .logo {
@@ -97,16 +103,6 @@ button {
   aspect-ratio: 1/1;
 }
 
-.navbar {
-  background-color: rgb(0, 51, 126, 0.7);
-  backdrop-filter: blur(10px);
-  margin: 0;
-  padding: 0;
-  position: sticky;
-  font-size: 1.2em;
-  height: 50px;
-}
-
 ul.nb {
   height: 100%;
   list-style-type: none;
@@ -116,28 +112,31 @@ ul.nb {
 }
 
 li.nb {
+  display: flex;
   float: left;
   height: 100%;
 }
-li.nb a {
-  height: 100%;
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-li.nb a:hover:not(.active) {
-  background-color: rgb(62, 62, 62);
-}
-.active {
-  background-color: #0074da;
+
+li.nb:has(>a.active){
+  background-color: rgb(22, 84, 176);
 }
 
-.centertext {
-  text-align: center;
+li.nb:has(>a:hover:not(.active)) {
+  background-color: rgb(50, 50, 50);
 }
+
+li.nb a {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding: 0 1em 0 1em;
+  color: white;
+  justify-content: center;
+  align-items: center;
+}
+
 .logoutbtn {
+  height: 100%;
   background: none;
   border: none;
   display: block;
@@ -146,8 +145,27 @@ li.nb a:hover:not(.active) {
   padding: 14px 16px;
   text-decoration: none;
 }
+
+.topnav-right {
+  padding-right: 0 !important;
+  float: right !important;
+}
+
 .logoutbtn:hover:not(.active) {
   background-color: rgb(62, 62, 62);
+}
+
+.centertext {
+  text-align: center;
+}
+
+
+.container {
+  display: inline-flex;
+  align-content: stretch;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 90%;
 }
 
 .main-block {
@@ -167,10 +185,7 @@ li.nb a:hover:not(.active) {
   padding-left: 2%;
   /* font-family: "Lucida Sans"; */
 }
-a {
-  text-decoration: none;
-  color: rgb(66, 221, 245);
-}
+
 ul.sl {
   list-style-type: none;
   overflow: hidden;
