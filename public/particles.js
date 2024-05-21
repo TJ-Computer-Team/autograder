@@ -1109,10 +1109,10 @@ let pJS = function (tag_id, params) {
       /* el on mousemove */
       pJS.interactivity.el.addEventListener("mousemove", function (e) {
         if (pJS.interactivity.el == window) {
-          let pos_x = e.clientX,
+          var pos_x = e.clientX,
             pos_y = e.clientY;
         } else {
-          let pos_x = e.offsetX || e.clientX,
+          var pos_x = e.offsetX || e.clientX,
             pos_y = e.offsetY || e.clientY;
         }
 
