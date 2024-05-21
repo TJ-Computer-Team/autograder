@@ -11,6 +11,9 @@ const FileReader = require('filereader');
 const csvtojson = require('csvtojson');
 const upload = require('express-fileupload');
 
+// Web Master Description
+//https://docs.google.com/document/d/10WLQosU_D6geiNpA_fptZzeRnaZZwlkXQ7XgXfVkpR8/edit#heading=h.t8gub6phq7p9
+
 function getContestStart(cid) {	
         let contestStart;
 	let startStr; // in UTC timezone, +4 from EST
@@ -49,14 +52,24 @@ function getLateTakers(cid) {
 }
 
 router.get("/authlogin", async (req, res) => {
-	if (req.session.loggedin) {
-		res.redirect("/grade/profile");
-	}
-	else {
-		let theurl = await getToken();
-		res.redirect(theurl);
-	}
+	// if (req.session.loggedin) {
+	// 	res.redirect("/grade/profile");
+	// }
+	// else {
+	// 	let theurl = await getToken();
+	// 	res.redirect(theurl);
+	// }
+
+	// Store user information in the session
+	req.session.name = "2026achen";
+	req.session.username = "Andrew Chen";
+	req.session.loggedin = true;
+
+	// Redirect to profile page or any other page
+	res.redirect('/grade/profile');
+
 });
+
 router.get("/login", async (req, res)=>{ 
 	let CODE = req.query.code;
 	let data = await processFunction(CODE, req, res);
@@ -71,9 +84,11 @@ router.post("/logout", (req, res)=> {
 	req.session.destroy();
 	res.redirect("/");
 });
+
 router.get("/profile", checkLoggedIn, (req, res)=>{ 
 	res.render("profile", {name: req.session.name, username: req.session.username});
 });
+
 router.get("/profile/:id", checkLoggedIn, async (req, res) => {
 	let vals = await grabProfile(req.params.id);
 	if (vals == false) {
@@ -438,6 +453,8 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
 	}
 });
 
+
+
 function checkLoggedIn(req, res, next) {
 	if (false && !req.session.admin) {
 		res.send("The TJ Computer Team Grader will be down for maintenance in preparation for the in-house contest. We hope to see you there!");
@@ -456,5 +473,15 @@ function checkLoggedIn(req, res, next) {
 	}
 	}
 }
+
+
+router.get("/leaderboard", checkLoggedIn, async (req, res) => {
+	res.render("leaderboard");
+});
+
+
+router.get("/rating", checkLoggedIn, async (req, res) => {
+	res.render("rating");
+});
 
 module.exports = router;

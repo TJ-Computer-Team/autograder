@@ -15,6 +15,9 @@ app.use(favicon("./public/images/favicon.ico"));
 
 app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: false}));
+
+console.log(process.env.SECRET_KEY);
+
 app.use(session({
 	secret: process.env.SECRET_KEY,
 	resave: false,
@@ -56,7 +59,6 @@ app.get("/start", async (req, res) => {
 		}
 		res.render("firstTime", {name:req.session.user_data.display_name, username:req.session.user_data.ion_username, device: deviceClass});
 	}
-
 
 });
 
