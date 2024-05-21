@@ -481,7 +481,8 @@ router.get("/leaderboard", checkLoggedIn, async (req, res) => {
 
 
 router.get("/rating", checkLoggedIn, async (req, res) => {
-	res.render("rating");
+	const username = req.query.username || 'Dan';
+	res.render("rating", {username});
 });
 
 module.exports = router;
