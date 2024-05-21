@@ -44,38 +44,35 @@
               <option value=<%= locals.problem[i].pid %> <% if(locals.problem[i].pid==locals.problemid) { %> selected  <% } %> > <%= locals.problem[i].pid + " - " + locals.problem[i].name %> </option>
             <% } %>
           </select>
-          <br/>
         </div>
         <div class="problem-text">
-          <select id="lang" name="lang">
-            <% if( locals.lastlang == "cpp"){ %>
-            <option value="cpp">C++</option>
-            <% }else{ %>
-            <option value="cpp" selected>C++</option>
-            <% } %> <% if( locals.lastlang == "java"){ %>
-            <option value="java" selected>Java</option>
-            <% }else{ %>
-            <option value="java">Java</option>
-            <% } %> <% if( locals.lastlang == "python"){ %>
-            <option value="python" selected>Python</option>
-            <% }else{ %>
-            <option value="python">Python</option>
-            <% } %>
-          </select>
-          <br />
-          <textarea
-            id="codeinput"
-            name="code"
-            rows="20"
-            cols="150"
-            spellcheck="false"
-            placeholder="Insert code here"
-          ></textarea>
-        </div>
-        <div class="problem-text">OR USE FILE UPLOAD HERE</div>
-        <input type="file" name="files" />
-        <div class="option-buttons">
-          <button class="button" type="submit">Submit</button>
+          <div class="vertAlign">
+            <select id="lang" name="lang">
+              <% if( locals.lastlang == "cpp"){ %>
+              <option value="cpp">C++</option>
+              <% }else{ %>
+              <option value="cpp" selected>C++</option>
+              <% } %> <% if( locals.lastlang == "java"){ %>
+              <option value="java" selected>Java</option>
+              <% }else{ %>
+              <option value="java">Java</option>
+              <% } %> <% if( locals.lastlang == "python"){ %>
+              <option value="python" selected>Python</option>
+              <% }else{ %>
+              <option value="python">Python</option>
+              <% } %>
+            </select>
+            <textarea id="codeinput" name="code" rows="20" cols="150" spellcheck="false" placeholder="Insert code here"></textarea>
+
+            OR USE FILE UPLOAD HERE
+            <label class="custom-file-upload">
+              <input type="file" name="files"/>
+              Upload File
+            </label>
+            <div class="option-buttons">
+              <button class="button" type="submit">Submit</button>
+            </div>
+          </div>
         </div>
       </form>
     </div>

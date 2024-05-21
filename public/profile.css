@@ -1,8 +1,12 @@
 html {
+  height: 100%;
+  width: 100%;
   background: rgb(25, 25, 35);
   background-attachment: fixed;
 }
 body {
+  height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
   font-family: monospace !important;
@@ -10,13 +14,38 @@ body {
 }
 a {
   text-decoration: none;
-  color: rgb(66, 221, 245);
+  color: white;
 }
 p {
   margin: 0;
 }
 button {
   font: inherit;
+}
+table {
+  width: 100%;
+  color: white;
+  background-color: rgb(63, 47, 187);
+  /* font-family: "Lucida Sans"; */
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0.5vw;
+  border-collapse: collapse;
+}
+th {
+  font-size: 2em;
+  border: 1px solid;
+  border-color: black;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+td {
+  font-size: 1.5em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  text-decoration: none;
+  border: 1px solid;
+  border-color: black;
 }
 
 
@@ -177,7 +206,7 @@ li.nb a {
   border-width: 4px;
   border-radius: 0.75vw;
 
-  width: 80%;
+  width: 90%;
   margin: 3em auto 3em auto;
   padding: 4em;
 
@@ -187,10 +216,63 @@ li.nb a {
   line-height: 3em;
 }
 
+
 .problem-text {
   color: white;
   font-size: 1.5em;
-  padding-left: 2%;
+  line-height: 2em;
+  text-align: center;
+}
+
+.vertAlign {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#problemid {
+  width: 20%;
+  background-color: black;
+  color: white;
+}
+
+#lang {
+  margin: auto;
+  width: 20%;
+  background-color: black;
+  color: white;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  background-color: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  margin: auto;
+  width: 20%;
+  border: 1px solid #ffffff;
+  padding: 0.5em 1em 0.5em 1em;
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+.custom-file-upload:hover {
+  background-color: rgba(0, 0, 0, 1);
+}
+
+#codeinput {
+  margin: auto;
+  margin-top: 1em;
+  background-color: black;
+  color: white;
+  width: 80%;
+  resize: vertical;
+}
+
+.info {
+  font-size: 1.5em;
 }
 
 ul.sl {
@@ -204,7 +286,7 @@ ul.sl {
 }
 li.sl {
   width: 100%;
-  background-color: rgb(77, 119, 159);
+  background-color: rgb(63, 47, 187);
   border-radius: 1vw;
   margin-left: auto;
   margin-right: auto;
@@ -212,7 +294,7 @@ li.sl {
   margin-bottom: 1%;
 }
 li.sl:hover {
-  background-color: rgb(51, 145, 234);
+  background-color: rgb(82, 65, 207);
 }
 li.slg {
   width: 100%;
@@ -228,8 +310,8 @@ li.slg {
   color: white;
   font-size: 1.5em;
   width: 100%;
-  /* font-family: "Lucida Sans"; */
 }
+
 .option-buttons {
   display: flex;
   justify-content: flex-start;
@@ -237,22 +319,25 @@ li.slg {
   padding: 2%;
   margin: 1%;
 }
+
 .button {
-  padding: 0.5vw;
-  width: 100%;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  width: 80%;
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  border-radius: 4px;
-  background-color: rgb(65, 136, 203);
+  background-color: rgb(63, 47, 187);
   text-align: center;
-  color: black;
+  color: white;
   position: relative;
 }
+
 .button:hover {
-  color: rgb(255, 255, 255);
-  background-color: rgb(51, 145, 234);
+  color: white;
+  background-color: rgb(82, 65, 207);
 }
+
 input[type="text"] {
   width: 5%;
   padding-top: 0.25%;
@@ -261,6 +346,7 @@ input[type="text"] {
   font-size: 100%;
   margin: 1%;
 }
+
 input[type="file"] {
   width: 100%;
   padding-top: 0.25%;
@@ -268,7 +354,6 @@ input[type="file"] {
   box-sizing: border-box;
   font-size: 100%;
   margin: 1%;
-  /* font-family: "Lucida Sans"; */
 }
 .indent {
   margin: 1%;
@@ -312,37 +397,6 @@ li.cnb a:hover:not(.active) {
 }
 .cactive {
   background-color: rgb(100, 100, 100, 0.5);
-}
-
-table {
-  width: 100%;
-  color: white;
-  background-color: rgb(77, 119, 159);
-  /* font-family: "Lucida Sans"; */
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 0.5vw;
-  border-collapse: collapse;
-}
-th {
-  font-size: 2em;
-  border: 1px solid;
-  border-color: black;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
-td {
-  font-size: 1.5em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  text-decoration: none;
-  border: 1px solid;
-  border-color: black;
-}
-html,
-body {
-  height: 100%;
-  width: 100%;
 }
 
 #schedule table,
