@@ -1,0 +1,144 @@
+/* graystyle.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #222222;
+    color: #ffffff;
+}
+
+.navbar {
+    margin-bottom: 20px;
+    background-color: #272B30;
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff !important;
+}
+
+.nav-link.disabled {
+    color: #6c757d !important;
+}
+
+.card {
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+}
+
+.card-header {
+    background-color: #444444;
+    font-size: 1.25rem; /* Slightly larger font for card header */
+}
+
+.card-body {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.card-title {
+    color: #d9534f;
+}
+
+.card-text {
+    color: #f0f0f0;
+}
+
+.btn-primary {
+    background-color: #d9534f;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #c9302c;
+}
+
+.table {
+    color: #b2b0b0;
+}
+
+.table thead {
+    background-color: #555555;
+    color: #ffffff;
+    font-size: 0.675rem; /* Smaller font size for table head */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #2b2b2b; /* Darker grey */
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #3b3b3b; /* Slightly lighter grey */
+}
+
+.table-hover tbody tr:hover {
+    background-color: #555555; /* Darker hover color */
+}
+
+.list-group-item {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #444444;
+}
+
+.list-group-item a {
+    color: #d9534f;
+}
+
+.list-group-item:hover {
+    background-color: #444444;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.file-input-wrapper input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.file-input-wrapper .btn-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #d9534f;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.file-input-wrapper .btn-upload:hover {
+    background-color: #c9302c;
+    border-color: #ebdcdc;
+}
+
+.file-name {
+    margin-left: 10px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+.flag-icon {
+    margin-right: 5px;
+}
+
+
+.footer {
+    padding: 10px 0;
+    font-size: 0.5rem;
+}
+.footer .card {
+    margin-bottom: 0;
+}

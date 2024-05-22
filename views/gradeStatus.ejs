@@ -67,19 +67,21 @@
 </html>
 -->
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="../profile.css"/>
-  <title>My Submissions</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Submissions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../profile.css"/>
+    <link rel="stylesheet" type="text/css" href="../graystyle.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="/grade/profile">Home</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,44 +97,47 @@
                     <li class="nav-item"><a class="nav-link" href="/grade/leaderboard">Leader Board</a></li>
                     <li class="nav-item"><a class="nav-link" href="/grade/rating">Rating Graph</a></li>
                 </ul>
+				<a class="navbar-brand ms-auto" href="https://activities.tjhsst.edu/ict/">
+                    <img src="/images/TJ.jpeg" alt="Logo" height="40">
+                </a>
             </div>
         </div>
     </nav>
 
-  <div class="container mt-4">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title">Submissions<% if (locals.viewAsAdmin == true) { %> - viewing as Admin <% } %></h5>
-      </div>
-      <div class="card-body">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Submission</th>
-              <% if (locals.viewAsAdmin == true) { %>
-              <th scope="col">User</th>
-              <% } %>
-              <th scope="col">Problem</th>
-              <th scope="col">Runtime</th>
-              <th scope="col">Verdict</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% for (let i=locals.submissions.length-1; i>=0; i--) { %>
-            <tr>
-              <td><a href="<%="/grade/status/"+locals.submissions[i].id%>">#<%=locals.submissions[i].id%></a></td>
-              <% if (locals.viewAsAdmin == true) { %>
-              <td><a href="<%="/grade/profile/"+locals.submissions[i].user%>"><%=locals.submissions[i].user%></a></td>
-              <% } %>
-              <td><a href="<%="/grade/problemset/"+locals.submissions[i].problemid%>"><%=locals.submissions[i].problemname%></a></td>
-              <td><%=locals.submissions[i].runtime%> ms</td>
-              <td><%=locals.submissions[i].verdict%></td>
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
+	<div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Submissions<% if (locals.viewAsAdmin == true) { %> - viewing as Admin <% } %></h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Submission</th>
+                            <% if (locals.viewAsAdmin == true) { %>
+                            <th scope="col">User</th>
+                            <% } %>
+                            <th scope="col">Problem</th>
+                            <th scope="col">Runtime</th>
+                            <th scope="col">Verdict</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i = locals.submissions.length - 1; i >= 0; i--) { %>
+                        <tr>
+                            <td><a href="<%="/grade/status/" + locals.submissions[i].id%>">#<%= locals.submissions[i].id %></a></td>
+                            <% if (locals.viewAsAdmin == true) { %>
+                            <td><a href="<%="/grade/profile/" + locals.submissions[i].user%>"><%= locals.submissions[i].user %></a></td>
+                            <% } %>
+                            <td><a href="<%="/grade/problemset/" + locals.submissions[i].problemid%>"><%= locals.submissions[i].problemname %></a></td>
+                            <td><%= locals.submissions[i].runtime %> ms</td>
+                            <td><%= locals.submissions[i].verdict %></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
 </body>
 </html>

@@ -3,10 +3,7 @@ html {
     background: linear-gradient(15deg, rgba(4,0,65,1) 0%, rgba(1,17,100,1) 50%, rgba(0,38,168,1) 100%);
     background-attachment: fixed;
 }
-body {
-    margin: 0;
-    padding: 0;
-}
+
 .info-block {
     background-color: rgb(0, 0, 0, 0.6);
     width: 35%;
@@ -231,3 +228,4 @@ html, body {
 .bg-blue {
     background-color: blue !important;
 }
+

@@ -67,83 +67,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grade</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="../profile.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../profile.css">
+    <link rel="stylesheet" type="text/css" href="../graystyle.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/grade/profile">Home</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="/grade/status">Submissions</a></li>
-                <li class="nav-item"><a class="nav-link" href="/grade/contests">Contests</a></li>
-                <li class="nav-item"><a class="nav-link" href="/grade/problemset">Problemset</a></li>
-                <li class="nav-item"><a class="nav-link" href="/grade/submit">Submit</a></li>
-                <li class="nav-item"><a class="nav-link" href="/grade/info">Rules and Info</a></li>
-                <li class="nav-item"><a class="nav-link" href="/grade/leaderboard">Leader Board</a></li>
-                <li class="nav-item"><a class="nav-link" href="/grade/rating">Rating Graph</a></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/grade/profile">Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/grade/status">Submissions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/grade/contests">Contests</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/grade/problemset">Problemset</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/grade/submit">Submit</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/grade/info">Rules and Info</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/grade/leaderboard">Leader Board</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/grade/rating">Rating Graph</a></li>
+                </ul>
+                <a class="navbar-brand ms-auto" href="https://activities.tjhsst.edu/ict/">
+                    <img src="/images/TJ.jpeg" alt="Logo" height="40">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Submit</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Java users, make sure you are using package "subcode" and naming the class "test".</p>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <form action="/grade/status" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="problemid" class="form-label">Problem ID</label>
+                        <input type="number" class="form-control" id="problemid" name="problemid" value="<%=locals.problemid%>" max="100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lang" class="form-label">Language</label>
+                        <select class="form-select" id="lang" name="lang">
+                            <option value="cpp">C++</option>
+                            <option value="java">Java</option>
+                            <option value="python">Python</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="codeinput" class="form-label">Code</label>
+                        <textarea class="form-control" id="codeinput" name="code" rows="10" placeholder="Insert code here"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fileinput" class="form-label">Or Upload File</label>
+                        <div class="file-input-wrapper">
+                            <input class="form-control" type="file" id="fileinput" name="file">
+                            <span class="file-name" id="file-name">No file chosen</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
         </div>
     </div>
-</nav>
 
-  <div class="container mt-4">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title">Submit</h5>
-      </div>
-      <div class="card-body">
-        <p class="card-text">java users, make sure you are using package "subcode" and naming the class "test"</p>
-      </div>
-    </div>
+    <script type="text/javascript">
+        document.getElementById('codeinput').addEventListener('keydown', function(e) {
+            if (e.key == 'Tab') {
+                e.preventDefault();
+                var start = this.selectionStart;
+                var end = this.selectionEnd;
+                // set textarea value to: text before caret + tab + text after caret
+                this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+                // put caret at right position again
+                this.selectionStart = this.selectionEnd = start + 1;
+            }
+        });
 
-    <div class="card mt-4">
-      <div class="card-body">
-        <form action="/grade/status" method="POST">
-          <div class="mb-3">
-            <label for="problemid" class="form-label">Problem ID</label>
-            <input type="number" class="form-control" id="problemid" name="problemid" value="<%=locals.problemid%>" max="100">
-          </div>
-          <div class="mb-3">
-            <label for="lang" class="form-label">Language</label>
-            <select class="form-select" id="lang" name="lang">
-              <option value="cpp">C++</option>
-              <option value="java">Java</option>
-              <option value="python">Python</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="codeinput" class="form-label">Code</label>
-            <textarea class="form-control" id="codeinput" name="code" rows="10" placeholder="Insert code here"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <script type="text/javascript">
-    document.getElementById('codeinput').addEventListener('keydown', function(e) {
-      if (e.key == 'Tab') {
-        e.preventDefault();
-        var start = this.selectionStart;
-        var end = this.selectionEnd;
-        // set textarea value to: text before caret + tab + text after caret
-        this.value = this.value.substring(0, start) + "\\t" + this.value.substring(end);
-        // put caret at right position again
-        this.selectionStart = this.selectionEnd = start + 1;
-      }
-    });
-  </script>
+        document.getElementById('fileinput').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+            document.getElementById('file-name').textContent = fileName;
+        });
+    </script>
 </body>
 </html>
-
