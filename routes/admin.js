@@ -16,6 +16,9 @@ const upload = require('express-fileupload');
 router.get("/", async (req, res) => {
         //res.send("admin panel -- goto /createProblem");
         //let admin = await checkAdmin(req.session.userid);//seems insecure LMAO, but issok, ill looka t it later
+
+        //req.session.admin = true; // Set admin session variable
+            
         if(req.session.admin){
                 let page = req.query.page;
                 if (page == undefined) page = 0;

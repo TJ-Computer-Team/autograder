@@ -127,13 +127,14 @@ router.post("/attendanceComplete", async (req, res) => {
 });
 
 router.get("/contests", checkLoggedIn, async (req, res) => {
-	if (req.session.admin) {
-		res.render('contests');
-	} else {
-		res.render('contests');
-		// res.redirect("/grade/profile");
-		//res.send("Contests coming soon...");
-	}
+	res.render("contests", {tjioi: "Test"})
+	// if (req.session.admin) {
+	// 	res.render('contests');
+	// } else {
+	// 	res.render('contests');
+	// 	// res.redirect("/grade/profile");
+	// 	//res.send("Contests coming soon...");
+	// }
 });
 router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 	let cid = req.params.id;
@@ -322,16 +323,16 @@ router.get("/problemset", checkLoggedIn, async (req, res) => {
 	let page = req.query.page;
 	if (page == undefined) page = 0;
 	let start = page*5; //write multipage later
-	let vals = await grabAllProblems();
+//	let vals = await grabAllProblems();
 	let lst = [];
 
-	for (let i=0; i<vals.length; i++) {
-		let p = vals[i];
-		if (!p.secret || req.session.admin) lst.push(p);
-	}
-	lst.sort(function(a, b) {
-		return a.pid>b.pid?1:-1;
-	});
+	// for (let i=0; i<vals.length; i++) {
+	// 	let p = vals[i];
+	// 	if (!p.secret || req.session.admin) lst.push(p);
+	// }
+	// lst.sort(function(a, b) {
+	// 	return a.pid>b.pid?1:-1;
+	// });
 	
 	res.render("gradeProblemset", {problems: lst});
 });
@@ -375,13 +376,15 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.
 	}
 });
 router.get("/submit", checkLoggedIn, (req, res) => {
-	if (false) {
-		res.send("contest ended");
-		//res.redirect("/grade/profile")
-	}
-	else {
-		res.render("gradeSubmit", {problemid: req.query.problem});
-	}
+	res.render("gradeSubmit", {problemid: 1000, problemname: "test", lastlang: "scratch", problem: []})
+	
+	// if (false) {
+	// 	res.send("contest ended");
+	// 	//res.redirect("/grade/profile")
+	// }
+	// else {
+	// 	res.render("gradeSubmit", {problemid: req.query.problem});
+	// }
 });
 
 router.post("/status", checkLoggedIn, async (req, res) => { //eventually change to post to submit
@@ -428,15 +431,25 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 router.get("/status", checkLoggedIn, async (req, res) => {
 	let user = req.query.user;
 	let contest = req.query.contest;
-	let admin = await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
+	//let admin = await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
 	admin = req.session.admin;
 	console.log(user, contest, admin);
 	if (user == undefined && contest == undefined && !admin) { //& !admin
 		user = req.session.userid;
 	}
-	let submissions = await grabSubs(user, contest);
-	res.render("gradeStatus", {submissions: submissions, viewAsAdmin: admin});
+	//let submissions = await grabSubs(user, contest);
+	//res.render("gradeStatus", {submissions: submissions, viewAsAdmin: admin});
+	submissions = ""
+	let page = req.query.page;
+	if (page == undefined) page = 1;
+	res.render("gradeStatus", {
+		submissions: submissions,
+		viewAsAdmin: admin,
+		page: page,
+	});
+
 });
+
 router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
 	let vals = await grabStatus(req.params.id);
 	if (vals.user == req.session.userid || req.session.admin) {
@@ -481,7 +494,7 @@ router.get("/leaderboard", checkLoggedIn, async (req, res) => {
 
 
 router.get("/rating", checkLoggedIn, async (req, res) => {
-	const username = req.query.username || 'Dan';
+	const username = req.query.username || 'Andrew';
 	res.render("rating", {username});
 });
 

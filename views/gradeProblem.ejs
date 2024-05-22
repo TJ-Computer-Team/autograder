@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,5 +58,91 @@
             <div class="button">Back</div>
         </a>
     </div>
+</body>
+</html>
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../profile.css"/>
+  <link rel="stylesheet" href="../../katex.min.css">
+  <script src="../../katex.min.js"></script>
+  <script src="../../render.js"></script>
+  <title><%=locals.title%></title>
+</head>
+<body onload="myRender()">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="/grade/profile">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/grade/status">Submissions</a></li>
+          <li class="nav-item"><a class="nav-link" href="/grade/contests">Contests</a></li>
+          <li class="nav-item"><a class="nav-link" href="/grade/problemset">Problemset</a></li>
+          <li class="nav-item"><a class="nav-link" href="/grade/submit">Submit</a></li>
+          <li class="nav-item"><a class="nav-link" href="/grade/info">Rules and Info</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title"><strong><%=locals.title%> (problem id=<%=locals.pid%>)</strong></h5>
+      </div>
+      <div class="card-body">
+        <div class="info">
+          <%-String(locals.statement).replaceAll("\\n", "<br>")%>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5 class="card-title"><strong>Input Format</strong></h5>
+      </div>
+      <div class="card-body">
+        <div class="info">
+          <%-String(locals.inputtxt).replaceAll("\\n", "<br>")%>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5 class="card-title"><strong>Output Format</strong></h5>
+      </div>
+      <div class="card-body">
+        <div class="info">
+          <%-String(locals.outputtxt).replaceAll("\\n", "<br>")%>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5 class="card-title"><strong>Samples</strong></h5>
+      </div>
+      <div class="card-body">
+        <div class="info">
+          <%-String(locals.samples).replaceAll("\\n", "<br>")%>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+      <a href="<%="/grade/submit?problem="+locals.pid%>" class="btn btn-primary me-3">Submit</a>
+      <a href="<%=locals.back%>" class="btn btn-secondary">Back</a>
+    </div>
+  </div>
 </body>
 </html>
