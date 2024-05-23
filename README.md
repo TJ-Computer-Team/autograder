@@ -23,7 +23,7 @@ To run this locally, download the files, install Node.js and use npm to install 
 
 Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 
-VISUAL CHANGES:
+**VISUAL CHANGES:**
 1) Overhauled the GUI using Bootstrap, allowing for responsive design, consistent UI, faster development, and more flexible customization later on.
 2) Added Tailwind CSS, leading to more modern and faster customization later on
 3) Gve website a more modern aesthetic (which I think looks better)
@@ -36,7 +36,7 @@ VISUAL CHANGES:
 13) Improved table design (centered text, padding, white border, colorings, etc.)
 14) Added adow to nav bar 
 
-FUNCTIONALITY CHANGES
+**FUNCTIONALITY CHANGES**
 
 1) Added a "my contests" tab to contests, where after in-house contests, in-house takers can review their past contests as well as their editorial solutions to learn from mistakes or try past problems they didn't get to
 2) Added a rating graph, which can easily be integrated into the Dashboard
@@ -49,10 +49,10 @@ FUNCTIONALITY CHANGES
 10) Other small tweaks
 
 
-COMMENTS:
+**COMMENTS:**
 For my code, got rid of the database and oauth. Because of this, to run my code you've got to create a .env file or else it gives an error.
 
 In the future, I want to expand on the functionalities mention above with access to the database. With more time, I want to further enhance the visual look of the website. 
 
-- Andrew Chen
+**- Andrew Chen**
 
