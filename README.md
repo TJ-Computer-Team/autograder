@@ -31,7 +31,7 @@ Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 3) Gave website a more modern aesthetic (which I think looks better)
 4) Created logo to top-left
 5) New and improved log-out button
-7) Removed gradient from the background and changed the overall website theme color to nicer navy deep blue
+7) Changed the overall website theme color to nicer dark gray
 9) Font changes (it's ui-sans-serif, looking for future ones that could fit even better)
 11) Added hover color changes to nav bar tabs, submit button, tables, etc.
 12) Submissions tab now displays bold green in Verdict if solution accepted
