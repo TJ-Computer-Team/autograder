@@ -23,6 +23,8 @@ To run this locally, download the files, install Node.js and use npm to install 
 
 Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 
+-------------------------------------------------------------
+
 **VISUAL CHANGES:**
 1) Overhauled the GUI using Bootstrap, allowing for responsive design, consistent UI, faster development, and more flexible customization later on.
 2) Added Tailwind CSS, leading to more modern and better customization later on
