@@ -70,6 +70,8 @@ app.get("/megaknight", async (req, res) => {
 	res.render("megaknight");
 });
 
+
+
 app.get("/megaknightmovement", async (req, res) => {
 	res.render("megaknightmovement");
 });

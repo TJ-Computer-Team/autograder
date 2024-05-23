@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "devStart": "nodemon app.js"
+    "devStart": "nodemon app.js",
+    "build:css": "tailwindcss build public/src/input.css -o public/src/output.css"
+
   },
   "dependencies": {
     "axios": "^0.27.2",
@@ -26,10 +28,13 @@
     "svgdom": "^0.1.10"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "tailwindcss": "^3.4.3"
   },
   "name": "autograder",
   "description": "Prospective Webmasters, these things may interest you.",
   "author": "",
   "license": "ISC"
 }
+
+

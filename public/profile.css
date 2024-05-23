@@ -197,15 +197,18 @@ li.nb a:hover:not(.active) {
 .active {
     background-color: #0074da;
 }
+.table-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 table {
-	width: 100%;
-	color: white;
-	background-color: rgb(77, 119, 159);
-	font-family: 'Lucida Sans';
-	margin-left: auto;
-	margin-right: auto;
-	border-radius: 0.5vw;
-	border-collapse: collapse;
+    width: 80%;
+    color: white;
+    background-color: rgb(77, 119, 159);
+    font-family: 'Lucida Sans';
+    border-radius: 0.5vw;
+    border-collapse: collapse;
 }
 th {
     font-size: 1.75em;

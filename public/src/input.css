@@ -1,0 +1,9 @@
+/* src/input.css */
+
+/* Import your existing styles */
+@import './graystyle.css';
+
+/* Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

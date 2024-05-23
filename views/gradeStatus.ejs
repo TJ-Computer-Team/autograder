@@ -78,31 +78,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../profile.css"/>
-    <link rel="stylesheet" type="text/css" href="../graystyle.css">
+    <link rel="stylesheet" type="text/css" href="src/output.css">
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/grade/profile">Home</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="/grade/status">Submissions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/contests">Contests</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/problemset">Problemset</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/submit">Submit</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/info">Rules and Info</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/leaderboard">Leader Board</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/rating">Rating Graph</a></li>
-                </ul>
-				<a class="navbar-brand ms-auto" href="https://activities.tjhsst.edu/ict/">
-                    <img src="/images/TJ.jpeg" alt="Logo" height="40">
-                </a>
-            </div>
-        </div>
-    </nav>
+<body style="background-color: #101729;">
+    <%- include('partials/navbar.ejs') %>.
 
 	<div class="container mt-4">
         <div class="card">
@@ -137,23 +116,22 @@
                         <tr>
                             <td>#1</td>
                             <!--td><a href="/grade/profile/user1">user1</a></td-->
-                            <td>Problem A</td>
+                            <td><a href="/grade/problemset/1">Problem A</a></td> 
                             <td>120 ms</td>
-                            <td>Accepted</td>
+                            <td class="text-green-500">Accepted</td>
                         </tr>
                         <tr>
                             <td>#2</td>
                             <!--td><a href="/grade/profile/user2">user2</a></td-->
-                            <td>Problem B</td>
+                            <td><a href="/grade/problemset/2">Problem B</a></td> 
                             <td>150 ms</td>
-                            <td>Wrong Answer</td>
+                            <td class="text-blue-300">Wrong Answer</td>
                         </tr>
                         <tr>
                             <td>#3</td>
-                            <!--td><a href="/grade/profile/user3">user3</a></td-->
-                            <td>Problem C</td>
+                            <td><a href="/grade/problemset/3">Problem C</a></td> 
                             <td>90 ms</td>
-                            <td>Accepted</td>
+                            <td class="text-green-500">Accepted</td>
                         </tr>
                         <!--tr>
                             <td><a href="/grade/status/4">#4</a></td>
