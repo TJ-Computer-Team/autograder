@@ -34,7 +34,7 @@ Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 11) Added hover color changes to nav bar tabs, submit button, tables, etc.
 12) Submissions tab now displays bold green in Verdict if solution accepted
 13) Improved table design (centered text, padding, white border, colorings, etc.)
-14) Added adow to nav bar 
+14) Added shadow to nav bar 
 
 **FUNCTIONALITY CHANGES**
 
