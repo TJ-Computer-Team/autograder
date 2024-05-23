@@ -29,7 +29,7 @@ Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 1) Overhauled the GUI using Bootstrap, allowing for responsive design, consistent UI, faster development, and more flexible customization later on.
 2) Added Tailwind CSS, leading to more modern and better customization later on
 3) Gave website a more modern aesthetic (which I think looks better)
-4) Moved logo to top-left
+4) Created logo to top-left
 5) New and improved log-out button
 7) Removed gradient from the background and changed the overall website theme color to nicer navy deep blue
 9) Font changes (it's ui-sans-serif, looking for future ones that could fit even better)
