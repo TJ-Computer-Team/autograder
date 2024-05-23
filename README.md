@@ -38,7 +38,7 @@ Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 
 **FUNCTIONALITY CHANGES**
 
-1) Added a "my contests" tab to contests, where after in-house contests, in-house takers can review their past contests as well as their editorial solutions to learn from mistakes or try past problems they didn't get to
+1) Added a "my contests" tab to contests, where after in-house contests, in-house takers can review their past contests as well as their corersponding editorial solutions to learn from mistakes or try past problems they didn't get to
 2) Added a rating graph, which can easily be integrated into the Dashboard
 3) Added personal stats to dashboard (e.g. #contests attended, #problems solved, future steps w/ access to database)
 4) Added a leaderboard tab, which displays rank / rated elo of Computer Team members
