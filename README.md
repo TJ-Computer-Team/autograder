@@ -46,7 +46,7 @@ Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 4) Added a leaderboard tab, which displays rank / rated elo of Computer Team members
 6) Added start time and end times to contest
 7) Time limits on each problem (future steps with access to database)
-8) Helped clean up code by reducing repetition. For example, nav bar code no longer has to be repeatedly rewritten between 8 different ejs files, but now  it is instead written once in new partials folder
+8) Helped clean up code by reducing repetition. For example, nav bar code no longer has to be repeatedly rewritten between all different ejs files, but now  it is instead written once in new partials folder
 9) Added hyperlink between the Submissions page and Problems page (now can directly get to a problem from submissions page)
 10) Other small tweaks
 
