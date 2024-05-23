@@ -1,84 +1,35 @@
-<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../profile.css"/>
-    <title>Profile</title>
-</head>
-<body>
-    <div class="navbar">
-        <ul class="nb">
-            <li class="nb"><a class="active" href="/grade/profile">Home</a></li>
-            <li class="nb"><a href="/grade/status">Submissions</a></li>
-            <li class="nb"><a href="/grade/contests">Contests</a></li>
-            <li class="nb"><a href="/grade/problemset">Problemset</a></li>
-            <li class="nb"><a href="/grade/submit">Submit</a></li>
-	    <li class="nb"><a href="/grade/info">Rules and Info</a></li>
-        </ul>
-    </div>
-    <div class="info-block">
-        <div class="title"><strong>Profile</strong></div>    
-        <div class="info">Name: <%=locals.name%></div>
-        <div class="info">Username: <%=locals.username%></div>
-    </div>
-    <form class="logout" action="/grade/logout" method="POST">
-        <div class="option-buttons">
-            <button class="button" type="submit">Log Out</button>
-        </div>
-    </form>
-</body>
-</html>
--->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../profile.css"/>
-    <title>Profile</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../graystyle.css">  
-    <!--style>
+    <link rel="stylesheet" href="../graystyle.css"> <!-- Make sure to update the path to your graystyle.css file -->
+    <title>Profile</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .content {
+            flex: 1;
+        }
         .footer {
             padding: 10px 0;
-            font-size: 0.5rem;
+            font-size: 0.75rem;
         }
         .footer .card {
             margin-bottom: 0;
         }
-    </style-->
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/grade/profile">Home</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="/grade/status">Submissions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/contests">Contests</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/problemset">Problemset</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/submit">Submit</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/info">Rules and Info</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/leaderboard">Leader Board</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/grade/rating">Rating Graph</a></li>
-                </ul>
-                <a class="navbar-brand ms-auto" href="https://activities.tjhsst.edu/ict/">
-                    <img src="/images/TJ.jpeg" alt="Logo" height="40">
-                </a>
-            </div>
-        </div>
-    </nav>
-    <div class="container mt-4">
+    <%- include('partials/navbar.ejs') %>.
+    <div class="container mt-4 content">
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title">Profile</h5>
@@ -93,18 +44,18 @@
         </form>
     </div>
 
-    <footer class="footer mt-4">
+    <!-- <footer class="footer mt-4 bg-dark text-white">
         <div class="container">
-            <div class="card">
+            <div class="card bg-dark text-white">
                 <div class="card-header">
-                    <h8 class="card-title">Contact Information</h8>
+                    <h6 class="card-title">Contact Information</h6>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">Email: <a href="mailto:tjctgrader@gmail.com">tjctgrader@gmail.com</a></p>
+                    <p class="card-text">Email: <a href="mailto:tjctgrader@gmail.com" class="text-white">tjctgrader@gmail.com</a></p>
                     <p class="card-text">Johnny Liu, Daniel Qiu, and Gabriel Xu</p>
                 </div>
             </div>
         </div>
-    </footer>
+    </footer> -->
 </body>
 </html>
