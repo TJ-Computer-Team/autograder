@@ -50,7 +50,7 @@ Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 
 
 **COMMENTS:**
-I got rid of the database and oauth. Because of this, to run my code you've got to create a .env file or else it gives an error.
+I got rid of the database and oauth sections of the code. Because of this, to run my code you've got to create a .env file or else it gives an error.
 
 In the future, I want to expand on the functionalities mention above with access to the database. With more time, I want to further enhance the visual look of the website. 
 
