@@ -25,7 +25,7 @@ Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
 
 **VISUAL CHANGES:**
 1) Overhauled the GUI using Bootstrap, allowing for responsive design, consistent UI, faster development, and more flexible customization later on.
-2) Added Tailwind CSS, leading to more modern and faster customization later on
+2) Added Tailwind CSS, leading to more modern and better customization later on
 3) Gve website a more modern aesthetic (which I think looks better)
 4) Moved logo to top-left
 5) New and improved log-out button
