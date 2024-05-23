@@ -22,3 +22,19 @@ To run this locally, download the files, install Node.js and use npm to install 
 ```node app.js```.
 
 Current Developers: Gabriel Xu, Johnny Liu, and Daniel Qiu
+
+-------------- Effort ---------------------------
+1) Overhaul the GUI using Bootstrap which allows Responsive Design, Consistent User Interface, Fast Devleopment, Flexible Customization.
+2) Create Strip down version without OAuth and Database Integration.
+3) New Functionalities:
+    * Add new My Contest under Contests Tab
+    * Display Contest Start Time and End Time
+    * Display Problem Set Time Limit
+    * Add upload file under Submit Tab
+    * New Leader Board Tab
+    * New Rating Graph Tab, which can be easily integrated with Profile Tab
+4) Propose 
+    * Create Database Table Contest with Start Time, which allows admin to manage Contests, such as start End time. Therefore, it eliminates the hardcoding
+    * Allows admin to manage Problem, set up time limit.
+
+

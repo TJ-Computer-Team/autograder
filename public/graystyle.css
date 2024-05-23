@@ -2,8 +2,16 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #222222;
+    background: linear-gradient(270deg, #222222, #555555);
+    background-size: 400% 400%;
+    animation: gradientBackground 15s ease infinite;
     color: #ffffff;
+}
+
+@keyframes gradientBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .navbar {
@@ -17,6 +25,22 @@ body {
 
 .nav-link.disabled {
     color: #6c757d !important;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #57595b;
+    color: white;
+}
+.nav-tabs .nav-link {
+    color: #57595b;
+}
+.nav-tabs .nav-link:hover {
+    color: #57595b;
+}
+.tab-content {
+    border: 1px solid #dee2e6;
+    border-top: none;
+    padding: 1rem;
 }
 
 .card {
@@ -36,7 +60,7 @@ body {
 }
 
 .card-title {
-    color: #d9534f;
+    color: #f0f0f0;
 }
 
 .card-text {
@@ -44,7 +68,7 @@ body {
 }
 
 .btn-primary {
-    background-color: #d9534f;
+    background-color: #2b2b2b;
     border: none;
 }
 
@@ -52,8 +76,17 @@ body {
     background-color: #c9302c;
 }
 
-.table {
+
+.table-custom {
     color: #b2b0b0;
+    background-color: #2b2b2b;
+    width: 100%
+}
+
+.thead-dark-custom {
+    background-color: #555555;
+    color: #ffffff;
+    font-size: 0.675rem; /* Smaller font size for table head */
 }
 
 .table thead {
@@ -81,7 +114,7 @@ body {
 }
 
 .list-group-item a {
-    color: #d9534f;
+    color: #f0f0f0;
 }
 
 .list-group-item:hover {

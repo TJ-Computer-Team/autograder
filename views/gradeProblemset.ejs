@@ -89,6 +89,47 @@
                         </li>
                     <% } %>
                 </ul>
+                <table class="table-custom table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Problem Name</th>
+                            <th scope="col">Time Limit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i = 0; i < locals.problems.length; i++) { %>
+                            <tr>
+                                <td>
+                                    <a href="<%="/grade/problemset/" + locals.problems[i].pid %>" class="text-decoration-none">
+                                        <%= locals.problems[i].name %>
+                                    </a>
+                                </td>
+                                <td><%= locals.problems[i].timeLimit %></td>
+                            </tr>
+                        <% } %>
+                        <!-- Example rows -->
+                        <tr>
+                            <td><a href="/grade/problemset/1" class="text-decoration-none">Problem A</a></td>
+                            <td>10 min</td>
+                        </tr>
+                        <tr>
+                            <td><a href="/grade/problemset/2" class="text-decoration-none">Problem B</a></td>
+                            <td>15 min</td>
+                        </tr>
+                        <tr>
+                            <td><a href="/grade/problemset/3" class="text-decoration-none">Problem C</a></td>
+                            <td>20 min</td>
+                        </tr>
+                        <tr>
+                            <td><a href="/grade/problemset/4" class="text-decoration-none">Problem D</a></td>
+                            <td>30 min</td>
+                        </tr>
+                        <tr>
+                            <td><a href="/grade/problemset/5" class="text-decoration-none">Problem E</a></td>
+                            <td>30 min</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
