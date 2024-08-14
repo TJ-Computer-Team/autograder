@@ -165,13 +165,7 @@ router.post("/attendanceComplete", async (req, res) => {
 });
 
 router.get("/contests", checkLoggedIn, async (req, res) => {
-	if (req.session.admin) {
-		res.render('contests', {tjioi:req.session.tjioi});
-	} else {
-		res.render('contests', {tjioi:req.session.tjioi});
-		// res.redirect("/grade/profile");
-		//res.send("Contests coming soon...");
-	}
+	res.render('contests', {tjioi:req.session.tjioi});
 });
 router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 	let cid = req.params.id;
@@ -522,24 +516,12 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 router.get("/status", checkLoggedIn, async (req, res) => {
 	let user = req.query.user;
 	let contest = req.query.contest;
-	//let admin = await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
 	let admin = req.session.admin;
 	//console.log(user, contest, admin);
 	if (user == undefined && contest == undefined && !admin) { //& !admin
 		user = req.session.userid;
 	}
 	let submissions = await grabSubs(user, contest);
-
-	/*
-	if (contest != undefined) {
-		let contestStart=getContestStart(parseInt(contest));
-		submissions=submissions.filter(function(elem) {
-			return req.session.admin || (elem.timestamp > contestStart);
-		});
-		res.send("SDKL:ASKD:LSA");
-	}
-	*/
-
 	submissions=submissions.filter(function(elem) {
 		return req.session.tjioi ^ elem.contest<202400;
 	});
