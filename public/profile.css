@@ -13,7 +13,6 @@ body {
   color: white;
 }
 a {
-  text-decoration: none;
   color: white;
 }
 p {
@@ -25,7 +24,7 @@ button {
 table {
   width: 100%;
   color: white;
-  background-color: rgb(63, 47, 187);
+  background-color: rgb(30, 51, 156);
   /* font-family: "Lucida Sans"; */
   margin-left: auto;
   margin-right: auto;
@@ -105,7 +104,8 @@ td {
 }
 
 .statsInfo {
-  flex: 1;
+  margin: 0.5em;
+  font-size: 1.7em;
 }
 
 .navbar {
@@ -162,6 +162,7 @@ li.nb a {
   color: white;
   justify-content: center;
   align-items: center;
+  text-decoration: none;
 }
 
 .logoutbtn {
@@ -286,7 +287,7 @@ ul.sl {
 }
 li.sl {
   width: 100%;
-  background-color: rgb(63, 47, 187);
+  background-color: rgb(30, 51, 156);
   border-radius: 1vw;
   margin-left: auto;
   margin-right: auto;
@@ -294,7 +295,7 @@ li.sl {
   margin-bottom: 1%;
 }
 li.sl:hover {
-  background-color: rgb(82, 65, 207);
+  background-color: rgb(40, 61, 166);
 }
 li.slg {
   width: 100%;
@@ -327,7 +328,7 @@ li.slg {
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
-  background-color: rgb(63, 47, 187);
+  background-color: rgb(30, 51, 156);
   text-align: center;
   color: white;
   position: relative;
@@ -335,7 +336,7 @@ li.slg {
 
 .button:hover {
   color: white;
-  background-color: rgb(82, 65, 207);
+  background-color: rgb(40, 61, 166);
 }
 
 input[type="text"] {
