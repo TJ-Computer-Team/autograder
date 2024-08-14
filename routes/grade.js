@@ -383,7 +383,6 @@ router.get("/problemset", checkLoggedIn, async (req, res) => {
 	let start = page*5; //write multipage later
 	let vals = await grabAllProblems(req.session.admin);
 	let lst = [];
-	console.log(lst)
 
 	for (let i=0; i<vals.length; i++) {
 		let p = vals[i];
