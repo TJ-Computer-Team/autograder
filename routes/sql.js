@@ -548,28 +548,76 @@ async function grabContestProblems(cid) {
 }
 async function validateUser(id, password) {
 	return new Promise((resolve, reject) => {
-                pl.connect((err, client, release) => {
-                        if (err) {
-                                console.log("Error getting client");
-                                resolve(false);
-                        }
-                        let qry = `SELECT * FROM users WHERE id = $1 AND pass = $2`;
-                        client.query(qry, [id, password], (err, results) => {
-                                release();
-                                if (err) {
-                                        console.log("an error occured while querying");
-					console.log(err);
-                                        resolve(false);
-                                }
-                                if (results.rows.length == 0) {
-                                        resolve(false);
-                                }
-                                else {
-					resolve(true);
-                                }
-                        });
-                });
+        pl.connect((err, client, release) => {
+        if (err) {
+            console.log("Error getting client");
+            resolve(false);
+        }
+        let qry = `SELECT * FROM users WHERE id = $1 AND pass = $2`;
+        client.query(qry, [id, password], (err, results) => {
+            release();
+            if (err) {
+                console.log("an error occured while querying");
+	    	    console.log(err);
+                resolve(false);
+            }
+            if (results.rows.length == 0) {
+                resolve(false);
+            }
+            else {
+		        resolve(true);
+            }
         });
+        });
+     });
+}
+async function updateUSACO(id, usaco) {
+    return new Promise((resolve, reject) => {
+        pl.connect((err, client, release) => {
+            if (err) {
+                console.log("Error getting client");
+                resolve(false);
+            }
+            let qry = `UPDATE users SET usaco_division = $1 WHERE id = $2;`;
+            client.query(qry,[usaco, id], (err, results) => {
+                release();
+                if (err) {
+                    console.log("an error occured while querying to update usaco division", err);
+                    resolve(false);
+                }
+                else if (results.rows.length == 0) {
+                    resolve(false);
+                }
+                else {
+                    resolve(false);
+                }
+            });
+        });
+    });
+}
+async function updateCF(id, cf) {
+    return new Promise((resolve, reject) => {
+        pl.connect((err, client, release) => {
+            if (err) {
+                console.log("Error getting client");
+                resolve(false);
+            }
+            let qry = `UPDATE users SET cf_handle = $1 WHERE id = $2;`;
+            client.query(qry,[cf, id], (err, results) => {
+                release();
+                if (err) {
+                    console.log("an error occured while querying to update cf handle", err);
+                    resolve(false);
+                }
+                else if (results.rows.length == 0) {
+                    resolve(false);
+                }
+                else {
+                    resolve(false);
+                }
+            });
+        });
+    });
 }
 module.exports = {
 	grab: (id) => {
@@ -644,5 +692,11 @@ module.exports = {
 	},
 	validateUser: (id, password) => {
 		return validateUser(id, password);
-	}
+	},
+  updateUSACO: (id, usaco) => {
+    return updateUSACO(id, usaco);
+  },
+  updateCF: (id, cf) => {
+    return updateCF(id, cf);
+  }
 }

@@ -35,7 +35,23 @@
           <div class="title"><p>Profile</p></div>
           <div class="userinfo">Name: <%=locals.name%></div>
           <div class="userinfo">Username: <%=locals.username%></div>
-          <div class="statsInfo"></div>
+          <div class="statsInfo">
+            <form action="/grade/updateStats" method="POST">
+              <label for="usaco_div">USACO Division</label>
+              <select name="usaco_div">
+                <option value="none" <% if(locals.usaco_div=="none") { %> selected  <% } %> >Not Participated</option>
+                <option value="bronze" <% if(locals.usaco_div=="bronze") { %> selected  <% } %> >Bronze</option>
+                <option value="silver" <% if(locals.usaco_div=="silver") { %> selected  <% } %> >Silver</option>
+                <option value="gold" <% if(locals.usaco_div=="gold") { %> selected  <% } %> >Gold</option>
+                <option value="plat" <% if(locals.usaco_div=="plat") { %> selected  <% } %> >Platinum</option>
+              </select>
+              <br>
+              <label for="cf_handle">Codeforces Handle</label>
+              <input name="cf_handle" value=<%=locals.cf_handle%>>
+              <br>
+              <input type="submit" value="Save">
+            </form>
+          </div>
         </div>
       </div>
     </div>

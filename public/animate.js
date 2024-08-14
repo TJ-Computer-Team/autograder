@@ -31,7 +31,8 @@ function bfs(start) {
 
   let intid = setInterval(function () {
     let titleText = document.getElementById("title");
-
+    
+    /*
     if (cntT < 40) {
       titleText.innerHTML = "<strong><em>TJCT Grader</em></strong>";
       cntT += 1;
@@ -40,6 +41,7 @@ function bfs(start) {
       if (cntT >= 80) cntT = 0;
       cntT += 1;
     }
+    */
 
     if (!alt && from[ptr] != -1) {
       let cur = q[ptr];

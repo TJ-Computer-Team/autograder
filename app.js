@@ -30,7 +30,7 @@ app.get("/test", async (req, res) => {
 });
 
 app.get("/", async (req, res) => {
-    let source = req.headers['user-agent']
+    let source = req.headers['user-agent'];
     let ua = useragent.parse(source);
     
     if (ua.isMobile) {
@@ -91,5 +91,6 @@ app.post("/confirm", async (req, res) => {
 		res.send("ERROR" + error);
 	}
 });
+
 console.log("start");
 app.listen(port);
