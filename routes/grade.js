@@ -455,8 +455,6 @@ router.get("/submit", checkLoggedIn, async (req, res) => {
 
 router.post("/status", checkLoggedIn, async (req, res) => { //eventually change to post to submit
 	//sends file to another website
-	
-
 	let language = req.body.lang;
 	//console.log(language);
 	if (language != 'python' && language != 'cpp' && language != 'java') {
