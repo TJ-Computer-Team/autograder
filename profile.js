@@ -23,7 +23,9 @@ async function check(user_data, req, res) {
 			req.session.username = results.rows[0].username;
 			req.session.userid = results.rows[0].id;
 			req.session.admin = results.rows[0].admin;
-			req.session.tjioi = Math.floor(parseInt(req.session.userid)/100)==2024;
+            req.session.usaco_div = results.rows[0].usaco_division;
+            req.session.cf_handle = results.rows[0].cf_handle;
+			req.session.tjioi = Math.floor(parseInt(req.session.userid)/100)>=2024 && Math.floor(parseInt(req.session.userid)/100)<10000;
 			if (req.session.admin) {
 				req.session.name = "[Admin] " + req.session.name;
 			}

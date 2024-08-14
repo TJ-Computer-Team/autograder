@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab, grabProblem, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, updateTest, addSol, makePublic, updateChecker, grabUsers, grabContestProblems, validateUser} = require("./sql");
+const {grab, grabProblem, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, updateTest, addSol, makePublic, updateChecker, grabUsers, grabContestProblems, validateUser, updateUSACO, updateCF} = require("./sql");
 const {queue, compileTests} = require("./runTests");
 
 const {processFunction, getToken} = require("../oauth");
@@ -10,7 +10,6 @@ const {check} = require("../profile");
 const FileReader = require('filereader');
 const csvtojson = require('csvtojson');
 const upload = require('express-fileupload');
-const formidable = require('formidable').formidable;
 
 const lastSubmission = new Map();
 router.use(upload());
@@ -60,31 +59,6 @@ function getLateTakers(cid) {
 	return [];
 }
 
-router.get("/uploadfiletest", async (req, res) => {
-	res.render("danielorz.ejs")
-});
-
-router.post('/uploadfiletest', function (req, res) {
-	
-  let sampleFile = req.files;
-	console.log(sampleFile.files);
-let filename = sampleFile.name;
-	console.log(filename);
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
-  }
-
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-
-  // Use the mv() method to place the file somewhere on your server
-  //sampleFile.mv('/somewhere/on/your/server/filename.jpg', function(err) {
-   // if (err)
-    //  return res.status(500).send(err);
-
-    res.send('File uploaded!');
-  //});
-});
-
 router.get("/authlogin", async (req, res) => {
 	if (req.session.loggedin) {
 		res.redirect("/grade/profile");
@@ -120,6 +94,18 @@ router.post("/tjioilogin", async (req, res) => {
 	}
 });
 
+router.post("/updateStats", async (req, res) => {
+    let usaco=req.body.usaco_div;
+    let cf=req.body.cf_handle;
+    if (usaco!="" && usaco!=undefined) {
+        await updateUSACO(req.session.userid, usaco);
+    }
+    if (cf!="" && cf!=undefined) {
+        await updateCF(req.session.userid, cf);
+    }
+    res.redirect('/grade/profile');
+});
+
 router.get("/info", checkLoggedIn, async (req, res) => {
 	res.render("info", {tjioi: req.session.tjioi});
 });
@@ -132,7 +118,7 @@ router.get("/profile", checkLoggedIn, (req, res)=>{
 	if (req.session.tjioi) {
 		res.render("tjioiProfile", {name: req.session.name, username: req.session.username});
 	} else {
-		res.render("profile", {name: req.session.name, username: req.session.username});
+		res.render("profile", {name: req.session.name, username: req.session.username, usaco_div: req.session.usaco_div, cf_handle: req.session.cf_handle});
 	}
 });
 router.get("/profile/:id", checkLoggedIn, async (req, res) => {
