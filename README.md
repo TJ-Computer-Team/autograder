@@ -17,8 +17,7 @@ This repository contains most of the website that deals with how pages are rende
 
 `views` folder: EJS files that are rendered to users
 
-To run this locally, download the files, install Node.js and use npm to install the necessary packages. Then, run:
-```node app.js```. You will also have to update the environment variables and database code for it to load properly.
+To run this locally, download the files, install Node.js and use npm to install the necessary packages. Then, run: ```node app.js```. You will also have to update the environment variables and database code for it to load properly.
 
 ---
 

@@ -693,10 +693,10 @@ module.exports = {
 	validateUser: (id, password) => {
 		return validateUser(id, password);
 	},
-    updateUSACO: (id, usaco) => {
-        return updateUSACO(id, usaco);
-    },
-    updateCF: (id, cf) => {
-        return updateCF(id, cf);
-    }
+  updateUSACO: (id, usaco) => {
+    return updateUSACO(id, usaco);
+  },
+  updateCF: (id, cf) => {
+    return updateCF(id, cf);
+  }
 }
