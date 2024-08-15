@@ -486,7 +486,7 @@ router.post("/status", checkLoggedIn, async (req, res) => { // sends file to ano
         reg = /^.*\.(py|java|cpp)$/i
         language = sampleFile.name.match(reg)
         if (language == null) {
-            res.send("please change file extension");
+            res.send("Invalid file extension");
             return;
         }
         language = language[1]
