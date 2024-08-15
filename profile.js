@@ -10,12 +10,10 @@ async function check(user_data, req, res) {
 		});
 		await cl.connect();
 		let results = await cl.query("SELECT * FROM users WHERE id = ($1)", [user_data.id]);
-		if (results.rows.length == 0) {
+		if (results.rows.length == 0) { // first time user
 			await cl.end();
 			req.session.user_data = user_data;
 			res.redirect("/start");
-
-			//populate(user_data, req, res);
 		}
 		else {
 			cl.end();
@@ -30,7 +28,6 @@ async function check(user_data, req, res) {
 				req.session.name = "[Admin] " + req.session.name;
 			}
 			req.session.loggedin = true;
-
 			if (req.session.mobile) {
 				res.redirect("/grade/attendance");
 			}
@@ -44,7 +41,7 @@ async function check(user_data, req, res) {
 		console.log(error);
 	}
 }
-async function populate(user_data, req, res) {
+async function populate(user_data, req, res) { // generate data for first time user
 	try {
 		cl = new Client ({
 			user: "postgres",
@@ -55,22 +52,10 @@ async function populate(user_data, req, res) {
 		await cl.connect();
 		await cl.query("INSERT INTO users VALUES ($1, $2, $3, $4, $5, $6, $7)", [user_data.id, user_data.display_name, user_data.ion_username, 0, false, user_data.email, user_data.pass]);
 		await cl.end();
-		req.session.name = user_data.display_name;
-		req.session.username = user_data.ion_username;
-		req.session.userid = user_data.id;
-		req.session.loggedin = true;
-		req.session.admin = false;
-		
-	        if (req.session.mobile) {
-               		res.redirect("/grade/attendance");
-                }
-                else {
-                        res.redirect("/grade/profile");
-                }
+		check(user_data, req, res);
 	}
 	catch (error) {
 		console.log(error);
-		//res.redirect("/");
 		res.send(error);
 	}
 }
