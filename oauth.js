@@ -49,7 +49,7 @@ async function processFunction(CODE, req, res2) {
         });
         return vals;
     } catch (error) {
-        console.log('Access Token Error lol', error.message);
+        console.log('Access Token Error:', error.message);
         return false;
     }
 }
