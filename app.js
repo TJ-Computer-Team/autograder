@@ -59,10 +59,6 @@ app.get("/start", async (req, res) => {
     }
 });
 
-app.get("/robot", async (req, res) => {
-    res.redirect("https://www.cs.columbia.edu/~sedwards/presentations/robot-car-instructions.pdf");
-});
-
 app.get("/megaknight", async (req, res) => {
     res.render("megaknight");
 });
