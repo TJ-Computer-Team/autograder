@@ -1,16 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const {grab, grabProblem, grabAllProblems, grabSubs, grabStatus, checkAdmin, createSubmission, grabProfile, getProblem, addProblem, testSql, addChecker, addTest, updateTest, addSol, makePublic, updateChecker, grabUsers, grabContestProblems, validateUser, updateUSACO, updateCF} = require("./sql");
-const {queue, compileTests} = require("./runTests");
-
+const {grabProblem, grabAllProblems, grabSubs, grabStatus, createSubmission, grabProfile, grabUsers, grabContestProblems, validateUser, updateUSACO, updateCF} = require("./sql");
+const {queue} = require("./runTests");
 const {processFunction, getToken} = require("../oauth");
 const {check} = require("../profile");
-
-const FileReader = require('filereader');
-const csvtojson = require('csvtojson');
 const upload = require('express-fileupload');
-
 const lastSubmission = new Map();
 router.use(upload());
 
@@ -54,16 +49,14 @@ function getContestEnd(cid) {
 	return contestEnd;
 }
 function getLateTakers(cid) {
-	//if(cid==3) return [1001731, 1001623, 1001620, 1001475, 1002158, 1001944, 1001092, 1002595, 1001904, 1001642];// anush devkar, armaan ahmed, anusha agarwal, kanishk sivanadam, max zhao, rishikesh narayana, samarth bhargav, nathan liang, esha m, navya arora
-	//if(cid==4) return [1002636, 1001207, 1001608, 1002135];//svaran, avni, arjun, olivia
-	return [];
+	if (cid==3) return [1001731, 1001623, 1001620, 1001475, 1002158, 1001944, 1001092, 1002595, 1001904, 1001642];// anush devkar, armaan ahmed, anusha agarwal, kanishk sivanadam, max zhao, rishikesh narayana, samarth bhargav, nathan liang, esha m, navya arora
+	if (cid==4) return [1002636, 1001207, 1001608, 1002135];//svaran, avni, arjun, olivia
 }
 
 router.get("/authlogin", async (req, res) => {
 	if (req.session.loggedin) {
 		res.redirect("/grade/profile");
-	}
-	else {
+	} else {
 		let theurl = await getToken();
 		res.redirect(theurl);
 	}
@@ -73,7 +66,6 @@ router.get("/login", async (req, res)=>{
 	let data = await processFunction(CODE, req, res);
 	await check(data.user_data, data.req, data.res);
 });
-
 router.get("/tjioilogin", (req, res) => {
 	if (req.session.loggedin) {
 		res.redirect('/grade/profile');
@@ -93,7 +85,6 @@ router.post("/tjioilogin", async (req, res) => {
 		res.send("Invalid credentials");
 	}
 });
-
 router.post("/updateStats", async (req, res) => {
     let usaco=req.body.usaco_div;
     let cf=req.body.cf_handle;
@@ -105,11 +96,9 @@ router.post("/updateStats", async (req, res) => {
     }
     res.redirect('/grade/profile');
 });
-
 router.get("/info", checkLoggedIn, async (req, res) => {
 	res.render("info", {tjioi: req.session.tjioi});
 });
-
 router.post("/logout", (req, res)=> {
 	req.session.destroy();
 	res.redirect("/");
@@ -125,23 +114,17 @@ router.get("/profile/:id", checkLoggedIn, async (req, res) => {
 	if (req.session.tjioi) {
 		res.redirect("/grade/profile");
 	} else {
-
-	let vals = await grabProfile(req.params.id);
-	if (vals == false) {
-		res.send("No such user");
-	}
-	else {
-		res.render("fprofile", {name: vals.name, username: vals.username});
-	}
-
+		let vals = await grabProfile(req.params.id);
+		if (vals == false) {
+			res.send("No such user");
+		} else {
+			res.render("fprofile", {name: vals.name, username: vals.username});
+		}
 	}
 });
-
-
 router.get("/", async (req, res) => {
 	res.redirect("/grade/profile");
 });
-
 router.get("/attendance", async (req, res) => {
 	if (req.session.loggedin) {
 		deviceClass = 'main';
@@ -152,25 +135,23 @@ router.get("/attendance", async (req, res) => {
 		res.redirect("/");
 	}
 });
-
 router.post("/attendanceComplete", async (req, res) => {
-        if (req.session.loggedin) {
-        	let pass = req.body.pass;
+	if (req.session.loggedin) {
+		let pass = req.body.pass;
 		let block = req.body.block;
-		res.send("Attendance complete, thank you.");
+		res.send("Attendance complete, thank you");
 	}
 	else {
 		res.redirect("/");
 	}
 });
-
 router.get("/contests", checkLoggedIn, async (req, res) => {
 	res.render('contests', {tjioi:req.session.tjioi});
 });
 router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 	let cid = req.params.id;
 	let problems = await grabContestProblems(cid);
-	if (problems== undefined){
+	if (problems== undefined) {
 		problems = []
 	}
 	let time = (new Date()).getTime();
@@ -178,7 +159,7 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 	let contestEnd = getContestEnd(req.params.id);
 	let title = "In-House #"+cid;
 	if (cid==202401) title="Practice Contest";
-	else if(cid==202402) title="TJIOI 2024";
+	else if (cid==202402) title="TJIOI 2024";
 	let timeMessage = contestEnd;
 	let timeType="end";
 	if (time < contestStart) {
@@ -187,32 +168,30 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 	}
 	var ordered=[];
 	for(let i=0; i<problems.length; i++) {
-		if(true) {
+		if (true) {
 			ordered.push(problems[i]);
 			ordered[ordered.length-1].solves=0;
 			ordered[ordered.length-1].available = (!problems[i].secret || req.session.admin);
 			ordered[ordered.length-1].users=[];
 		}
 	}
-
-        let subs = await grabSubs(undefined, cid);
-        let users = await grabUsers();
-	// let subs=  [];
-        for (let i=0; i<subs.length; i++) {
+	let subs = await grabSubs(undefined, cid);
+	let users = await grabUsers();
+	for (let i=0; i<subs.length; i++) {
 		if (parseInt(subs[i].timestamp)>getContestEnd(cid)) continue;
-                let ind, pind;
-                for (let j=0; j<users.length; j++) {
-                        if (users[j].id == subs[i].user) {
-                                ind = j;
-                                break;
-                        }
-                }
-                for (let j=0; j<ordered.length; j++) {
-                        if (ordered[j].pid == subs[i].problemid) {
-                                pind = j;
-                                break;
-                        }
-                }
+		let ind, pind;
+		for (let j=0; j<users.length; j++) {
+			if (users[j].id == subs[i].user) {
+				ind = j;
+				break;
+			}
+		}
+		for (let j=0; j<ordered.length; j++) {
+			if (ordered[j].pid == subs[i].problemid) {
+				pind = j;
+				break;
+			}
+		}
 		if (pind==undefined) {
 			console.log("error - cannot find matching problem for submission in rendering solve count");
 			continue;
@@ -221,19 +200,18 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
 			console.log("error - cannot find matching user for submission in rendering solve count");
 			continue;
 		}
-                if (subs[i].verdict == "Accepted" || subs[i].verdict=="AC") {
+		if (subs[i].verdict == "Accepted" || subs[i].verdict=="AC") {
 			if (ordered[pind].users.includes(ind)) continue;
 			ordered[pind].solves+=1;
 			ordered[pind].users.push(ind);
-                }
+		}
 	}
 	ordered.sort(function(a, b) {
 		if (a.points==b.points)
 			return a.pid>b.pid? 1:-1;
 		return a.points>b.points? 1:-1;
 	});
-	
-	if(ordered.length>0)
+	if (ordered.length>0)
 		res.render("contest", {title: title, problems: ordered, user: req.session.userid, cid: cid, timeStatus: timeMessage, timeType: timeType});
 	else
 		res.redirect('/grade/contests');
@@ -248,99 +226,91 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
 	});
     let contestStart=getContestStart(cid);
 	let contestEnd=getContestEnd(cid);
-
-        let load = [];
-        for (let i=0; i<users.length; i++) {
-                let tmp = [];
-                for (let j=0; j<problems.length; j++) {
-                        tmp.push(0);
-                }
-                row = {
-                        name: users[i].display_name,
-                        id: users[i].id,
-                        solved: 0,
-                        problems: tmp,
-                        penalty: 0
-                }
-                load.push(row);
-        }
-        subs.sort(function(a, b) {
-                return parseInt(a.timestamp)>parseInt(b.timestamp)? 1 : -1;
-        });
-	
-        for (let i=0; i<subs.length; i++) {
+	let load = [];
+	for (let i=0; i<users.length; i++) {
+		let tmp = [];
+		for (let j=0; j<problems.length; j++) {
+			tmp.push(0);
+		}
+		row = {
+			name: users[i].display_name,
+			id: users[i].id,
+			solved: 0,
+			problems: tmp,
+			penalty: 0
+		}
+		load.push(row);
+	}
+	subs.sort(function(a, b) {
+		return parseInt(a.timestamp)>parseInt(b.timestamp)? 1 : -1;
+	});
+	for (let i=0; i<subs.length; i++) {
 		let contestEnd2=contestEnd;
 		let contestStart2=contestStart;
-		if(cid==3) {
-			if([1002379].includes(subs[i].user)) contestEnd2+=50*60000; // shaurya bisht
-			if([1001533].includes(subs[i].user)) contestEnd2+=((4*24)*60+30)*60000; // yicong wang
-			if(getLateTakers(3).includes(subs[i].user)) {
+		if (cid==3) {
+			if ([1002379].includes(subs[i].user)) contestEnd2+=50*60000; // shaurya bisht
+			if ([1001533].includes(subs[i].user)) contestEnd2+=((4*24)*60+30)*60000; // yicong wang
+			if (getLateTakers(3).includes(subs[i].user)) {
 				contestEnd2+=(2*24+20)*60*60000;
 			}
 		}
-		else if(cid==4) {
-			if(getLateTakers(4).includes(subs[i].user)) {
+		else if (cid==4) {
+			if (getLateTakers(4).includes(subs[i].user)) {
 				contestEnd2+=(3*24+4)*60*60000;
 				contestStart2+=((3*24+4)*60-5)*60000;
 			}
 		}
-		if(parseInt(subs[i].timestamp)>contestEnd2) continue;
-		//console.log("timestamps:", subs[i].timestamp, contestEnd);
-                let ind, pind;
-                for (let j=0; j<load.length; j++) {
-                        if (load[j].id == subs[i].user) {
-                                ind = j;
-                                break;
-                        }
-                }
-                for (let j=0; j<problems.length; j++) {
-                        if (problems[j].pid == subs[i].problemid) {
-                                pind = j;
-                                break;
-                        }
-                }
-                if (subs[i].verdict == "Accepted" || subs[i].verdict=="AC") {
-                        if (load[ind].problems[pind]>=1) {
-                                continue;
-                        }
-                        load[ind].solved +=problems[pind].points;
-                        if (Number.isInteger(parseInt(subs[i].timestamp))) {
-                                let time = parseInt(subs[i].timestamp);
-                                if (true||time > contestStart2) {
-                                        load[ind].penalty += parseInt((time-contestStart2)/60000); // convert milliseconds to minutes
-                                }
-                                else {
-                                        console.log("error, timestamp before contest start")
-                                }
-                        }
-                        else {
-                                console.log("error, invalid timestamp");
-                        }
-                        if (load[ind].problems[pind]<0) {
-                                load[ind].penalty -= 10*load[ind].problems[pind];
-                        }
-                        load[ind].problems[pind] = 1-load[ind].problems[pind];
-                }
-                else {
-                        if (load[ind].problems[pind] < 1) {
-                                load[ind].problems[pind] -= 1;
-                        }
-                }
-        }
-        let load2 = [];
-        for (let i=0; i<load.length; i++) {
-                let val = load[i];
-                if (val.solved > 0) {
-			if(val.penalty<0) val.penalty=0;
-                        if(val.penalty>0) load2.push(val);
-                }
-        }
-        load2.sort(function(a,b){
-                if (a.solved==b.solved) return a.penalty > b.penalty ? 1 : -1;
-                return a.solved < b.solved ? 1 : -1;
-        });
+		if (parseInt(subs[i].timestamp)>contestEnd2) continue;
+		let ind, pind;
+		for (let j=0; j<load.length; j++) {
+			if (load[j].id == subs[i].user) {
+				ind = j;
+				break;
+			}
+		}
+		for (let j=0; j<problems.length; j++) {
+			if (problems[j].pid == subs[i].problemid) {
+				pind = j;
+				break;
+			}
+		}
+		if (subs[i].verdict == "Accepted" || subs[i].verdict=="AC") {
+			if (load[ind].problems[pind]>=1) {
+				continue;
+			}
+			load[ind].solved +=problems[pind].points;
+			if (Number.isInteger(parseInt(subs[i].timestamp))) {
+				let time = parseInt(subs[i].timestamp);
+				load[ind].penalty += parseInt((time-contestStart2)/60000);
+			}
+			else {
+				console.log("Error, invalid timestamp");
+			}
+			if (load[ind].problems[pind]<0) {
+				load[ind].penalty -= 10*load[ind].problems[pind];
+			}
+			load[ind].problems[pind] = 1-load[ind].problems[pind];
+		}
+		else {
+			if (load[ind].problems[pind] < 1) {
+				load[ind].problems[pind] -= 1;
+			}
+		}
+	}
+	let load2 = [];
+	for (let i=0; i<load.length; i++) {
+		let val = load[i];
+		if (val.solved > 0) {
+			if (val.penalty<0) val.penalty=0;
+			if (val.penalty>0) load2.push(val);
+		}
+	}
+	load2.sort(function(a,b) {
+		if (a.solved==b.solved) return a.penalty > b.penalty ? 1 : -1;
+		return a.solved < b.solved ? 1 : -1;
+	});
 	for (let i=0; i<load2.length; i++) {
-		if(i>0 && load2[i].solved==load2[i-1].solved && load2[i].penalty==load2[i-1].penalty) load2[i].rank=load2[i-1].rank;
+		if (i>0 && load2[i].solved==load2[i-1].solved && load2[i].penalty==load2[i-1].penalty) load2[i].rank=load2[i-1].rank;
 		else load2[i].rank=i+1;
 	}
 	let title="In-House #"+cid;
@@ -351,7 +321,7 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
 router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
     let user = req.query.user;
     let contest = req.query.contest;
-    let admin = req.session.admin; //await checkAdmin(req.session.userid); //seems insecure but look at later :DD:D:D:D
+    let admin = req.session.admin;
     if (user == undefined && contest == undefined && !admin) {
         user = req.session.userid;
     }
@@ -362,7 +332,6 @@ router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
 	let title="In-House #"+cid;
 	if (cid == 202401) title="Practice Contest";
 	else if (cid == 202402) title="TJIOI 2024";
-
 	if (contest != undefined) {
         let contestStart=getContestStart(cid);
         submissions=submissions.filter(function(elem) {
@@ -372,12 +341,8 @@ router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
     res.render("contestStatus", {title: title, user: req.session.userid, cid: cid, submissions: submissions});
 });
 router.get("/problemset", checkLoggedIn, async (req, res) => {
-	let page = req.query.page;
-	if (page == undefined) page = 0;
-	let start = page*5; //write multipage later
 	let vals = await grabAllProblems(req.session.admin);
 	let lst = [];
-
 	for (let i=0; i<vals.length; i++) {
 		let p = vals[i];
 		if ((!p.secret || req.session.admin) && (req.session.tjioi ^ p.contestid<202400)) lst.push(p);
@@ -385,32 +350,27 @@ router.get("/problemset", checkLoggedIn, async (req, res) => {
 	lst.sort(function(a, b) {
 		return a.pid>b.pid?1:-1;
 	});
-	
 	res.render("gradeProblemset", {problems: lst});
 });
-router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.id
+router.get("/problemset/:id", checkLoggedIn, async (req, res) => {
 	let vals = await grabProblem(req.params.id);
 	let contestStart=getContestStart(vals.cid);
 	let userid=req.session.userid;
-	if(vals.cid==3) {
-		if([1002379].includes(userid)) contestStart+=50*60000; // shaurya bisht
-		if([1001533].includes(userid)) contestStart+=((4*24)*60+30)*60000; // yicong wang
-		if(getLateTakers(3).includes(userid)) contestStart+=(2*24+20)*60*60000;
+	if (vals.cid==3) {
+		if ([1002379].includes(userid)) contestStart+=50*60000; // shaurya bisht
+		if ([1001533].includes(userid)) contestStart+=((4*24)*60+30)*60000; // yicong wang
+		if (getLateTakers(3).includes(userid)) contestStart+=(2*24+20)*60*60000;
 	}
-	else if(vals.cid==4) {
-		if(getLateTakers(4).includes(userid)) contestStart+=(3*24+4)*60*60000; // 6:30 pm on monday
+	else if (vals.cid==4) {
+		if (getLateTakers(4).includes(userid)) contestStart+=(3*24+4)*60*60000; // 6:30 pm on monday
 	}
-
 	vals.title = vals.name;
 	vals.pid = req.params.id;
-	if(!req.session.admin && (new Date()).getTime()<=contestStart) {
+	if (!req.session.admin && (new Date()).getTime()<=contestStart) {
 		console.log(userid, "has tried to access problem early for contest", vals.cid, "at time", new Date().getTime());
-		res.send("contest has not started");
+		res.send("Contest has not started");
 		return;
 	}
-
-	//console.log(vals);
-
 	let back  = req.query.back;
 	if (back) {
 		vals.back = back;
@@ -418,9 +378,7 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => { //req.params.
 	else {
 		vals.back = "/grade/problemset";
 	}
-
 	if (req.session.admin || !vals.secret) {
-		console.log("trying to render problem");
 		res.render("gradeProblem", vals);
 	}
 	else {
@@ -445,64 +403,48 @@ router.get("/submit", checkLoggedIn, async (req, res) => {
 	lastSub = last[last.length-1].language;
 	res.render("gradeSubmit", {problemid: req.query.problem, problemname: problemname, lastlang: lastSub, problem: problems});
 });
-
-router.post("/status", checkLoggedIn, async (req, res) => { //eventually change to post to submit
-	//sends file to another website
+router.post("/status", checkLoggedIn, async (req, res) => { // sends file to another website
 	let language = req.body.lang;
-	//console.log(language);
 	if (language != 'python' && language != 'cpp' && language != 'java') {
-		console.log("invalid language");
-		res.send("unacceptable code language");
+		res.send("Unacceptable code language");
 		return;
 	}
-
 	let pid = req.body.problemid;
-	if(pid ==""){
+	if (pid =="") {
 		res.send("You did not input any problem id");
 		return;
 	}
-
 	let file = req.body.code;
-
 	let problem = await grabProblem(pid);
 	let cid = problem.cid;
-
 	let problemname = problem.name;
-
 	let today = new Date();
 	let timestamp = today.getTime();
-
-	if(req.files && Object.keys(req.files).length !=0){
+	if (req.files && Object.keys(req.files).length !=0){
 		let sampleFile = req.files.files;
 		reg = /^.*\.(py|java|cpp)$/i
 		language= sampleFile.name.match(reg)
-		if(language==null){
+		if (language==null) {
 			res.send("please change file extension");
 			return;
 		}
 		language = language[1]
-
-		if(language=="py"){
+		if (language=="py") {
 			language = 'python';
 		}
-		console.log(language);
 		file = sampleFile.data.toString()
-		console.log(file);
 	}
-
 	let contestStart=getContestStart(cid);
 	let contestEnd=getContestEnd(cid);
 	if (!req.session.admin && timestamp<=contestStart) {
 		res.send("contest currently unavailable");
 	}
-
 	let prevts = lastSubmission.get(req.session.userid);
-	if (prevts==undefined){
+	if (prevts==undefined) {
 		prevts= -30000
 	}
-	if (timestamp-prevts>30000 || req.session.admin){
+	if (timestamp-prevts>30000 || req.session.admin) {
 		let sid = await createSubmission(req.session.userid, file, pid, language, problemname, cid, timestamp);
-		console.log("submission id:", sid);
 		lastSubmission.set(req.session.userid, timestamp);
 		await queue(pid, sid);
 		res.redirect("/grade/status");
@@ -510,15 +452,12 @@ router.post("/status", checkLoggedIn, async (req, res) => { //eventually change 
 		res.render("spamming");
 		return;
 	}
-	
 });
-
 router.get("/status", checkLoggedIn, async (req, res) => {
 	let user = req.query.user;
 	let contest = req.query.contest;
 	let admin = req.session.admin;
-	//console.log(user, contest, admin);
-	if (user == undefined && contest == undefined && !admin) { //& !admin
+	if (user == undefined && contest == undefined && !admin) {
 		user = req.session.userid;
 	}
 	let submissions = await grabSubs(user, contest);
@@ -529,36 +468,29 @@ router.get("/status", checkLoggedIn, async (req, res) => {
 	if (page == undefined) page=1;
 	res.render("gradeStatus", {submissions: submissions, viewAsAdmin: admin, page: page});
 });
-router.get("/status/:id", checkLoggedIn, async (req, res) => { //req.params.id
+router.get("/status/:id", checkLoggedIn, async (req, res) => {
 	let vals = await grabStatus(req.params.id);
 	if (vals.user == req.session.userid || req.session.admin) {
 		if (!req.session.admin &&vals.insight!=undefined && vals.insight[0] == 'D') {
-			vals.insight = "You cannot view feedback (not a sample testcase).";
-			//vals.insight = vals.insight.substring(67);
+			vals.insight = "You cannot view feedback (not a sample testcase)";
 		}
 		vals.admin = req.session.admin;
-
 		res.render("status", {submission: vals});
-	}
-	else {
-		res.send("You do not have permission to view this submission.");
+	} else {
+		res.send("You do not have permission to view this submission");
 	}
 });
-
 router.get("/rankings", checkLoggedIn, async (req, res) => {
     
 });
-
 function checkLoggedIn(req, res, next) {
 	if (req.session.loggedin) {
 		if (req.session.mobile) {
 			res.redirect("/grade/attendance");
-		}
-		else {
+		} else {
 			next();
 		}
-	}
-	else {
+	} else {
 		res.redirect("/");
 	}
 }
