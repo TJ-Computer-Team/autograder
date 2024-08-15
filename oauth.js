@@ -1,4 +1,6 @@
-const { AuthorizationCode } = require('simple-oauth2');
+const {
+    AuthorizationCode
+} = require('simple-oauth2');
 const axios = require('axios');
 const config = {
     client: {
@@ -6,9 +8,9 @@ const config = {
         secret: process.env.CLIENT_SECRET
     },
     auth: {
-        tokenHost:     'https://ion.tjhsst.edu/oauth/',
+        tokenHost: 'https://ion.tjhsst.edu/oauth/',
         authorizePath: 'https://ion.tjhsst.edu/oauth/authorize',
-        tokenPath:     'https://ion.tjhsst.edu/oauth/token/'
+        tokenPath: 'https://ion.tjhsst.edu/oauth/token/'
     }
 };
 const client = new AuthorizationCode(config);
@@ -26,27 +28,26 @@ async function processFunction(CODE, req, res2) {
         scope: ['read']
     };
     try {
-        let accessToken = await client.getToken(tokenParams); 
+        let accessToken = await client.getToken(tokenParams);
         let vals = undefined;
         await axios.get('https://ion.tjhsst.edu/api/profile?format=json', {
-            headers: {
-                'Authorization': 'Bearer '+ accessToken.token.access_token
-            }
-        }).then(res => {
-            let user_data = res.data;
-            req.session.id = user_data.id;
-            req.session.accessToken = accessToken;
-            
-            vals = {
-                user_data: user_data,
-                req: req,
-                res: res2
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            res2.redirect("/");
-        });
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken.token.access_token
+                }
+            }).then(res => {
+                let user_data = res.data;
+                req.session.id = user_data.id;
+                req.session.accessToken = accessToken;
+                vals = {
+                    user_data: user_data,
+                    req: req,
+                    res: res2
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                res2.redirect("/");
+            });
         return vals;
     } catch (error) {
         console.log('Access Token Error:', error.message);
@@ -60,5 +61,5 @@ module.exports = {
     },
     processFunction: (CODE, req, res) => {
         return processFunction(CODE, req, res);
-    } 
+    }
 }
