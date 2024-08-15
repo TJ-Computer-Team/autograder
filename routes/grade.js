@@ -536,7 +536,7 @@ router.get("/status", checkLoggedIn, async (req, res) => {
 router.get("/status/:id", checkLoggedIn, async (req, res) => {
     let vals = await grabStatus(req.params.id);
     if (vals.user == req.session.userid || req.session.admin) {
-        if (!req.session.admin && vals.insight != undefined && vals.insight[0] == 'D') {
+        if (!req.session.admin && vals.insight != undefined && vals.insight.startsWith("Viewing as admin")) {
             vals.insight = "You cannot view feedback (not a sample testcase)";
         }
         vals.admin = req.session.admin;
