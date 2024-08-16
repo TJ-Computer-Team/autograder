@@ -38,13 +38,13 @@
         <li class="cnb"><a href="/grade/submit">Submit Code</a></li>
         <li class="cnb">
           <a
-            href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.user%>&contest=<%=locals.cid%>"
+            href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.user%>"
             >My Submissions</a
           >
         </li>
         <li class="cnb">
           <a
-            href="/grade/contests/<%=locals.cid%>/status?contest=<%=locals.cid%>"
+            href="/grade/contests/<%=locals.cid%>/status"
             >All Submissions</a
           >
         </li>
@@ -69,7 +69,7 @@
           <td class="centertext"><%= "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i] %></td>
           <% if (locals.problems[i].available) { %>
             <td class="centertext">
-              <a href="/grade/problemset/<%=locals.problems[i].pid%>?back=https://tjctgrader.org/grade/contests/<%=locals.cid%>">
+              <a href="/grade/problemset/<%=locals.problems[i].pid%>?back=/grade/contests/<%=locals.cid%>">
                 <%=locals.problems[i].name%>
               </a>
             </td>
