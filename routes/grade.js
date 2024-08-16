@@ -16,7 +16,8 @@ const {
     updateUSACO,
     updateCF,
     getContest,
-    getAllContests
+    getAllContests,
+    getStats
 } = require("./sql");
 const {
     queue
@@ -231,8 +232,7 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
     else
         res.redirect('/grade/contests');
 });
-router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
-    let cid = req.params.id;
+async function getStandings(cid) {
     let subs = await grabSubs(undefined, cid);
     let users = await grabUsers();
     let problems = await grabContestProblems(cid);
@@ -326,12 +326,17 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
         if (i > 0 && load2[i].solved == load2[i - 1].solved && load2[i].penalty == load2[i - 1].penalty) load2[i].rank = load2[i - 1].rank;
         else load2[i].rank = i + 1;
     }
+    return {title: contest.name, pnum: problems.length, load: load2};
+}
+router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
+    let cid = req.params.id;
+    let standings = await getStandings(cid);
     res.render("standings", {
-        title: contest.name,
+        title: standings.title,
         user: req.session.userid,
         cid: cid,
-        pnum: problems.length,
-        load: load2
+        pnum: standings.pnum,
+        load: standings.load
     });
 });
 router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
@@ -502,9 +507,72 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => {
     }
 });
 router.get("/rankings", checkLoggedIn, async (req, res) => {
-
+    res.redirect('/rankings/2025');
 });
-
+router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
+    let rankings = await getStats(season);
+    for (let i = 0; i < rankings.length; i++) {
+        if (rankings[i].usaco == "plat") {
+            rankings[i].usaco = 1900;
+        } else if (rankings[i].usaco == "gold") {
+            rankings[i].usaco=1600;
+        } else if (rankings[i].usaco == "silver") {
+            rankings[i].usaco=1200;
+        } else {
+            rankings[i].usaco=800;
+        }
+        rankings[i].inhouses=[]
+    }
+    let contests = await getAllContests();
+    let contest_count = 0;
+    for (let i = 0; i < contests.length; i++) {
+        if (contests[i].rated == true) {
+            contest_count += 1;
+            let standings = await getStandings(contests[i].id);
+            for (let useri = 0; useri < rankings.length; useri++) {
+                let took = false;
+                for (let j = 0; j < standings.load.length; j++) {
+                    if (rankings[useri].id == standings[j].id) {
+                        rankings[useri].inhouses.push(2000*(standings.load.length-rank+1)/standings.load.length);
+                        took = true;
+                        break;
+                    }
+                }
+                if (!took) {
+                    rankings[useri].inhouses.push(0);
+                }
+            }
+        }
+    }
+    for (let i = 0; i < rankings.length; i++) {
+        rankings[i].inhouses.sort(function(a, b) {
+            return a-b;
+        });
+        let overall = 0;
+        for (let j = max(0, min(2, contest_count-2)); j < contest_count; j++) {
+            overall += rankings[i].inhouses[j];
+        }
+        overall /= contest_count;
+        rankings[i].inhouse = overall;
+        let vals = [rankings[i].usaco, rankings[i].cf, rankings[i].inhouse];
+        vals.sort(function(a, b) {
+            return a-b;
+        });
+        rankings[i].index = .2 * vals[0] + .35 * vals[1] * .45 * vals[2];
+    }
+    rankings.sort(function(a, b) {
+        return a.index < b.index ? 1 : -1;
+    });
+    for (let i = 0; i < rankings.length; i++) {
+        if (i > 0 && rankings[i].index == rankings[i - 1].index) {
+            rankings[i].rank =  rankings[i - 1].rank;
+        }
+        else rankings[i].rank = i + 1;
+    }
+    res.render("rankings", {
+        rankings: rankings
+    })
+});
 function checkLoggedIn(req, res, next) {
     if (req.session.loggedin) {
         if (req.session.mobile) {
