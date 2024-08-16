@@ -244,11 +244,8 @@ async function insertSubmission(id, verdict, runtime, memory, insight) {
                 if (err) {
                     console.log("An error occured while querying to insert submission", err);
                     resolve(false);
-                } else if (results.rows.length == 0) {
-                    resolve(false);
-                } else {
-                    resolve(false);
                 }
+                resolve(true);
             });
         });
     });
@@ -304,87 +301,87 @@ async function grabProfile(id) {
     });
 }
 async function addTest(tid, pid, tval) { // not in use
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
                 console.log("Error adding problem");
-                res(false);
+                resolve(false);
             }
             let qry = `INSERT INTO test (points,pid, test) VALUES ($1, $2, $3) RETURNING id;`;
             client.query(qry, [pts, pid, tval], (err, results) => {
                 release();
                 if (err) {
                     console.log("Error while querying");
-                    res(false);
+                    resolve(false);
                 }
-                res(true);
+                resolve(true);
             });
         });
     });
 }
 async function updateChecker(checkid, checkercode, lang) { // not in use
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
                 console.log("Error adding problem");
-                res(false);
+                resolve(false);
             }
             let qry = `UPDATE CHECKER SET code=$1, lang=$2 WHERE id = $3;`;
             client.query(qry, [checkercode, lang, checkid], (err, results) => {
                 release();
                 if (err) {
                     console.log("Error while querying");
-                    res(false);
+                    resolve(false);
                 }
-                res(true);
+                resolve(true);
             });
         });
     });
 }
 async function addChecker(checkid, checkercode, lang) { // not in use
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
                 console.log("Error adding problem");
-                res(false);
+                resolve(false);
             }
             let qry = `INSERT INTO checker (code, lang) VALUES ($1, $2) RETURNING id;`;
             client.query(qry, [checkercode, lang], (err, results) => {
                 release();
                 if (err) {
                     console.log("Error while querying");
-                    res(false);
+                    resolve(false);
                 }
-                res(true);
+                resolve(true);
             });
         });
     });
 }
 async function addSol(pid, code, lang) { // not in use
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
                 console.log("Error adding problem");
-                res(false);
+                resolve(false);
             }
             let qry = `UPDATE problems SET solution=$1, sollang=$3 WHERE pid=$2`;
             client.query(qry, [code, pid, lang], (err, results) => {
                 release();
                 if (err) {
                     console.log("Error while querying");
-                    res(false);
+                    resolve(false);
                 }
-                res(true);
+                resolve(true);
             });
         });
     });
 }
 async function addProblem(pid, pname, cid, checkid, sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples, points) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
                 console.log("Error adding problem");
-                res(false);
+                resolve(false);
             }
             console.log(pid, secret, inputtxt, outputtxt, samples);
             // pid | name | contestid | checkerid | solution | statement | tl | ml | interactive | secret | points 
@@ -409,47 +406,47 @@ async function addProblem(pid, pname, cid, checkid, sol, state, tl, ml, inter, s
                 if (err) {
                     console.log(err);
                     console.log("Error while querying");
-                    res(false);
+                    resolve(false);
                 }
-                res(results);
+                resolve(results);
             });
         });
     });
 }
 async function grabUsers() {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
                 console.log("Error getting problems");
-                res(false);
+                resolve(false);
             }
             let qry = "SELECT * FROM users;";
             client.query(qry, (err, results) => {
                 release();
                 if (results.rows.length == 0) {
-                    res(false);
+                    resolve(false);
                 } else {
-                    res(results.rows);
+                    resolve(results.rows);
                 }
             });
         });
     });
 }
 async function grabContestProblems(cid) {
-    return new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
                 console.log("Error getting problems");
-                res(false);
+                resolve(false);
             }
             let qry = `SELECT * FROM problems WHERE contestid = $1`;
             console.log("CID HERE", cid);
             client.query(qry, [cid], (err, results) => {
                 release();
                 if (results.rows.length == 0) {
-                    res(false);
+                    resolve(false);
                 } else {
-                    res(results.rows);
+                    resolve(results.rows);
                 }
             });
         });
@@ -468,13 +465,9 @@ async function validateUser(id, password) {
                 if (err) {
                     console.log("An error occured while querying");
                     console.log(err);
-                    resolve(false);
+                    resolve(false)
                 }
-                if (results.rows.length == 0) {
-                    resolve(false);
-                } else {
-                    resolve(true);
-                }
+                resolve(true);
             });
         });
     });
@@ -491,12 +484,8 @@ async function updateUSACO(id, usaco) {
                 release();
                 if (err) {
                     console.log("An error occured while querying to update usaco division", err);
-                    resolve(false);
-                } else if (results.rows.length == 0) {
-                    resolve(false);
-                } else {
-                    resolve(false);
                 }
+                resolve(true);
             });
         });
     });
@@ -513,16 +502,59 @@ async function updateCF(id, cf) {
                 release();
                 if (err) {
                     console.log("An error occured while querying to update cf handle", err);
+                }
+                resolve(true);
+            });
+        });
+    });
+}
+async function getAllContests() {
+    return new Promise((resolve, reject) => {
+        pl.connect((err, client, release) => {
+            if (err) {
+                console.log("Error getting client");
+                resolve(false);
+            }
+            let qry = `SELECT * FROM contests;`;
+            client.query(qry, [], (err, results) => {
+                release();
+                if (err) {
+                    console.log("An error occured while querying for contests", err);
                     resolve(false);
-                } else if (results.rows.length == 0) {
+                }
+                if (results.rows.length == 0) {
                     resolve(false);
                 } else {
-                    resolve(false);
+                    resolve(results.rows);
                 }
             });
         });
     });
 }
+async function getContest(cid) {
+    return new Promise((resolve, reject) => {
+        pl.connect((err, client, release) => {
+            if (err) {
+                console.log("Error getting client");
+                resolve(false);
+            }
+            let qry = `SELECT * FROM contests WHERE id = $1;`;
+            client.query(qry, [cid], (err, results) => {
+                release();
+                if (err) {
+                    console.log("An error occured while querying for contest", err);
+                    resolve(false);
+                }
+                if (results.rows.length == 0) {
+                    resolve(false);
+                } else {
+                    resolve(results.rows[0]);
+                }
+            });
+        });
+    });
+}
+
 module.exports = {
     grab: (id) => {
         if (Number(id))
@@ -593,5 +625,11 @@ module.exports = {
     },
     updateCF: (id, cf) => {
         return updateCF(id, cf);
+    },
+    getAllContests: () => {
+        return getAllContests();
+    },
+    getContest: (cid) => {
+        return getContest(cid);
     }
 }

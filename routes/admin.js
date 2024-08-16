@@ -253,7 +253,7 @@ router.post("/create", async (req, res) => {
         let outputtxt = req.body.outputtxt;
         let samples = req.body.samples;
         console.log(req.body);
-        let ret = {
+        /*let ret = {
             "pts": pts,
             "pid": pid,
             "pname": pname,
@@ -266,9 +266,9 @@ router.post("/create", async (req, res) => {
             "inputtxt": inputtxt,
             "outputtxt": outputtxt,
             "samples": samples
-        };
+        };*/
         await addProblem(pid, pname, cid, checkid, '', state, tl, ml, false, secret, inputtxt, outputtxt, samples, pts);
-        res.render("portal", ret);
+        res.redirect("/admin");
     } else {
         res.send("You are not an admin");
     }
