@@ -23,7 +23,7 @@ async function grab(id) {
             client.query(qry, [id], (err, results) => {
                 release();
                 if (err) {
-                    console.log("An error occured while querying");
+                    console.log("An error occured while querying", err);
                     resolve(false);
                 }
                 if (results.rows.length == 0) {
@@ -56,7 +56,7 @@ async function grabChecker(id) { // not in use
             client.query(qry, [id], (err, results) => {
                 release();
                 if (err) {
-                    console.log("An error occured while querying for checker");
+                    console.log("An error occured while querying for checker", err);
                     resolve(false);
                 }
                 if (results.rows.length == 0) {
@@ -73,7 +73,7 @@ async function grabChecker(id) { // not in use
         });
     });
 }
-async function grabAllProblems(isAdmin, cid) {
+async function grabAllProblems(isAdmin) {
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
@@ -82,10 +82,6 @@ async function grabAllProblems(isAdmin, cid) {
             }
             let qry = "SELECT * FROM problems WHERE (problems.secret IS NULL OR problems.secret = false OR problems.secret = $1)";
             let params = [];
-            if (cid != undefined) {
-                qry = "SELECT * FROM problems WHERE problems.contestid = $1 AND (problems.secret IS NULL OR problems.secret = false OR problems.secret = $2)";
-                params = [cid]
-            }
             if (isAdmin) {
                 params.push(true)
             } else {
@@ -94,7 +90,7 @@ async function grabAllProblems(isAdmin, cid) {
             client.query(qry, params, (err, results) => {
                 release();
                 if (err) {
-                    console.log("An error occured while querying for problems");
+                    console.log("An error occured while querying for problems", err);
                     resolve(false);
                 }
                 if (results.rows.length == 0) {
@@ -167,12 +163,14 @@ async function grabStatus(id) {
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
+                console.log("Error getting client");
                 resolve(false);
             }
             let qry = "SELECT * FROM submissions WHERE id = $1";
             client.query(qry, [id], (err, results) => {
                 release();
                 if (err) {
+                    console.log("An error occured while querying for status", err);
                     resolve(false);
                 }
                 if (results.rows.length == 0) {
@@ -199,12 +197,14 @@ async function grabProblem(id) {
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
+                console.log("Error getting client");
                 resolve(false);
             }
             let qry = "SELECT * FROM problems WHERE pid = $1";
             client.query(qry, [id], (err, results) => {
                 release();
                 if (err) {
+                    console.log("An error occured while querying for problem", err);
                     console.log(err);
                 }
                 if (results.rows.length == 0) {
@@ -284,7 +284,7 @@ async function grabProfile(id) {
             client.query(qry, [id], (err, results) => {
                 release();
                 if (err) {
-                    console.log("An error occured while querying");
+                    console.log("An error occured while querying for profile", err);
                     resolve(false);
                 }
                 if (results.rows.length == 0) {
@@ -304,7 +304,7 @@ async function addTest(tid, pid, tval) { // not in use
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
-                console.log("Error adding problem");
+                console.log("Error getting client");
                 resolve(false);
             }
             let qry = `INSERT INTO test (points,pid, test) VALUES ($1, $2, $3) RETURNING id;`;
@@ -323,7 +323,7 @@ async function updateChecker(checkid, checkercode, lang) { // not in use
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
-                console.log("Error adding problem");
+                console.log("Error getting client");
                 resolve(false);
             }
             let qry = `UPDATE CHECKER SET code=$1, lang=$2 WHERE id = $3;`;
@@ -342,7 +342,7 @@ async function addChecker(checkid, checkercode, lang) { // not in use
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
-                console.log("Error adding problem");
+                console.log("Error getting client");
                 resolve(false);
             }
             let qry = `INSERT INTO checker (code, lang) VALUES ($1, $2) RETURNING id;`;
@@ -361,7 +361,7 @@ async function addSol(pid, code, lang) { // not in use
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
-                console.log("Error adding problem");
+                console.log("Error getting client");
                 resolve(false);
             }
             let qry = `UPDATE problems SET solution=$1, sollang=$3 WHERE pid=$2`;
@@ -380,7 +380,7 @@ async function addProblem(pid, pname, cid, checkid, sol, state, tl, ml, inter, s
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
-                console.log("Error adding problem");
+                console.log("Error getting client");
                 resolve(false);
             }
             console.log(pid, secret, inputtxt, outputtxt, samples);
@@ -404,8 +404,7 @@ async function addProblem(pid, pname, cid, checkid, sol, state, tl, ml, inter, s
             client.query(qry, [pid, pname, cid, checkid, sol, state, tl, ml, inter, secret, inputtxt, outputtxt, samples, points], (err, results) => {
                 release();
                 if (err) {
-                    console.log(err);
-                    console.log("Error while querying");
+                    console.log("Error while querying to add problem", err);
                     resolve(false);
                 }
                 resolve(results);
@@ -417,12 +416,16 @@ async function grabUsers() {
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
-                console.log("Error getting problems");
+                console.log("Error getting client");
                 resolve(false);
             }
             let qry = "SELECT * FROM users;";
             client.query(qry, (err, results) => {
                 release();
+                if (err) {
+                    console.log("An error occured while querying for users", err);
+                    resolve(false)
+                }
                 if (results.rows.length == 0) {
                     resolve(false);
                 } else {
@@ -436,18 +439,17 @@ async function grabContestProblems(cid) {
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
             if (err) {
-                console.log("Error getting problems");
+                console.log("Error getting client");
                 resolve(false);
             }
             let qry = `SELECT * FROM problems WHERE contestid = $1`;
-            console.log("CID HERE", cid);
             client.query(qry, [cid], (err, results) => {
                 release();
-                if (results.rows.length == 0) {
-                    resolve(false);
-                } else {
-                    resolve(results.rows);
+                if (err) {
+                    console.log("An error occured while querying for contest problems", err);
+                    resolve(false)
                 }
+                resolve(results.rows);
             });
         });
     });
@@ -463,8 +465,7 @@ async function validateUser(id, password) {
             client.query(qry, [id, password], (err, results) => {
                 release();
                 if (err) {
-                    console.log("An error occured while querying");
-                    console.log(err);
+                    console.log("An error occured while querying to validate user", err);
                     resolve(false)
                 }
                 resolve(true);
@@ -502,8 +503,60 @@ async function updateCF(id, cf) {
                 release();
                 if (err) {
                     console.log("An error occured while querying to update cf handle", err);
+                    resolve(false);
                 }
                 resolve(true);
+            });
+        });
+    });
+}
+async function updateCFRating() {
+    return new Promise((resolve, reject) => {
+        pl.connect((err, client, release) => {
+            if (err) {
+                console.log("Error getting client");
+                resolve(false);
+            }
+            let qry = `SELECT * FROM users WHERE cf_handle IS NOT NULL`;
+            client.query(qry, [], (err, results) => {
+                release();
+                if (err) {
+                    console.log("An error occured while querying to update cf rating", err);
+                    resolve(false);
+                }
+                if (results.rows.length == 0) {
+                    resolve(false);
+                }
+                let url = "https://codeforces.com/api/user.info?handles="
+                for (let i = 0; i < results.rows.length; i++) {
+                    url += results.rows[i].cf_handle;
+                    if (i + 1 < results.rows.length) url+=";";
+                }
+                fetch(url).then(response => {
+                    if (!response.ok) {
+                        throw new Error('CF API response was not ok');
+                    }
+                    return response.json();
+                }).then(data => {
+                    if (data["status"]!="OK") {
+                        throw new Error('CF API response was not ok');
+                    }
+                    data = data["result"];
+                    for (let i = 0; i < results.rows.length; i++) {
+                        let qry2 = `UPDATE users SET cf_rating = $1 WHERE id = $2;`;
+                        client.query(qry2, [data[i].maxRating, results[i].id], (err, res) => {
+                            release();
+                            if (err) {
+                                console.log("An error occured while querying to update cf rating", err);
+                                resolve(false);
+                            }
+                        });
+                    }
+                    resolve(true);
+                }).catch(error => {
+                    console.log('Error when using CF API', error);
+                    resolve(false);
+                });
             });
         });
     });
@@ -554,6 +607,38 @@ async function getContest(cid) {
         });
     });
 }
+async function getStats(season) {
+    await updateCFRating();
+    return new Promise((resolve, reject) => {
+        pl.connect((err, client, release) => {
+            if (err) {
+                console.log("Error getting client");
+                resolve(false);
+            }
+            let qry = `SELECT * FROM users
+                WHERE LEFT(username, 4) ~ '^[0-9]+$'
+                AND LEFT(username, 4)::int <= $1;`;
+            client.query(qry, [season], (err, results) => {
+                release();
+                if (err) {
+                    console.log("An error occured while querying for contest", err);
+                    resolve(false);
+                }
+                retarr = [];
+                for (let i = 0; i < results.rows.length; i++) {
+                    let ret = {
+                        id: results.rows[i].id,
+                        name: results.rows[i].display_name,
+                        usaco: results.rows[i].usaco_division,
+                        cf: results.rows[i].cf_rating
+                    }
+                    retarr.push(ret);
+                }
+                resolve(retarr);
+            });
+        });
+    });
+}
 
 module.exports = {
     grab: (id) => {
@@ -565,8 +650,8 @@ module.exports = {
         if (Number(id))
             return grabChecker(id);
     },
-    grabAllProblems: (isAdmin, cid) => {
-        return grabAllProblems(isAdmin, cid);
+    grabAllProblems: (isAdmin) => {
+        return grabAllProblems(isAdmin);
     },
     grabSubs: (user, contest) => {
         return grabSubs(user, contest);
@@ -631,5 +716,8 @@ module.exports = {
     },
     getContest: (cid) => {
         return getContest(cid);
+    },
+    getStats: (season) => {
+        return getStats(season);
     }
 }
