@@ -33,12 +33,12 @@
       <div class="title">Contests</div>
     </div>
     <div class="main-block" id="problems">
-    <% for (let i=0; i<locals.contests.length; i++) { %>
+        <% for (let i=locals.contests.length-1; i>=0; i--) { %>
       <ul class="sl">
         <li class="sl">
           <a href= <%= "/grade/contests/" + locals.contests[i].id %> >
             <div class="problem-text">
-              <%= "[" + locals.contests[i].season-1 + "-" + locals.contests[i].season + "] " + locals.contests[i].name + " (" + ["Unrated", "Rated"][locals.contests[i].rated] + ")" %>
+              <%= "[" + (locals.contests[i].season-1) + "-" + locals.contests[i].season + "] " + locals.contests[i].name + " (" + ["Unrated", "Rated"][Number(locals.contests[i].rated)] + ")" %>
             </div>
           </a>
         </li>

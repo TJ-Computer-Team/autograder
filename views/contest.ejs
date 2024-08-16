@@ -59,7 +59,7 @@
         <tr>
           <th>#</th>
           <th>Name</th>
-          <% if (locals.problems[0].points != 1) { %>
+          <% if (locals.problems[0].points != locals.problems[locals.problems.length-1].points) { %>
           <th>Points</th>
           <% } %>
           <th>Solved</th>
@@ -76,7 +76,9 @@
           <% } else { %>
             <td class="centertext">Problem Not Available</td>
           <% } %>
-          <% if (locals.problems[0].points != 1) { %> <td class="centertext"><%=locals.problems[i].points%></td> <% } %>
+          <% if (locals.problems[0].points != locals.problems[locals.problems.length-1].points) { %>
+            <td class="centertext"><%=locals.problems[i].points%></td>
+          <% } %>
           <td class="centertext"><%=locals.problems[i].solves%></td>
         </tr>
       <% } %>

@@ -15,8 +15,7 @@ const {
     validateUser,
     updateUSACO,
     updateCF,
-    grabAllContests,
-    grabContest,
+    getContest,
     getAllContests
 } = require("./sql");
 const {
@@ -32,47 +31,6 @@ const {
 const upload = require('express-fileupload');
 const lastSubmission = new Map();
 router.use(upload());
-
-function getContestStart(cid) {
-    let contestStart;
-    let startStr; // in UTC timezone, +4 from EST
-    if (cid == 1)
-        startStr = "2023-10-06T18:30:00Z";
-    else if (cid == 2)
-        startStr = "2023-10-27T18:30:00Z";
-    else if (cid == 3)
-        startStr = "2024-01-12T19:30:00Z"; // changed to +5, probably cause of daylight saving stuff
-    else if (cid == 4)
-        startStr = "2024-02-23T19:30:00Z";
-    else if (cid == 202401)
-        startStr = "2024-05-11T14:00:00Z"; // back to +4
-    else if (cid == 202402)
-        startStr = "2024-05-11T16:30:00Z";
-    else
-        startStr = "";
-    contestStart = new Date(startStr).getTime();
-    return contestStart;
-}
-
-function getContestEnd(cid) {
-    let endStr;
-    let contestEnd;
-    if (cid == 1)
-        endStr = "2023-10-06T20:00:00Z";
-    else if (cid == 2)
-        endStr = "2023-10-27T20:00:00Z";
-    else if (cid == 3)
-        endStr = "2024-01-12T21:00:00Z";
-    else if (cid == 4)
-        endStr = "2024-02-23T21:00:00Z";
-    else if (cid == 202401)
-        endStr = "2024-05-11T15:30:00Z";
-    else if (cid == 202402)
-        endStr = "2024-05-11T19:30:00Z";
-    else endStr = "";
-    contestEnd = new Date(endStr).getTime();
-    return contestEnd;
-}
 
 function getLateTakers(cid) {
     if (cid == 3) return [1001731, 1001623, 1001620, 1001475, 1002158, 1001944, 1001092, 1002595, 1001904, 1001642]; // anush devkar, armaan ahmed, anusha agarwal, kanishk sivanadam, max zhao, rishikesh narayana, samarth bhargav, nathan liang, esha m, navya arora
@@ -193,6 +151,9 @@ router.get("/contests", checkLoggedIn, async (req, res) => {
     contests = contests.filter(function(elem) {
         return !(req.session.tjioi ^ elem.tjioi);
     });
+    contests.sort(function(a, b) {
+        return (a.id < b.id ? -1 : 1);
+    });
     res.render('contests', {
         contests: contests
     });
@@ -204,7 +165,7 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
         problems = []
     }
     let time = (new Date()).getTime();
-    let contest = await grabContest(cid);
+    let contest = await getContest(cid);
     let contestStart = new Date(contest.start).getTime();
     let contestEnd = new Date(contest.end).getTime();
     let timeMessage = contestEnd;
@@ -278,7 +239,7 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
     problems.sort(function(a, b) {
         return a.pid > b.pid ? 1 : -1;
     });
-    let contest = await grabContest(cid);
+    let contest = await getContest(cid);
     let contestStart = new Date(contest.start).getTime();
     let contestEnd = new Date(contest.end).getTime();
     let load = [];
@@ -377,7 +338,7 @@ router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
     let user = req.query.user;
     let cid = req.params.id;
     if (user != undefined) user = Number(user);
-    let contest = await grabContest(cid);
+    let contest = await getContest(cid);
     let submissions = await grabSubs(user, cid);
     submissions = submissions.filter(function(elem) {
         return req.session.admin || (elem.timestamp > contestStart);
@@ -405,7 +366,7 @@ router.get("/problemset", checkLoggedIn, async (req, res) => {
 });
 router.get("/problemset/:id", checkLoggedIn, async (req, res) => {
     let vals = await grabProblem(req.params.id);
-    let contest = await grabContest(vals.cid);
+    let contest = await getContest(vals.cid);
     let contestStart = new Date(contest.start).getTime();
     let userid = req.session.userid;
     if (vals.cid == 3) {
@@ -488,7 +449,7 @@ router.post("/status", checkLoggedIn, async (req, res) => { // sends file to ano
         }
         file = sampleFile.data.toString()
     }
-    let contest = grabContest(cid);
+    let contest = getContest(cid);
     let contestStart = new Date(contest.start).getTime();
     if (!req.session.admin && timestamp <= contestStart) {
         res.send("contest has not started yet");
