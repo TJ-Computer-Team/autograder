@@ -257,7 +257,7 @@ async function createSubmission(user, code, problem, language, problemname, cid,
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest, timestamp) values ($1, $2, $3, $4, -1, -1, 'RN', $5, $6, $7) RETURNING id`;
+            let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest, timestamp) values ($1, $2, $3, $4, -1, -1, 'Running', $5, $6, $7) RETURNING id`;
             let vals = [user, code, problem, language, problemname, cid, timestamp];
             client.query(qry, vals, (err, results) => {
                 release();
