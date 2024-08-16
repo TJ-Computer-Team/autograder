@@ -32,56 +32,18 @@
     <div class="main-block">
       <div class="title">Contests</div>
     </div>
-    <% if(!locals.tjioi) { %>
     <div class="main-block" id="problems">
+    <% for (let i=0; i<locals.contests.length; i++) { %>
       <ul class="sl">
         <li class="sl">
-          <a href=<%="/grade/contests/1"%>>
-            <div class="problem-text">In-House #1 (Unrated)</div>
-          </a>
-        </li>
-      </ul>
-      <ul class="sl">
-        <li class="sl">
-          <a href=<%="/grade/contests/2"%>>
+          <a href= <%= "/grade/contests/" + locals.contests[i].id %> >
             <div class="problem-text">
-              Widener & PClassic Team Selection Contest (Rated)
+              <%= "[" + locals.contests[i].season-1 + "-" + locals.contests[i].season + "] " + locals.contests[i].name + " (" + ["Unrated", "Rated"][locals.contests[i].rated] + ")" %>
             </div>
           </a>
         </li>
       </ul>
-      <ul class="sl">
-        <li class="sl">
-          <a href=<%="/grade/contests/3"%>>
-            <div class="problem-text">January In-House (Rated)</div>
-          </a>
-        </li>
-      </ul>
-      <ul class="sl">
-        <li class="sl">
-          <a href=<%="/grade/contests/4"%>>
-            <div class="problem-text">February In-House (Rated)</div>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <% } else { %>
-    <div class="main-block" id="problems">
-      <ul class="sl">
-        <li class="sl">
-          <a href=<%="/grade/contests/202401"%>>
-            <div class="problem-text">TJIOI Practice Contest</div>
-          </a>
-        </li>
-      </ul>
-      <ul class="sl">
-        <li class="sl">
-          <a href=<%="/grade/contests/202402"%>>
-            <div class="problem-text">TJIOI 2024</div>
-          </a>
-        </li>
-      </ul>
-    </div>
     <% } %>
+    </div>
   </body>
 </html>
