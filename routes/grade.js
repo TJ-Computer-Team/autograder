@@ -314,8 +314,7 @@ async function getStandings(cid) {
     for (let i = 0; i < load.length; i++) {
         let val = load[i];
         if (val.solved > 0) {
-            if (val.penalty < 0) val.penalty = 0;
-            if (val.penalty > 0) load2.push(val);
+            if (val.penalty >= 0) load2.push(val);
         }
     }
     load2.sort(function(a, b) {
