@@ -14,7 +14,10 @@ const {
     grabContestProblems,
     validateUser,
     updateUSACO,
-    updateCF
+    updateCF,
+    grabAllContests,
+    grabContest,
+    getAllContests
 } = require("./sql");
 const {
     queue
@@ -186,8 +189,12 @@ router.post("/attendanceComplete", async (req, res) => {
     }
 });
 router.get("/contests", checkLoggedIn, async (req, res) => {
+    let contests = await getAllContests();
+    contests = contests.filter(function(elem) {
+        return !(req.session.tjioi ^ elem.tjioi);
+    });
     res.render('contests', {
-        tjioi: req.session.tjioi
+        contests: contests
     });
 });
 router.get("/contests/:id", checkLoggedIn, async (req, res) => {
@@ -197,11 +204,9 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
         problems = []
     }
     let time = (new Date()).getTime();
-    let contestStart = getContestStart(req.params.id);
-    let contestEnd = getContestEnd(req.params.id);
-    let title = "In-House #" + cid;
-    if (cid == 202401) title = "Practice Contest";
-    else if (cid == 202402) title = "TJIOI 2024";
+    let contest = await grabContest(cid);
+    let contestStart = new Date(contest.start).getTime();
+    let contestEnd = new Date(contest.end).getTime();
     let timeMessage = contestEnd;
     let timeType = "end";
     if (time < contestStart) {
@@ -220,7 +225,7 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
     let subs = await grabSubs(undefined, cid);
     let users = await grabUsers();
     for (let i = 0; i < subs.length; i++) {
-        if (parseInt(subs[i].timestamp) > getContestEnd(cid)) continue;
+        if (parseInt(subs[i].timestamp) > contestEnd) continue;
         let ind, pind;
         for (let j = 0; j < users.length; j++) {
             if (users[j].id == subs[i].user) {
@@ -255,7 +260,7 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
     });
     if (ordered.length > 0)
         res.render("contest", {
-            title: title,
+            title: contest.name,
             problems: ordered,
             user: req.session.userid,
             cid: cid,
@@ -273,8 +278,9 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
     problems.sort(function(a, b) {
         return a.pid > b.pid ? 1 : -1;
     });
-    let contestStart = getContestStart(cid);
-    let contestEnd = getContestEnd(cid);
+    let contest = await grabContest(cid);
+    let contestStart = new Date(contest.start).getTime();
+    let contestEnd = new Date(contest.end).getTime();
     let load = [];
     for (let i = 0; i < users.length; i++) {
         let tmp = [];
@@ -359,11 +365,8 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
         if (i > 0 && load2[i].solved == load2[i - 1].solved && load2[i].penalty == load2[i - 1].penalty) load2[i].rank = load2[i - 1].rank;
         else load2[i].rank = i + 1;
     }
-    let title = "In-House #" + cid;
-    if (cid == 202401) title = "Practice Contest";
-    else if (cid == 202402) title = "TJIOI 2024";
     res.render("standings", {
-        title: title,
+        title: contest.name,
         user: req.session.userid,
         cid: cid,
         pnum: problems.length,
@@ -372,26 +375,15 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
 });
 router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
     let user = req.query.user;
-    let contest = req.query.contest;
-    let admin = req.session.admin;
-    if (user == undefined && contest == undefined && !admin) {
-        user = req.session.userid;
-    }
-    if (user != undefined) user = Number(user);
-    if (contest != undefined) contest = Number(contest);
-    let submissions = await grabSubs(user, contest);
     let cid = req.params.id;
-    let title = "In-House #" + cid;
-    if (cid == 202401) title = "Practice Contest";
-    else if (cid == 202402) title = "TJIOI 2024";
-    if (contest != undefined) {
-        let contestStart = getContestStart(cid);
-        submissions = submissions.filter(function(elem) {
-            return req.session.admin || (elem.timestamp > contestStart);
-        });
-    }
+    if (user != undefined) user = Number(user);
+    let contest = await grabContest(cid);
+    let submissions = await grabSubs(user, cid);
+    submissions = submissions.filter(function(elem) {
+        return req.session.admin || (elem.timestamp > contestStart);
+    });
     res.render("contestStatus", {
-        title: title,
+        title: contest.name,
         user: req.session.userid,
         cid: cid,
         submissions: submissions
@@ -413,7 +405,8 @@ router.get("/problemset", checkLoggedIn, async (req, res) => {
 });
 router.get("/problemset/:id", checkLoggedIn, async (req, res) => {
     let vals = await grabProblem(req.params.id);
-    let contestStart = getContestStart(vals.cid);
+    let contest = await grabContest(vals.cid);
+    let contestStart = new Date(contest.start).getTime();
     let userid = req.session.userid;
     if (vals.cid == 3) {
         if ([1002379].includes(userid)) contestStart += 50 * 60000; // shaurya bisht
@@ -438,7 +431,7 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => {
     if (req.session.admin || !vals.secret) {
         res.render("gradeProblem", vals);
     } else {
-        res.redirect("/grade/problemset");
+        res.redirect(vals.back);
     }
 });
 router.get("/submit", checkLoggedIn, async (req, res) => {
@@ -495,10 +488,10 @@ router.post("/status", checkLoggedIn, async (req, res) => { // sends file to ano
         }
         file = sampleFile.data.toString()
     }
-    let contestStart = getContestStart(cid);
-    let contestEnd = getContestEnd(cid);
+    let contest = grabContest(cid);
+    let contestStart = new Date(contest.start).getTime();
     if (!req.session.admin && timestamp <= contestStart) {
-        res.send("contest currently unavailable");
+        res.send("contest has not started yet");
     }
     let prevts = lastSubmission.get(req.session.userid);
     if (prevts == undefined) {
@@ -537,7 +530,7 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => {
     let vals = await grabStatus(req.params.id);
     if (vals.user == req.session.userid || req.session.admin) {
         if (!req.session.admin && vals.insight != undefined && vals.insight.startsWith("Viewing as admin")) {
-            vals.insight = "You cannot view feedback (not a sample testcase)";
+            vals.insight = "You cannot view feedback (not a sample test)";
         }
         vals.admin = req.session.admin;
         res.render("status", {
