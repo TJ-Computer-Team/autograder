@@ -519,7 +519,6 @@ async function updateCFRating() {
             }
             let qry = `SELECT * FROM users WHERE cf_handle IS NOT NULL`;
             client.query(qry, [], (err, results) => {
-                release();
                 if (err) {
                     console.log("An error occured while querying to update cf rating", err);
                     resolve(false);
@@ -544,14 +543,17 @@ async function updateCFRating() {
                     data = data["result"];
                     for (let i = 0; i < results.rows.length; i++) {
                         let qry2 = `UPDATE users SET cf_rating = $1 WHERE id = $2;`;
-                        client.query(qry2, [data[i].maxRating, results[i].id], (err, res) => {
-                            release();
+                        if (isNaN(data[i].maxRating)) {
+                            data[i].maxRating = 0;
+                        }
+                        client.query(qry2, [data[i].maxRating, results.rows[i].id], (err, res) => {
                             if (err) {
                                 console.log("An error occured while querying to update cf rating", err);
                                 resolve(false);
                             }
                         });
                     }
+                    release();
                     resolve(true);
                 }).catch(error => {
                     console.log('Error when using CF API', error);
@@ -617,7 +619,7 @@ async function getStats(season) {
             }
             let qry = `SELECT * FROM users
                 WHERE LEFT(username, 4) ~ '^[0-9]+$'
-                AND LEFT(username, 4)::int <= $1;`;
+                AND LEFT(username, 4)::int >= $1;`;
             client.query(qry, [season], (err, results) => {
                 release();
                 if (err) {
@@ -674,7 +676,7 @@ module.exports = {
     grabProfile: (id) => {
         if (Number(id))
             return grabProfile(id);
-        return;
+        return false;
     },
     insertSubmission: (id, verdict, runtime, memory, insight) => {
         return insertSubmission(id, verdict, runtime, memory, insight);

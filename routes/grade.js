@@ -506,9 +506,10 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => {
     }
 });
 router.get("/rankings", checkLoggedIn, async (req, res) => {
-    res.redirect('/rankings/2025');
+    res.redirect('/grade/rankings/2025');
 });
 router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
+    let season = Number(req.params.season);
     let rankings = await getStats(season);
     for (let i = 0; i < rankings.length; i++) {
         if (rankings[i].usaco == "plat") {
@@ -525,14 +526,14 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
     let contests = await getAllContests();
     let contest_count = 0;
     for (let i = 0; i < contests.length; i++) {
-        if (contests[i].rated == true) {
-            contest_count += 1;
+        if (contests[i].rated == true && contests[i].season == season) {
+            contest_count ++;
             let standings = await getStandings(contests[i].id);
             for (let useri = 0; useri < rankings.length; useri++) {
                 let took = false;
                 for (let j = 0; j < standings.load.length; j++) {
-                    if (rankings[useri].id == standings[j].id) {
-                        rankings[useri].inhouses.push(2000*(standings.load.length-rank+1)/standings.load.length);
+                    if (rankings[useri].id == standings.load[j].id) {
+                        rankings[useri].inhouses.push(2000 * (standings.load.length - standings.load[j].rank + 1) / standings.load.length);
                         took = true;
                         break;
                     }
@@ -543,22 +544,28 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
             }
         }
     }
+    let drops = Math.min(2, contest_count - 2);
     for (let i = 0; i < rankings.length; i++) {
         rankings[i].inhouses.sort(function(a, b) {
             return a-b;
         });
         let overall = 0;
-        for (let j = max(0, min(2, contest_count-2)); j < contest_count; j++) {
+        for (let j = Math.max(0, drops); j < contest_count; j++) {
             overall += rankings[i].inhouses[j];
         }
-        overall /= contest_count;
+        if (contest_count > 0) {
+            overall /= contest_count - drops;
+        }
         rankings[i].inhouse = overall;
         let vals = [rankings[i].usaco, rankings[i].cf, rankings[i].inhouse];
         vals.sort(function(a, b) {
             return a-b;
         });
-        rankings[i].index = .2 * vals[0] + .35 * vals[1] * .45 * vals[2];
+        rankings[i].index = 0.2 * vals[0] + 0.35 * vals[1] + 0.45 * vals[2];
     }
+    rankings = rankings.filter(function(elem) {
+        return elem.usaco > 800 || elem.cf > 0 || elem.inhouse > 0;
+    });
     rankings.sort(function(a, b) {
         return a.index < b.index ? 1 : -1;
     });
