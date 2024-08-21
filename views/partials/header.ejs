@@ -1,0 +1,25 @@
+<div class="navbar">
+  <ul class="nb">
+    <li id="logoHolder" class="nb"><img class="logo" src="/images/logo.svg"></li>
+    <li class="nb"><a <% if (locals.active == "profile") { %> class="cactive" <% } %> href="/grade/profile">Home</a></li>
+    <li class="nb"><a <% if (locals.active == "submissions") { %> class="cactive" <% } %> href="/grade/status">Submissions</a></li>
+    <li class="nb"><a <% if (locals.active == "contests") { %> class="cactive" <% } %> href="/grade/contests">Contests</a></li>
+    <li class="nb"><a <% if (locals.active == "problemset") { %> class="cactive" <% } %> href="/grade/problemset">Problemset</a></li>
+    <li class="nb"><a <% if (locals.active == "submit") { %> class="cactive" <% } %> href="/grade/submit">Submit</a></li>
+    <li class="nb"><a <% if (locals.active == "info") { %> class="cactive" <% } %> href="/grade/info">Rules and Info</a></li>
+    <li class="nb"><a <% if (locals.active == "problems") { %> class="cactive" <% } %> href="/grade/rankings">Rankings</a></li>
+    <li class="nb topnav-right">
+      <form style="height: 100%;" action="/grade/logout" method="POST">
+        <button class="logoutbtn" type="submit">Log Out</button>
+      </form>
+    </li>
+  </ul>
+</div>
+<script type="text/javascript" src="../particles.js"></script>
+<script>
+  /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+  particlesJS.load("particles-js", <%= "../".repeat(locals.depth) %> + "particles.json", function () {
+    console.log("callback - particles.js config loaded");
+  });
+</script>
+<div id="particles-js" class="particles-js"></div>

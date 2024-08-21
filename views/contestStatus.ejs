@@ -5,42 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../../profile.css"/>
-    <title>My Submissions</title>
+    <title>Submissions</title>
 </head>
 <body>
+    <%- include("partials/header", {active: "contests", depth: 3}); %>
+    <%- include("partials/contestNavbar", {active: "submissions", title: locals.title, user: locals.user, cid: locals.cid}); %>
 
-    <div class="navbar">
-      <ul class="nb">
-        <li class="nb"><a href="/grade/profile">Home</a></li>
-        <li class="nb"><a href="/grade/status">Submissions</a></li>
-        <li class="nb"><a href="/grade/contests">Contests</a></li>
-        <li class="nb"><a href="/grade/problemset">Problemset</a></li>
-        <li class="nb"><a href="/grade/submit">Submit</a></li>
-	<li class="nb"><a href="/grade/info">Rules and Info</a></li>
-      </ul>
-    </div>
- <div id="particles-js" class="particles-js">   
-</div>
-    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
-    <script>
-    /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
-particlesJS.load('particles-js', '../../../particles.json', function() {
-  console.log('callback - particles.js config loaded');
-});
-    </script>
-    <div class="main-block">
-	    <div class="title"><%=locals.title%></div>
-    </div>
-    <div class="cnav">
-      <ul class="cnb">
-        <li class="cnb"><a href="/grade/contests/<%=locals.cid%>">Problems</a></li>
-        <li class="cnb"><a href="/grade/submit">Submit Code</a></li>
-        <li class="cnb"><a href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.user%>">My Submissions</a></li>
-        <li class="cnb"><a href="/grade/contests/<%=locals.cid%>/status">All Submissions</a></li>
-        <li class="cnb"><a href="/grade/contests/<%=locals.cid%>/standings">Standings</a></li>
-      </ul>
-    </div>
     <div class='main-block' id="submissions">
         <table>
                 <tr>

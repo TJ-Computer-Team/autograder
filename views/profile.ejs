@@ -8,28 +8,9 @@
     <title>Profile</title>
   </head>
   <body>
-    <script type="text/javascript" src="../particles.js"></script>
-    <script> particlesJS.load("particles-js", "../particles.json", function () {console.log("callback - particles.js config loaded")});</script>
-    <div id="particles-js" class="particles-js"></div>
+    <%- include("partials/header", {active: "profile", depth: 1}); %>
 
     <div id="mainContent">
-      <div class="navbar">
-        <ul class="nb">
-          <li id="logoHolder" class="nb"><img class="logo" src="/images/logo.svg"></li>
-          <li class="nb"><a class="active" href="/grade/profile"><p>Home</p></a></li>
-          <li class="nb"><a href="/grade/status"><p>Submissions</p></a></li>
-          <li class="nb"><a href="/grade/contests"><p>Contests</p></a></li>
-          <li class="nb"><a href="/grade/problemset"><p>Problemset</p></a></li>
-          <li class="nb"><a href="/grade/submit"><p>Submit</p></a></li>
-          <li class="nb"><a href="/grade/info"><p>Rules and Info</p></a></li>
-          <li class="nb topnav-right">
-            <form style="height: 100%;" action="/grade/logout" method="POST">
-              <button class="logoutbtn" type="submit">Log Out</button>
-            </form>
-          </li>
-        </ul>
-      </div>
-
       <div id="subContent">
         <div class="info-block">
           <div class="title"><p>Profile</p></div>

@@ -8,31 +8,11 @@
     <link rel="stylesheet" href="../../katex.min.css">
     <script src="../../katex.min.js"></script>
     <script src="../../render.js"></script>
-    
-
     <title><%=locals.title%></title>
 </head>
 <body onload="myRender()">
-    <div class="navbar">
-        <ul class="nb">
-            <li class="nb"><a href="/grade/profile">Home</a></li>
-            <li class="nb"><a href="/grade/status">Submissions</a></li>
-            <li class="nb"><a href="/grade/contests">Contests</a></li>
-            <li class="nb"><a href="/grade/problemset">Problemset</a></li>
-            <li class="nb"><a href="/grade/submit">Submit</a></li>
-            <li class="nb"><a href="/grade/info">Rules and Info</a></li>
-        </ul>
-    </div>
- <div id="particles-js" class="particles-js">   
-</div>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
-    <script>
-    /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
-particlesJS.load('particles-js', '../../../particles.json', function() {
-  console.log('callback - particles.js config loaded');
-});
-    </script>
+    <%- include("partials/header", {depth: 2}); %>
+    
     <div class="main-block">
         <div class="title"><strong><%=locals.title%> (ID: <%=locals.pid%>)</strong></div>
     </div>

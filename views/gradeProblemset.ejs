@@ -8,9 +8,7 @@
     <title>Problemset</title>
   </head>
   <body>
-    <script type="text/javascript" src="../particles.js"></script>
-    <script> particlesJS.load("particles-js", "../particles.json", function () {console.log("callback - particles.js config loaded")});</script>
-    <div id="particles-js" class="particles-js"></div>
+    <%- include("partials/header", {active: "problemset", depth: 1}); %>
 
 		<div class="navbar">
 			<ul class="nb">

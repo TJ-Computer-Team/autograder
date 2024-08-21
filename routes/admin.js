@@ -63,7 +63,7 @@ router.get("/queue", async (req, res) => {
         let payload = getQueue();
         let tasks = payload.tasks;
         let paused = payload.paused;
-        res.render("adminqueue", {
+        res.render("adminQueue", {
             submissions: tasks,
             paused: paused
         });
