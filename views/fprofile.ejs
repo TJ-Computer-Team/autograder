@@ -8,25 +8,12 @@
     <title>Profile</title>
 </head>
 <body>
-    <div class="navbar">
-        <ul class="nb">
-            <li class="nb"><a class="active" href="/grade/profile">Home</a></li>
-            <li class="nb"><a href="/grade/status">Submissions</a></li>
-            <li class="nb"><a href="/grade/contests">Contests</a></li>
-            <li class="nb"><a href="/grade/problemset">Problemset</a></li>
-            <li class="nb"><a href="/grade/submit">Submit</a></li>
-	    <li class="nb"><a href="/grade/info">Rules and Info</a></li>
-        </ul>
-    </div>
+    <%- include("partials/header", {depth: 2}); %>
+
     <div class="info-block">
         <div class="title"><strong>Profile</strong></div>
         <div class="info">Name: <%=locals.name%></div>
         <div class="info">Ion ID: <%=locals.username%></div>
     </div>
-    <form class="logout" action="/grade/logout" method="POST">
-        <div class="option-buttons">
-            <button class="button" type="submit">Log out</button>
-        </div>
-    </form>
 </body>
 </html>
