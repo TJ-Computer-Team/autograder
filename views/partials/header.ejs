@@ -15,11 +15,3 @@
     </li>
   </ul>
 </div>
-<script type="text/javascript" src="../particles.js"></script>
-<script>
-  /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
-  particlesJS.load("particles-js", <%= "../".repeat(locals.depth) %> + "particles.json", function () {
-    console.log("callback - particles.js config loaded");
-  });
-</script>
-<div id="particles-js" class="particles-js"></div>
