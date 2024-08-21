@@ -11,8 +11,9 @@
     <title><%=locals.title%></title>
 </head>
 <body onload="myRender()">
-    <%- include("partials/header", {depth: 2}); %>
-    
+    <%- include("partials/header"); %>
+    <%- include("partials/particles", {depth: 2}); %>
+
     <div class="main-block">
         <div class="title"><strong><%=locals.title%> (ID: <%=locals.pid%>)</strong></div>
     </div>

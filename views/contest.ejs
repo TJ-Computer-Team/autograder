@@ -8,8 +8,9 @@
     <title>Contest</title>
   </head>
   <body>
-    <%- include("partials/header", {depth: 2}); %>
+    <%- include("partials/header"); %>
     <%- include("partials/contestNavbar", {active: "problems", title: locals.title, user: locals.user, cid: locals.cid}); %>
+    <%- include("partials/particles", {depth: 2}); %>
 
     <div class="main-block">
       <table>
