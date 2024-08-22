@@ -461,7 +461,7 @@ async function validateUser(id, password) {
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = `SELECT * FROM users WHERE id = $1 AND pass = $2 AND id >= 202400 AND id < 1000000`;
+            let qry = `SELECT * FROM users WHERE id = $1 AND pass = $2 AND id < 1000000`;
             client.query(qry, [id, password], (err, results) => {
                 release();
                 if (err) {
