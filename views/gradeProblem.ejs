@@ -5,12 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../profile.css"/>
-    <script type="text/javascript"
-        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    <script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        svg: {
+            fontCache: 'global'
+        }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
     </script>
     <title><%=locals.title%></title>
 </head>
-<body onload="myRender()">
+<body>
     <%- include("partials/header"); %>
     <%- include("partials/particles", {depth: 2}); %>
 
@@ -19,25 +29,25 @@
     </div>
     <div class="main-block">
         <div class="info">
-        <%-String(locals.statement).replaceAll("\n", "<br>").replaceAll("$", "$$")%>
+        <%-String(locals.statement).replaceAll("\n", "<br>")%>
         </div>
     </div>
     <div class="main-block">
 	<div class="info"><strong>Input Format</strong>
 	<br>
-	<%-String(locals.inputtxt).replaceAll("\n", "<br>").replaceAll("$", "$$")%>
+	<%-String(locals.inputtxt).replaceAll("\n", "<br>")%>
 	</div>
     </div>
     <div class="main-block">
 	<div class="info"><strong>Output Format</strong>
 	<br>
-        <%-String(locals.outputtxt).replaceAll("\n", "<br>").replaceAll("$", "$$")%>
+        <%-String(locals.outputtxt).replaceAll("\n", "<br>")%>
 	</div>
     </div>
     <div class="main-block">
 	<div class="info"><strong>Samples</strong>
 	<br>
-        <%-String(locals.samples).replaceAll("\n", "<br>").replaceAll("$", "$$")%>
+        <%-String(locals.samples).replaceAll("\n", "<br>")%>
 	</div>
     </div>
     <div class="option-buttons">

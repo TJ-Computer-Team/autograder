@@ -59,14 +59,6 @@ app.get("/start", async (req, res) => {
     }
 });
 
-app.get("/megaknight", async (req, res) => {
-    res.render("megaknight");
-});
-
-app.get("/megaknightmovement", async (req, res) => {
-    res.render("megaknightmovement");
-});
-
 app.post("/confirm", async (req, res) => {
     user_data = req.session.user_data;
     user_data.email = req.body.email;
