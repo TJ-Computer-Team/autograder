@@ -77,9 +77,11 @@ router.post("/updateStats", async (req, res) => {
     let cf = req.body.cf_handle;
     if (usaco != "" && usaco != undefined) {
         await updateUSACO(req.session.userid, usaco);
+        req.session.usaco_div = usaco;
     }
     if (cf != "" && cf != undefined) {
         await updateCF(req.session.userid, cf);
+        req.session.cf_handle = cf;
     }
     res.redirect('/grade/profile');
 });
