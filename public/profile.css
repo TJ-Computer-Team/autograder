@@ -98,6 +98,14 @@ td {
   font-weight: bold;
 }
 
+.subtitle {
+  margin: auto;
+  text-align: center;
+  font-size: 1em;
+  font-family: monospace;
+  font-weight: bold;
+}
+
 .userinfo {
   margin: 0.5em;
   font-size: 1.7em;
