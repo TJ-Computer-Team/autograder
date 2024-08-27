@@ -42,7 +42,9 @@ async function run() {
         await axios.post('http://10.150.0.3:8080/run', querystring.stringify({
             lang: language,
             problemid: String(task),
-            code: userCode
+            code: userCode,
+            tl: tl,
+            ml: ml
         })).then(res => {
             return res['data']
         }).then(res => {

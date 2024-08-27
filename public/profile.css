@@ -99,11 +99,12 @@ td {
 }
 
 .subtitle {
-  margin: auto;
+  margin: 0em;
   text-align: center;
   font-size: 1em;
   font-family: monospace;
   font-weight: bold;
+  line-height: 1.5em;
 }
 
 .userinfo {
@@ -229,7 +230,7 @@ li.nb a {
 .problem-text {
   color: white;
   font-size: 1.5em;
-  line-height: 2em;
+  line-height: 1.75em;
   text-align: center;
 }
 
