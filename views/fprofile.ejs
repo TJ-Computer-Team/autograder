@@ -11,10 +11,15 @@
     <%- include("partials/header"); %>
     <%- include("partials/particles", {depth: 2}); %>
 
-    <div class="info-block">
-        <div class="title"><strong>Profile</strong></div>
-        <div class="info">Name: <%=locals.name%></div>
-        <div class="info">Ion ID: <%=locals.username%></div>
+    <div id="mainContent">
+        <div id="subContent">
+          <div class="info-block">
+            <div class="title"><p>Profile</p></div>
+            <div class="userinfo">Name: <%=locals.name%></div>
+            <div class="userinfo">Username: <%=locals.username%></div>
+          </div>
+        </div>
+      </div>
     </div>
 </body>
 </html>
