@@ -11,7 +11,7 @@ const {
 const useragent = require("express-useragent");
 
 var favicon = require('serve-favicon');
-app.use(favicon("./public/images/favicon.ico"));
+app.use(favicon("./public/images/Logo.ico"));
 
 app.use(express.static("./public"));
 app.use(express.urlencoded({

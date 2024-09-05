@@ -249,7 +249,7 @@ li.nb a {
   width: 20%;
   background-color: black;
   color: white;
-  font-size: 1em;
+  font-size: .7em;
 }
 
 #lang {
@@ -257,24 +257,23 @@ li.nb a {
   width: 20%;
   background-color: black;
   color: white;
-  font-size: 1em;
-}
-
-input[type="file"] {
-  display: none;
+  font-size: .7em;
 }
 
 .custom-file-upload {
   background-color: rgba(0, 0, 0, 0.3);
-  text-align: center;
+  justify-content: center;
   margin: auto;
-  width: 20%;
+  margin-top: 1em;
   border: 1px solid #ffffff;
-  padding: 0.5em 1em 0.5em 1em;
+  padding: 0.5em .5em 0.5em .5em;
   border-radius: 0.5em;
   cursor: pointer;
 }
-
+.custom-file {
+  background-color: rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
 .custom-file-upload:hover {
   background-color: rgba(0, 0, 0, 1);
 }
@@ -333,8 +332,13 @@ li.slg {
   display: flex;
   justify-content: flex-start;
   gap: 4vw;
-  padding: 2%;
+  padding: .5%;
+  padding-left: 2%;
   margin: 1%;
+  font-size: 1em;
+}
+.option-buttons a .button {
+  font-size: 1.5em;
 }
 
 .button {
