@@ -292,7 +292,9 @@ async function grabProfile(id) {
                 } else {
                     res = {
                         username: results.rows[0].username,
-                        name: results.rows[0].display_name
+                        name: results.rows[0].display_name,
+                        cf: results.rows[0].cf_handle,
+                        usaco: results.rows[0].usaco_division
                     }
                     resolve(res);
                 }

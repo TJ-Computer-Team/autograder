@@ -119,7 +119,10 @@ router.get("/profile/:id", checkLoggedIn, async (req, res) => {
         } else {
             res.render("fprofile", {
                 name: vals.name,
-                username: vals.username
+                username: vals.username,
+                cf: vals.cf,
+                usaco: vals.usaco,
+                admin: req.session.admin
             });
         }
     }
