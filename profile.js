@@ -47,7 +47,7 @@ async function populate(user_data, req, res) { // generate data for first time u
             database: "autograder"
         });
         await cl.connect();
-        await cl.query("INSERT INTO users VALUES ($1, $2, $3, $4, $5, $6, $7)", [user_data.id, user_data.display_name, user_data.ion_username, 0, false, user_data.email, user_data.pass]);
+        await cl.query("INSERT INTO users VALUES ($1, $2, $3, $4, $5, $6)", [user_data.id, user_data.display_name, user_data.ion_username, false, user_data.email, user_data.pass]);
         await cl.end();
         check(user_data, req, res);
     } catch (error) {
