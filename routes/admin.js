@@ -16,6 +16,16 @@ const {
     skip
 } = require("./runTests");
 
+function findMex(problems) {
+  const pids = problems.map(problem => problem.pid);
+  const set = new Set(pids);
+  let i = 1;
+  while (set.has(i)) {
+    i++;
+  }
+  return i;
+}
+
 router.get("/", async (req, res) => {
     let admin = req.session.admin;
     if (admin) {
@@ -24,7 +34,8 @@ router.get("/", async (req, res) => {
             return a.pid > b.pid ? 1 : -1;
         });
         res.render("admin", {
-            problems: vals
+            problems: vals,
+            newpid: findMex(vals)
         });
     } else {
         res.redirect("/");

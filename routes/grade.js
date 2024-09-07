@@ -232,7 +232,8 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
             user: req.session.userid,
             cid: cid,
             timeStatus: timeMessage,
-            timeType: timeType
+            timeType: timeType,
+            editorial: contest.editorial
         });
     else
         res.redirect('/grade/contests');

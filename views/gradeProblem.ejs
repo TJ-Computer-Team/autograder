@@ -67,6 +67,11 @@
         <a href = <%=locals.back%>>
             <div class="button">Back</div>
         </a>
+        <% if (!isNaN(locals.cid) && parseInt(locals.cid) > 0) { %>
+        <a href = <%="/grade/contests/"+locals.cid%>>
+            <div class="button">Contest</div>
+        </a>
+        <% } %>
     </div>
 </body>
 </html>

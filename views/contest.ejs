@@ -49,6 +49,15 @@
         </ul>
       </div>
     </div>
+    <% if (locals.editorial != undefined) { %>
+    <div class="main-block">
+      <div class="info">
+        <ul>
+        <a href="<%=locals.editorial%>" target="_blank">Editorial</a>
+        </ul>
+      </div>
+    </div>
+    <% } %>
     <div class="option-buttons">
       <a href="/grade/submit">
         <div class="button">Submit</div>
