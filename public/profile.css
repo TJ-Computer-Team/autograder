@@ -344,8 +344,7 @@ li.slg {
 }
 
 .button {
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  padding: 0.5em;
   border-radius: 0.5em;
   width: 80%;
   justify-content: center;
