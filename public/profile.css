@@ -420,6 +420,10 @@ li.cnb a:hover:not(.active) {
 .cactive {
   background-color: rgb(100, 100, 100, 0.5);
 }
+.small-padding {
+  padding-top: .4em;
+  padding-bottom: .4em;
+}
 
 #schedule table,
 #schedule th,
