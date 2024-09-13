@@ -4,7 +4,7 @@ TJ Computer Team Members: You can find all information about in-houses and the c
 This grader website can be accessed at https://tjctgrader.org/.
 Please contact us through tjctgrader@gmail.com if you have any questions or concerns.
 
-This repository contains most of the website that deals with how pages are rendered to users. The part of the website that runs code and judges it can be found at this repository: https://github.com/TJ-Computer-Team/coderunnner.
+This repository contains most of the website that deals with how pages are rendered to users. The part of the website that runs code and judges it can be found at this repository: https://github.com/TJ-Computer-Team/coderunner.
 
 ### Getting Started
 `public` folder: Homepage animation, mainly visual
