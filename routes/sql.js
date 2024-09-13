@@ -539,12 +539,12 @@ async function updateCFRating() {
                 }
                 fetch(url).then(response => {
                     if (!response.ok) {
-                        throw new Error('CF API response was not ok');
+                        throw new Error('CF API response was not ok: '+url);
                     }
                     return response.json();
                 }).then(data => {
                     if (data["status"]!="OK") {
-                        throw new Error('CF API response was not ok');
+                        throw new Error('CF API response was not ok: '+url);
                     }
                     data = data["result"];
                     for (let i = 0; i < results.rows.length; i++) {

@@ -207,11 +207,11 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
             }
         }
         if (pind == undefined) {
-            console.log("error - cannot find matching problem for submission in rendering solve count");
+            console.log("error - cannot find matching problem for submission in rendering solve count: "+subs[i].problemid);
             continue;
         }
         if (ind == undefined) {
-            console.log("error - cannot find matching user for submission in rendering solve count");
+            console.log("error - cannot find matching user for submission in rendering solve count: "+subs[i].user);
             continue;
         }
         if (subs[i].verdict == "Accepted" || subs[i].verdict == "AC") {
@@ -351,7 +351,7 @@ router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
     let contest = await getContest(cid);
     let submissions = await grabSubs(user, cid);
     submissions = submissions.filter(function(elem) {
-        return req.session.admin || (elem.timestamp > contestStart);
+        return req.session.admin || elem.timestamp > new Date(contest.start).getTime();
     });
     res.render("contestStatus", {
         title: contest.name,
