@@ -539,7 +539,7 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
                 let took = false;
                 for (let j = 0; j < standings.load.length; j++) {
                     if (rankings[useri].id == standings.load[j].id) {
-                        rankings[useri].inhouses.push(2000 * (standings.load.length - standings.load[j].rank + 1) / standings.load.length);
+                        rankings[useri].inhouses.push(1200 * (standings.load.length - standings.load[j].rank + 1) / standings.load.length + 800);
                         took = true;
                         break;
                     }
