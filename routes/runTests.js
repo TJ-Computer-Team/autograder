@@ -48,6 +48,7 @@ async function run() {
         })).then(res => {
             return res['data']
         }).then(res => {
+            console.log('response recieved from coderunner');
             insertSubmission(sub, res.verdict, res.tl, memory, res.output);
             if (!queuePaused) run();
         }).catch((error) => {
