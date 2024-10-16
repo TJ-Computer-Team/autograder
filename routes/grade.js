@@ -568,6 +568,11 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
             return a-b;
         });
         rankings[i].index = 0.2 * vals[0] + 0.35 * vals[1] + 0.45 * vals[2];
+        /*
+        if (vals[0]==0 && [1001521,1001932,1001207].includes(rankings[i].id)) {
+            rankings[i].index = 0.4 * vals[1] + 0.6 * vals[2];
+        }
+        */
     }
     rankings = rankings.filter(function(elem) {
         return elem.usaco > 800 || elem.cf > 0 || elem.inhouse > 0;
