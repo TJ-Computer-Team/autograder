@@ -550,20 +550,21 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
             }
         }
     }
-    let drops = Math.min(2, contest_count - 2);
-    if ([1001521,1001932,1001207].includes(rankings[i].id)) {
-        drops++;
-    }
-    drops = Math.max(0, drops);
     for (let i = 0; i < rankings.length; i++) {
         rankings[i].inhouses.sort(function(a, b) {
             return a-b;
         });
+        let author_drops=0;
+        if ([1001521,1001932,1001207].includes(rankings[i].id)) {
+            author_drops++;
+        }
+        let drops = Math.min(2, contest_count - 2 + author_drops);
+        drops = Math.max(0, drops);
         let overall = 0;
         for (let j = Math.max(0, drops); j < contest_count; j++) {
             overall += rankings[i].inhouses[j];
         }
-        if (contest_count > 0) {
+        if (contest_count > 0 && contest_count - drops > 0) {
             overall /= contest_count - drops;
         }
         rankings[i].inhouse = overall;
