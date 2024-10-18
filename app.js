@@ -28,7 +28,7 @@ app.set('view engine', 'ejs');
 
 app.get("/", async (req, res) => {
     let source = req.headers['user-agent'];
-    let ua = useragent.parse(source);
+    let ua = await(useragent.parse(source));
     if (ua.isMobile) {
         req.session.mobile = true;
         res.status(200);
