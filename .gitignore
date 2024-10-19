@@ -1,6 +1,8 @@
 node_modules
 README.md
 log.txt
+submissions.csv
+getSubs.js
 
 # Logs
 logs
