@@ -26,7 +26,7 @@
       <% for (let i=0; i<locals.load.length; i++) { %>
         <tr>
           <td class="centertext"><%=locals.load[i].rank%></td>
-	  <td class="centertext"><a href="/grade/profile/<%=locals.load[i].id%>"><%=locals.load[i].name%></a></td>
+          <td class="centertext"><a href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.load[i].id%>"><%=locals.load[i].name%></a></td>
 	  <td class="centertext"><%=locals.load[i].solved%></td>
           <td class="centertext"><%=locals.load[i].penalty%></td>
           <% for (let j=0; j<locals.pnum; j++) { %>
