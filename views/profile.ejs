@@ -17,6 +17,7 @@
           <div class="title"><p>Profile</p></div>
           <div class="userinfo">Name: <%=locals.name%></div>
           <div class="userinfo">Username: <%=locals.username%></div>
+          <% if(locals.username!="2025apalikal") { %>
             <form action="/grade/updateStats" method="POST">
               <div class="statsInfo">
                 <label for="usaco_div">USACO Division: </label>
@@ -37,7 +38,8 @@
                 <input type="submit" value="Save">
               </div>
               Note: If the entered information is suspicious, it will be verified in-person.
-            </form>          
+            </form>
+          <% } %>
           </div>
         </div>
       </div>
