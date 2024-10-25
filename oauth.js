@@ -1,3 +1,5 @@
+// This file handles part of the OAuth functionality
+
 const {
     AuthorizationCode
 } = require('simple-oauth2');
@@ -21,6 +23,8 @@ async function getToken() {
     });
     return login_url;
 }
+
+// Makes a call to the TJHSST Ion API with your information after the user gives perms to tjctgrader
 async function processFunction(CODE, req, res2) {
     const tokenParams = {
         code: CODE,
@@ -38,6 +42,8 @@ async function processFunction(CODE, req, res2) {
                 let user_data = res.data;
                 req.session.id = user_data.id;
                 req.session.accessToken = accessToken;
+
+                // user_data contains information such as ion_id that we display
                 vals = {
                     user_data: user_data,
                     req: req,
