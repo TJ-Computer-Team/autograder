@@ -17,19 +17,24 @@ app.use(express.static("./public"));
 app.use(express.urlencoded({
     extended: false
 }));
+
+// For personal setup, create a .env file to store secret OAuth key
 app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false
 }));
+
 app.use("/grade", gradeRouter);
 app.use("/admin", adminRouter);
 app.set('view engine', 'ejs');
 
+// Home page
 app.get("/", async (req, res) => {
     let source = req.headers['user-agent'];
     let ua = await(useragent.parse(source));
     if (ua.isMobile) {
+        // We don't support functionality on mobile
         req.session.mobile = true;
         res.status(200);
         res.render("phone", {
@@ -43,6 +48,7 @@ app.get("/", async (req, res) => {
     }
 });
 
+// Route to handle first time users
 app.get("/start", async (req, res) => {
     if (req.session.user_data == undefined) {
         res.redirect("/");
@@ -59,6 +65,7 @@ app.get("/start", async (req, res) => {
     }
 });
 
+// Post request after first time users receive their information
 app.post("/confirm", async (req, res) => {
     user_data = req.session.user_data;
     user_data.email = req.body.email;
