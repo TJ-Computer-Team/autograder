@@ -325,7 +325,7 @@ async function getStandings(cid) {
     let load2 = [];
     for (let i = 0; i < load.length; i++) {
         let val = load[i];
-        if (val.solved > 0) {
+        if (val.solved > 0 && (cid!=6 || ![1002404,1002587,1001623,1001694,1001672,1001944,1001560,1001608,1001865,1001217,1001317,1003218,69].includes(val.id))) {
             if (val.penalty >= 0) load2.push(val);
         }
     }
@@ -556,16 +556,21 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
             }
         }
     }
-    let drops = Math.min(2, contest_count - 2);
     for (let i = 0; i < rankings.length; i++) {
         rankings[i].inhouses.sort(function(a, b) {
             return a-b;
         });
+        let author_drops=0;
+        if ([1001521,1001932,1001207].includes(rankings[i].id)) {
+            author_drops++;
+        }
+        let drops = Math.min(2, contest_count - 2 + author_drops);
+        drops = Math.max(0, drops);
         let overall = 0;
         for (let j = Math.max(0, drops); j < contest_count; j++) {
             overall += rankings[i].inhouses[j];
         }
-        if (contest_count > 0) {
+        if (contest_count > 0 && contest_count - drops > 0) {
             overall /= contest_count - drops;
         }
         rankings[i].inhouse = overall;
@@ -574,6 +579,9 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
             return a-b;
         });
         rankings[i].index = 0.2 * vals[0] + 0.35 * vals[1] + 0.45 * vals[2];
+        if (vals[0]==0 && [1001521,1001932,1001207].includes(rankings[i].id)) {
+            rankings[i].index = 0.4 * vals[1] + 0.6 * vals[2];
+        }
     }
     rankings = rankings.filter(function(elem) {
         return elem.usaco > 800 || elem.cf > 0 || elem.inhouse > 0;

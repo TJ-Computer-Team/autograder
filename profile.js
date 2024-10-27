@@ -1,7 +1,11 @@
+// this file has functions to exectute the second half of the OAuth after the request to Ion API has been completed
+
 const Client = require('pg').Client;
 let cl = undefined;
 async function check(user_data, req, res) {
     try {
+        // communicate with the database
+        // note: this is one of the instances that doesn't use the pool created in routes/sql.js (which might be bad)
         cl = new Client({
             user: "postgres",
             password: process.env.PGPASSWORD,
@@ -9,6 +13,9 @@ async function check(user_data, req, res) {
             database: "autograder"
         });
         await cl.connect();
+
+        // fetch our user from the database
+        // prompt other behavior if they're new
         let results = await cl.query("SELECT * FROM users WHERE id = ($1)", [user_data.id]);
         if (results.rows.length == 0) { // first time user
             await cl.end();
@@ -38,7 +45,9 @@ async function check(user_data, req, res) {
         console.log(error);
     }
 }
-async function populate(user_data, req, res) { // generate data for first time user
+
+// file in the data into the database for a first-time user
+async function populate(user_data, req, res) { 
     try {
         cl = new Client({
             user: "postgres",

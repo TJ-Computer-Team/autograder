@@ -238,7 +238,7 @@ async function insertSubmission(id, verdict, runtime, memory, insight) {
                 console.log("Error getting client");
                 resolve(false);
             }
-            let qry = `UPDATE submissions SET verdict = $1, runtime = $2,memory = $3, insight = $4 WHERE id = $5;`;
+            let qry = `UPDATE submissions SET verdict = $1, runtime = $2, memory = $3, insight = $4 WHERE id = $5;`;
             client.query(qry, [verdict, runtime, memory, insight, id], (err, results) => {
                 release();
                 if (err) {
