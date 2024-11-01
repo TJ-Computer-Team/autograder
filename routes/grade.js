@@ -319,7 +319,7 @@ async function getStandings(cid) {
     let load2 = [];
     for (let i = 0; i < load.length; i++) {
         let val = load[i];
-        if (val.solved > 0 && (cid!=6 || ![1002404,1002587,1001623,1001694,1001672,1001944,1001560,1001608,1001865,1001217,1001317,1003218,69,1002592].includes(val.id))) {
+        if (val.solved > 0 && (cid!=6 || ![1002404,1002587,1001623,1001694,1001672,1001944,1001560,1001608,1001865,1001217,1001317,1003218,69].includes(val.id))) {
             if (val.penalty >= 0) load2.push(val);
         }
     }
