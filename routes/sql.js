@@ -6,7 +6,7 @@ const pl = new Pool({
     password: process.env.PGPASSWORD,
     port: 5432,
     database: "autograder",
-    max: 20,
+    max: 100,
     idleTimeoutMillis: 0,
     connectionTimeoutMillis: 10000,
     allowExitOnIdle: true
