@@ -34,10 +34,10 @@ async function processFunction(CODE, req, res2) {
     try {
         let accessToken = await client.getToken(tokenParams);
         let vals = undefined;
+        let content = { 'Authorization': 'Bearer ' + accessToken.token.access_token};
+        console.log("OAuth request content:", content);
         await axios.get('https://ion.tjhsst.edu/api/profile?format=json', {
-                headers: {
-                    'Authorization': 'Bearer ' + accessToken.token.access_token
-                }
+                headers: content;
             }).then(res => {
                 let user_data = res.data;
                 req.session.id = user_data.id;
