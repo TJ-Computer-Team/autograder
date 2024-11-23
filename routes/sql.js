@@ -727,5 +727,6 @@ module.exports = {
     },
     getStats: (season) => {
         return getStats(season);
-    }
+    },
+    pl
 }
