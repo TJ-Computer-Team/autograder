@@ -37,7 +37,7 @@ async function processFunction(CODE, req, res2) {
         let content = { 'Authorization': 'Bearer ' + accessToken.token.access_token};
         console.log("OAuth request content:", content);
         await axios.get('https://ion.tjhsst.edu/api/profile?format=json', {
-                headers: content;
+                headers: content
             }).then(res => {
                 let user_data = res.data;
                 req.session.id = user_data.id;
