@@ -49,7 +49,11 @@ router.get("/authlogin", async (req, res) => {
 router.get("/login", async (req, res) => {
     let CODE = req.query.code;
     let data = await processFunction(CODE, req, res);
-    await check(data.user_data, data.req, data.res);
+    if (data) {
+        await check(data.user_data, data.req, data.res);
+    } else {
+        res.send("Error logging in as ION could not process our request");
+    }
 });
 router.get("/tjioilogin", (req, res) => {
     if (req.session.loggedin) {
