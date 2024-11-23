@@ -75,7 +75,7 @@ app.post("/confirm", async (req, res) => {
         if (req.body.email.length > 100) {
             res.send("Your input exceeds the limit");
         } else {
-            populate(user_data, req, res);
+            await populate(user_data, req, res);
         }
     } catch (error) {
         console.log(error);
