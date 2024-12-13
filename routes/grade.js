@@ -285,7 +285,7 @@ async function getStandings(cid) {
                 contestStart2 += ((3 * 24 + 4) * 60 - 5) * 60000;
             }
         }
-        if (parseInt(subs[i].timestamp) > contestEnd2) continue;
+        if (parseInt(subs[i].timestamp) > contestEnd2 || parseInt(subs[i].timestamp) < contestStart2) continue;
         let ind, pind;
         for (let j = 0; j < load.length; j++) {
             if (load[j].id == subs[i].user) {
