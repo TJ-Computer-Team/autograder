@@ -410,8 +410,10 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => {
     }
 });
 router.get("/submit", checkLoggedIn, async (req, res) => {
-    user = req.query.user
-    last = await grabSubs(user)
+    user = req.query.user;
+    console.log(user);
+    last = await grabSubs(user);
+    console.log(last);
     problems = await grabAllProblems(req.session.admin);
     let problemname;
     for (let i = 0; i < problems.length; i++) {
