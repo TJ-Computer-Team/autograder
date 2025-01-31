@@ -568,7 +568,7 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
         let drops = Math.min(2, contest_count - 2 + author_drops);
         drops = Math.max(0, drops);
         let overall = 0;
-        for (let j = Math.max(0, drops); j < contest_count; j++) {
+        for (let j = drops; j < contest_count; j++) {
             overall += rankings[i].inhouses[j];
         }
         if (contest_count > 0 && contest_count - drops > 0) {
