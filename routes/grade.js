@@ -563,7 +563,7 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
         if ([1001521,1001932,1001207,1001092,1002872,1001805,1001549,1002135,1001753].includes(rankings[i].id)) {
             author_drops++;
         }
-        if ([1001521,1002872,1001694,1001092,1002135].includes(rankings[i].id)) {
+        if ([1001521,1002872,1001694,1001092,1002135,1001549,1001805,1001207].includes(rankings[i].id)) {
             author_drops++;
         }
         let drops = Math.min(2, contest_count - 2) + author_drops;
