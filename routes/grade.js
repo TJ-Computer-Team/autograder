@@ -424,7 +424,8 @@ router.get("/submit", checkLoggedIn, async (req, res) => {
         if (a.pid < b.pid) return -1;
         return 1;
     });
-    lastSub = last[last.length - 1].language;
+    lastSub='python';
+    if (last.length>0) lastSub = last[last.length - 1].language;
     res.render("gradeSubmit", {
         problemid: req.query.problem,
         problemname: problemname,
@@ -565,7 +566,7 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
         if ([1001521,1002872,1001694,1001092,1002135].includes(rankings[i].id)) {
             author_drops++;
         }
-        let drops = Math.min(2, contest_count - 2 + author_drops);
+        let drops = Math.min(2, contest_count - 2) + author_drops;
         drops = Math.max(0, drops);
         let overall = 0;
         for (let j = drops; j < contest_count; j++) {
