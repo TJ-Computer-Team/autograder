@@ -445,6 +445,11 @@ router.post("/status", checkLoggedIn, async (req, res) => { // sends file to ano
         return;
     }
     let file = req.body.code;
+    if (file.length > 60000) {
+      return res
+        .status(413)
+        .send("Submission too long – please keep it under 60 000 characters.");
+    }
     let problem = await grabProblem(pid);
     let cid = problem.cid;
     let problemname = problem.name;
