@@ -44,7 +44,15 @@
               <option value="python">Python</option>
               <% } %>
             </select>
-            <textarea id="codeinput" name="code" rows="20" cols="150" spellcheck="false" placeholder="Insert code here"></textarea>
+            <textarea
+              id="codeinput"
+              name="code"
+              rows="20"
+              cols="150"
+              spellcheck="false"
+              maxlength="60000"
+              placeholder="Insert code here">
+            </textarea>
 
             <label class="custom-file-upload">
               <input type="file" name="files" class="custom-file"/>
@@ -56,22 +64,25 @@
     </div>
 
     <script type="text/javascript">
-      document
-        .getElementById("codeinput")
-        .addEventListener("keydown", function (e) {
-          if (e.key == "Tab") {
-            e.preventDefault();
-            var start = this.selectionStart;
-            var end = this.selectionEnd;
-
-            // set textarea value to: text before caret + tab + text after caret
-            this.value =
-              this.value.substring(0, start) + "\t" + this.value.substring(end);
-
-            // put caret at right position again
-            this.selectionStart = this.selectionEnd = start + 1;
-          }
-        });
+      document.getElementById("codeinput").addEventListener("keydown", function (e) {
+        const max = 60000;
+        const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
+        // enforce character cap
+        if (this.value.length >= max && !allowed.includes(e.key)) {
+          e.preventDefault();
+          // (optional) flash a small warning in the UI
+          return;
+        }
+        // handle Tab
+        if (e.key === "Tab") {
+          e.preventDefault();
+          const start = this.selectionStart;
+          const end = this.selectionEnd;
+          this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+          this.selectionStart = this.selectionEnd = start + 1;
+        }
+      });
     </script>
+
   </body>
 </html>
