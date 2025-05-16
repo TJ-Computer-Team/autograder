@@ -8,35 +8,11 @@
     <title>Profile</title>
 </head>
 <body>
-    <div class="navbar">
-        <ul class="nb">
-            <li class="nb"><a class="active" href="/grade/profile">Home</a></li>
-            <li class="nb"><a href="/grade/status">Submissions</a></li>
-            <li class="nb"><a href="/grade/contests">Contests</a></li>
-            <li class="nb"><a href="/grade/problemset">Problemset</a></li>
-            <li class="nb"><a href="/grade/submit">Submit</a></li>
-	    <li class="nb"><a href="/grade/info">Rules and Info</a></li>
-	    <div class ="topnav-right">
-            <li class="nb">
-                    <form action="/grade/logout" method="POST">
-                        <button class="logoutbtn" type="submit">Log Out</button>
-                    </form>
-            </li>
-            </div>
-        </ul>
-    </div>
- <div id="particles-js" class="particles-js">   
-</div>
-    <script src="//cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-    /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
-particlesJS.load('particles-js', '../particles.json', function() {
-  console.log('callback - particles.js config loaded');
-});
-    </script>
+    <%- include("partials/header", {active: "home"}); %>
+    <%- include("partials/particles", {depth: 2}); %>
+
     <div class="container"> 
 
-    
     <div class="info-block">
     <div class="title"><strong>Profile</strong></div>   
     <div class="info">Name: <%=locals.name%></div>

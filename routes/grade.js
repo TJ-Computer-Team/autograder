@@ -522,7 +522,8 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => {
     }
 });
 router.get("/rankings", checkLoggedIn, async (req, res) => {
-    res.redirect('/grade/rankings/2025');
+    if (req.session.tjioi) res.redirect('/grade/contests');
+    else res.redirect('/grade/rankings/2025');
 });
 router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
     let season = Number(req.params.season);
