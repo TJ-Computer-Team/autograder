@@ -114,7 +114,7 @@ router.get("/profile", checkLoggedIn, (req, res) => {
     }
 });
 router.get("/profile/:id", checkLoggedIn, async (req, res) => {
-    if (req.session.tjioi) {
+    if (req.session.tjioi && !req.session.admin) {
         res.redirect("/grade/profile");
     } else {
         let vals = await grabProfile(req.params.id);
