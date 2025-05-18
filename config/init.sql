@@ -1,7 +1,5 @@
--- Change postgres password and create database
 ALTER USER postgres WITH PASSWORD 'postgres';
 
--- Connect to the autograder database
 \connect autograder
 
 -- USERS
@@ -79,7 +77,8 @@ CREATE TABLE IF NOT EXISTS test (
     test   TEXT NOT NULL
 );
 
--- Insert a contest with id 1
+
+-- example data begins here
 INSERT INTO contests (
     id, name, start, "end", editorial, tjioi, season, rated
 ) VALUES (
@@ -93,7 +92,6 @@ INSERT INTO contests (
     false
 );
 
--- Insert checker
 INSERT INTO checker (code, lang)
 VALUES (
     $$import sys
@@ -104,7 +102,6 @@ print("ok" if expected == actual else "wrong")$$,
     'python3'
 );
 
--- Insert problems
 INSERT INTO problems (
     pid, name, contestid, checkerid, solution, statement, tl, ml,
     interactive, secret, inputtxt, outputtxt, samples, points
