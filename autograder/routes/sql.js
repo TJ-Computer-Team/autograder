@@ -3,6 +3,7 @@ const {
 } = require('pg');
 const pl = new Pool({
     user: "postgres",
+    host: (process.env.PROD == "false" ? "postgres" : "locahost"),
     password: process.env.PGPASSWORD,
     port: 5432,
     database: "autograder",
@@ -640,6 +641,7 @@ async function getStats(season) {
                         usaco: results.rows[i].usaco_division,
                         cf: results.rows[i].cf_rating
                     }
+                    console.log(ret);
                     retarr.push(ret);
                 }
                 resolve(retarr);
