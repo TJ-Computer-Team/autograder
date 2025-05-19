@@ -92,6 +92,19 @@ INSERT INTO contests (
     false
 );
 
+INSERT INTO contests (
+    id, name, start, "end", editorial, tjioi, season, rated
+) VALUES (
+    2,
+    'Sample Contest 2',
+    NOW(),
+    NOW() + interval '2 hours',
+    'editorial text here',
+    false,
+    6969,
+    false
+);
+
 INSERT INTO checker (code, lang)
 VALUES (
     $$import sys
@@ -106,8 +119,13 @@ INSERT INTO problems (
     pid, name, contestid, checkerid, solution, statement, tl, ml,
     interactive, secret, inputtxt, outputtxt, samples, points
 ) VALUES
-(1001, 'Sum of Two Numbers', 1, 1, 'print(a + b)', 'Add two integers a and b.', 1, 256, false, false, '1 2', '3', '[{"input": "1 2", "output": "3"}]', 100),
-(1002, 'Max of Array', 1, 1, 'print(max(arr))', 'Find the maximum element in the array.', 1, 256, false, false, '1 3 2 5', '5', '[{"input": "1 3 2 5", "output": "5"}]', 100),
-(1003, 'Reverse String', 1, 1, 'print(s[::-1])', 'Reverse a given string.', 1, 128, false, false, 'hello', 'olleh', '[{"input": "hello", "output": "olleh"}]', 100),
-(1004, 'Even or Odd', 1, 1, 'print("Even" if n % 2 == 0 else "Odd")', 'Determine if a number is even or odd.', 0.5, 64, false, false, '4', 'Even', '[{"input": "3", "output": "Odd"}]', 50),
-(1005, 'Factorial', 1, 1, 'print(math.factorial(n))', 'Compute the factorial of a number.', 2, 512, false, false, '5', '120', '[{"input": "4", "output": "24"}]', 150);
+(1, 'Problem 1', 1, 1, 'print(1)', 'Problem 1 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 1\n Output: 1\n', 1),
+(2, 'Problem 2', 1, 1, 'print(2)', 'Problem 2 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 2\n Output: 2\n', 2),
+(3, 'Problem 3', 1, 1, 'print(3)', 'Problem 3 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 3\n Output: 3\n', 3),
+(4, 'Problem 4', 1, 1, 'print(4)', 'Problem 4 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 4\n Output: 4\n', 4),
+(5, 'Problem 5', 1, 1, 'print(5)', 'Problem 5 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 5\n Output: 5\n', 5),
+(6, 'Problem 6', 2, 1, 'print(6)', 'Problem 6 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 6\n Output: 6\n', 6),
+(7, 'Problem 7', 2, 1, 'print(7)', 'Problem 7 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 7\n Output: 7\n', 7),
+(8, 'Problem 8', 2, 1, 'print(8)', 'Problem 8 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 8\n Output: 8\n', 8),
+(9, 'Problem 9', 2, 1, 'print(9)', 'Problem 9 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 9\n Output: 9\n', 9),
+(10, 'Problem 10', 2, 1, 'print(10)', 'Problem 10 description', 1, 256, false, false, 'Input format', 'Output format', 'Input: 10\n Output: 10\n', 10);

@@ -413,6 +413,9 @@ router.get("/submit", checkLoggedIn, async (req, res) => {
     let user = req.session.userid;
     let last = await grabSubs(user);
     problems = await grabAllProblems(req.session.admin);
+    if (req.query.contest != null) {
+        problems = await grabContestProblems(req.query.contest);
+    }
     let problemname;
     for (let i = 0; i < problems.length; i++) {
         if (problems[i].pid == req.query.problem) problemname = problems[i].name;
