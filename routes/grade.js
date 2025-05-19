@@ -130,11 +130,13 @@ router.get("/", async (req, res) => {
 });
 router.get("/attendance", async (req, res) => {
     if (req.session.loggedin) {
-        deviceClass = 'main';
+        let deviceClass = 'main';
         if (req.session.mobile) deviceClass = 'phone';
+        const name = req.session.user_data && req.session.user_data.display_name ? req.session.user_data.display_name : '';
+        const username = req.session.user_data && req.session.user_data.ion_username ? req.session.user_data.ion_username : '';
         res.render("attendance", {
-            name: vals.name,
-            username: vals.username,
+            name: name,
+            username: username,
             device: deviceClass
         });
     } else {

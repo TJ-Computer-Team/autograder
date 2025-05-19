@@ -5,54 +5,50 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="../style.css" />
+  <link rel="stylesheet" type="text/css" href="../profile.css" />
   <title>Attendance</title>
 </head>
 
 <body>
-  <section class=<%=locals.device%>>
-    <div class="bgbox">
-      <div class="title"><strong>Attendance</strong></div>
-
-      <div class="subbox">
-        <div class="subtext">
-          <form action="/confirm" method="POST">
-            Complete 8th period attendance here.<br><br>
-
-            Make sure the following information is correct...<br>
-            Name: <strong>
-              <%=locals.name%>
-            </strong><br>
-            Username: <strong>
-              <%=locals.username%>
-            </strong><br>
-            <br>
-
-            Please select which block you are completing attendance for.<br>
-            <select name="block" id="block">
-              <option value="SCT">Senior Computer Team</option>
-              <option value="ICT">Intermediate Computer Team</option>
-            </select>
-            <br><br>
-
-            Please enter today's attendance password.<br>
-            <input type="text" name="pass" id="pass"></input>
-            <br><br>
-            <div class="cnt_buttons">
-              <button class="button" type="submit">Confirm</button>
-            </div>
-          </form>
+  <%- include("partials/header", { active: "attendance" }); %>
+  <%- include("partials/particles", { depth: 1 }); %>
+  <div class="profile-card">
+    <div class="title" style="margin-bottom:1.2em;"><strong>Attendance</strong></div>
+    <div class="profile-stats" style="margin-bottom:1.2em;">
+      <div class="stat-block">
+        <div class="stat-label">Name</div>
+        <div class="stat-value"><%= locals.name %></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Username</div>
+        <div class="stat-value"><%= locals.username %></div>
+      </div>
+    </div>
+    <form action="/confirm" method="POST" style="text-align:left;max-width:400px;margin:0 auto;">
+      <div class="stat-block" style="margin-bottom:1.2em;">
+        <div class="stat-label" style="margin-bottom:0.5em;">Instructions</div>
+        <div class="stat-value" style="font-size:1em;font-weight:400;">
+          Complete 8th period attendance here.
         </div>
       </div>
-
-      <form class="submit" action="/grade/completeAttendance" method="POST">
-
-      </form>
-    </div>
-
-
-  </section>
-
+      <div class="stat-block" style="margin-bottom:1.2em;">
+        <div class="stat-label">Block</div>
+        <select name="block" id="block"
+          style="margin-top:0.5em;width:100%;background:#232526;color:#e5e7eb;border:1px solid #339cff;border-radius:0.4em;padding:0.6em 0.9em;font-size:1em;box-sizing:border-box;">
+          <option value="SCT">Senior Computer Team</option>
+          <option value="ICT">Intermediate Computer Team</option>
+        </select>
+      </div>
+      <div class="stat-block" style="margin-bottom:1.2em;">
+        <div class="stat-label">Attendance Password</div>
+        <input type="text" name="pass" id="pass" placeholder="Enter today's password"
+          style="margin-top:0.5em;width:100%;background:#232526;color:#e5e7eb;border:1px solid #339cff;border-radius:0.4em;padding:0.6em 0.9em;font-size:1em;box-sizing:border-box;">
+      </div>
+      <div class="cnt_buttons" style="text-align:center;">
+        <button class="button" type="submit">Confirm</button>
+      </div>
+    </form>
+  </div>
 </body>
 
 </html>
