@@ -18,7 +18,7 @@ const {
     getContest,
     getAllContests,
     getStats
-} = require("./sql");
+} = require("./sql/sql");
 const {
     queue
 } = require("./runTests");

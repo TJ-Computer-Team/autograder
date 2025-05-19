@@ -8,7 +8,7 @@ const {
     grabProblem,
     grabAllProblems,
     addProblem
-} = require("./sql");
+} = require("./sql/sql");
 const {
     getQueue,
     toggleQueue,
