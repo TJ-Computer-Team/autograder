@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
     email            VARCHAR(255) NOT NULL,
     pass             VARCHAR(255) NOT NULL,
     cf_handle        VARCHAR(255),
-    cf_rating        SMALLINT,
+    cf_rating        SMALLINT DEFAULT 0,
     usaco_division   VARCHAR(50)
 );
 
