@@ -1,3 +1,5 @@
+const pl = require('./db');
+
 async function getAllContests() {
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {

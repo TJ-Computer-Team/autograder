@@ -1,3 +1,5 @@
+const pl = require('./db');
+
 async function grab(id) {
     return new Promise((resolve, reject) => {
         pl.connect((err, client, release) => {
