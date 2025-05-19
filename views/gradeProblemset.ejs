@@ -57,11 +57,14 @@
   <style>
     .problemset-table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 0.7em;
+      border-collapse: collapse; 
       color: #e5e7eb;
       font-size: 1.08em;
       margin-top: 0.5em;
+      background: #232526; 
+      border-radius: 0.7em;
+      overflow: hidden;
+      box-shadow: 0 2px 8px #23252633;
     }
     .problemset-table th {
       background: none;
@@ -73,10 +76,10 @@
       text-align: left;
     }
     .problemset-table td {
-      background: #232526;
-      border-radius: 0.7em;
+      background: none; 
+      border-radius: 0;
       padding: 0.8em 0.7em;
-      box-shadow: 0 2px 8px #23252633;
+      box-shadow: none; 
       vertical-align: middle;
     }
     .problem-link {
