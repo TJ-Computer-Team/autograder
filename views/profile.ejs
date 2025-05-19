@@ -156,7 +156,28 @@
           </div>
         </div>
         <% if(locals.username!="2025apalikal" ) { %>
-          <form class="profile-form" action="/grade/updateStats" method="POST">
+          <div id="profile-static-fields" class="profile-stats" style="margin-bottom:1.2em;">
+            <div class="stat-block">
+              <div class="stat-label">USACO Division</div>
+              <div class="stat-value">
+                <%= locals.usaco_div && locals.usaco_div !== 'none' ? locals.usaco_div.charAt(0).toUpperCase() + locals.usaco_div.slice(1) : 'Not Participated' %>
+              </div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-label">Codeforces Handle</div>
+              <div class="stat-value">
+                <%= locals.cf_handle || 'N/A' %>
+              </div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-label">Preferred Language</div>
+              <div class="stat-value">
+                <%= locals.preferred_lang ? (locals.preferred_lang === 'cpp' ? 'C++' : (locals.preferred_lang === 'java' ? 'Java' : (locals.preferred_lang === 'python' ? 'Python' : locals.preferred_lang))) : 'N/A' %>
+              </div>
+            </div>
+          </div>
+          <button id="edit-profile-btn" class="button" style="width:100%;margin-bottom:1em;">Edit Profile</button>
+          <form class="profile-form" id="profile-form" action="/grade/updateStats" method="POST" style="display:none;">
             <label for="usaco_div">USACO Division:</label>
             <select name="usaco_div">
               <option value="none" <% if(locals.usaco_div=="none" ) { %> selected <% } %> >Not Participated</option>
@@ -177,7 +198,14 @@
             <div style="font-size:0.95em;color:#fff;margin-top:0.7em;">Note: If the entered information is suspicious,
               it will be verified in-person.</div>
           </form>
-          <% } %>
+          <script>
+            document.getElementById('edit-profile-btn').addEventListener('click', function() {
+              document.getElementById('profile-form').style.display = 'block';
+              document.getElementById('profile-static-fields').style.display = 'none';
+              this.style.display = 'none';
+            });
+          </script>
+        <% } %>
       </div>
 </body>
 
