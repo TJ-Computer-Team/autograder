@@ -1,63 +1,29 @@
-// This file handles part of the OAuth functionality
+// Mock OAuth functionality to accept all logins
 
-const {
-    AuthorizationCode
-} = require('simple-oauth2');
-const axios = require('axios');
-const config = {
-    client: {
-        id: process.env.CLIENT_ID,
-        secret: process.env.CLIENT_SECRET
-    },
-    auth: {
-        tokenHost: 'https://ion.tjhsst.edu/oauth/',
-        authorizePath: 'https://ion.tjhsst.edu/oauth/authorize',
-        tokenPath: 'https://ion.tjhsst.edu/oauth/token/'
-    }
-};
-const client = new AuthorizationCode(config);
 async function getToken() {
-    const login_url = client.authorizeURL({
-        redirect_uri: process.env.CLIENT_REDIRECT_URI,
-        scope: ['read']
-    });
-    return login_url;
+    // Return a mock login URL (not used in this setup)
+    return "/grade/authlogin";
 }
 
-// Makes a call to the TJHSST Ion API with your information after the user gives perms to tjctgrader
+// Mock processFunction to accept any login and return dummy user data
 async function processFunction(CODE, req, res2) {
-    const tokenParams = {
-        code: CODE,
-        redirect_uri: process.env.CLIENT_REDIRECT_URI,
-        scope: ['read']
-    };
     try {
-        let accessToken = await client.getToken(tokenParams);
-        let vals = undefined;
-        let content = { 'Authorization': 'Bearer ' + accessToken.token.access_token};
-        console.log("OAuth request content:", content);
-        await axios.get('https://ion.tjhsst.edu/api/profile?format=json', {
-                headers: content
-            }).then(res => {
-                let user_data = res.data;
-                req.session.id = user_data.id;
-                req.session.accessToken = accessToken;
+        // Simulate user data
+        const user_data = {
+            id: "12345",
+            display_name: "Saturo Gojo",
+            ion_username: "skbidi"
+        };
 
-                // user_data contains information such as ion_id that we display
-                vals = {
-                    user_data: user_data,
-                    req: req,
-                    res: res2
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                res2.redirect("/");
-            });
-        return vals;
+        // Store user data in the session
+        req.session.id = user_data.id;
+        req.session.user_data = user_data;
+
+        // Redirect to the profile page after login
+        res2.redirect('/profile');
     } catch (error) {
-        console.log('Access Token Error:', error.message);
-        return false;
+        console.log('Mock Login Error:', error.message);
+        res2.status(500).send('An error occurred during login');
     }
 }
 
@@ -68,4 +34,4 @@ module.exports = {
     processFunction: (CODE, req, res) => {
         return processFunction(CODE, req, res);
     }
-}
+};

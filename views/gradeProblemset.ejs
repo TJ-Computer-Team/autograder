@@ -1,3 +1,6 @@
+<!-- updated the style to match the rest of the new website, also added a lot of data to each problem to make the problemset more useful. reversed the sorting to match codeforces with new problems on the top. added a difficulty, currenlt hardcoded but this can be added to the datanase. added tags similar to diffiuclty hradcoded. planning on making it show which oes you've solved so its more useful. -->
+
+<!-- TODO: Add-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="../profile.css" />
     <title>Problemset</title>
+
   </head>
   <body>
     <%- include("partials/header", {active: "problemset"}); %>
@@ -15,15 +19,82 @@
       <div class="title">Problemset</div>
     </div>
     <div class="main-block" id="problems">
-      <ul class="sl">
-        <% for (let i=0; i<locals.problems.length; i++) { %>
-          <li class="sl">
-            <a href = <%="/grade/problemset/"+locals.problems[i].pid%>>
-              <div class="problem-text"><%=locals.problems[i].name%></div>
-            </a>
-          </li>
-        <% } %>
-      </ul>
+      <table class="problemset-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Contest</th>
+            <th>Letter</th>
+            <th>Title</th>
+            <th>Tags</th>
+            <th>Difficulty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% 
+            // Sort problems by pid descending (newest first)
+            let sortedProblems = locals.problems.slice().sort((a, b) => b.pid - a.pid);
+            for (let i = 0; i < sortedProblems.length; i++) { 
+              let p = sortedProblems[i];
+              // Placeholder logic for contest, letter, tags, difficulty
+              let contestId = p.contestid || '1';
+              let letter = String.fromCharCode(65 + (i % 26)); // A, B, C, ...
+              let tags = p.tags || 'math, implementation'; // Placeholder
+              let difficulty = p.difficulty || '800'; // Placeholder
+          %>
+          <tr>
+            <td><%= sortedProblems.length - i %></td>
+            <td><%= contestId %></td>
+            <td><%= letter %></td>
+            <td><a href="/grade/problemset/<%=p.pid%>" class="problem-link"><%=p.name%></a></td>
+            <td><%= tags %></td>
+            <td><%= difficulty %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
     </div>
+  <style>
+    .problemset-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 0.7em;
+      color: #e5e7eb;
+      font-size: 1.08em;
+      margin-top: 0.5em;
+    }
+    .problemset-table th {
+      background: none;
+      color: #339cff;
+      font-weight: 700;
+      font-size: 1.08em;
+      padding: 0.7em 0.5em;
+      border-bottom: 2px solid #232526;
+      text-align: left;
+    }
+    .problemset-table td {
+      background: #232526;
+      border-radius: 0.7em;
+      padding: 0.8em 0.7em;
+      box-shadow: 0 2px 8px #23252633;
+      vertical-align: middle;
+    }
+    .problem-link {
+      color: #a259f7;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .problem-link:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    @media (max-width: 700px) {
+      .problemset-table th, .problemset-table td {
+        font-size: 0.98em;
+        padding: 0.5em 0.2em;
+      }
+    }
+  </style>
   </body>
 </html>

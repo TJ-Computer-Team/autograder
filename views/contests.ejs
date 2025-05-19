@@ -15,29 +15,88 @@
       <div class="title">Contests</div>
     </div>
     <div class="main-block" id="problems">
-        <% for (let i=locals.contests.length-1; i>=0; i--) { %>
-      <ul class="sl">
-        <li class="sl">
-          <a href= <%= "/grade/contests/" + locals.contests[i].id %> >
-            <div class="problem-text">
-              <%= "[" + (locals.contests[i].season-1) + "-" + locals.contests[i].season + "] " + locals.contests[i].name + " (" + ["Unrated", "Rated"][Number(locals.contests[i].rated)] + ")" %>
-            </div>
-          </a>
-        </li>
-      </ul>
-    <% } %>
-      <ul class="sl">
-        <li class="sl">
-          <a href="https://codeforces.com/group/M4wsRWBHyZ">
-            <div class="problem-text">
-              All Past Contests up to the 2022-2023 School Year
-            </div>
-          </a>
-        </li>
-      </ul>
+      <table class="problemset-table single-rect">
+        <thead>
+          <tr>
+            <th>Season</th>
+            <th>Name</th>
+            <th>Rated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i=locals.contests.length-1; i>=0; i--) { %>
+            <tr>
+              <td><%= (locals.contests[i].season-1) + '-' + locals.contests[i].season %></td>
+              <td>
+                <a href="/grade/contests/<%=locals.contests[i].id%>" class="problem-link">
+                  <%= locals.contests[i].name %>
+                </a>
+              </td>
+              <td><%= ["Unrated", "Rated"][Number(locals.contests[i].rated)] %></td>
+            </tr>
+          <% } %>
+          <tr>
+            <td colspan="3">
+              <a href="https://codeforces.com/group/M4wsRWBHyZ" class="problem-link">
+                All Past Contests up to the 2022-2023 School Year
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="main-block">
       When participating in any in-house competition, please remember that all code submissions must be your own original work. Using outside sources or generative AI tools to generate solutions is not permitted and will be considered a violation of the competition's rules. We will be actively monitoring submissions for plagiarism using MOSS and manually reviewing any code that appears suspicious. Submissions flagged for plagiarism may result in disqualification.
     </div>
+  <style>
+    .problemset-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      color: #e5e7eb;
+      font-size: 1.08em;
+      margin-top: 0.5em;
+      background: #232526;
+      border-radius: 0.7em;
+      box-shadow: 0 2px 8px #23252633;
+      overflow: hidden;
+    }
+    .problemset-table th {
+      background: none;
+      color: #339cff;
+      font-weight: 700;
+      font-size: 1.08em;
+      padding: 0.7em 0.5em;
+      border-bottom: 2px solid #232526;
+      text-align: left;
+    }
+    .problemset-table td {
+      background: none;
+      border-radius: 0;
+      padding: 0.8em 0.7em;
+      box-shadow: none;
+      vertical-align: middle;
+      border-bottom: 1px solid #232526;
+    }
+    .problemset-table tr:last-child td {
+      border-bottom: none;
+    }
+    .problem-link {
+      color: #a259f7;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .problem-link:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    @media (max-width: 700px) {
+      .problemset-table th, .problemset-table td {
+        font-size: 0.98em;
+        padding: 0.5em 0.2em;
+      }
+    }
+  </style>
   </body>
 </html>

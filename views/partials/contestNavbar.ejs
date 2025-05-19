@@ -1,6 +1,60 @@
 <div class="main-block">
   <div class="title"><%=locals.title%></div>
 </div>
+<style>
+  .cnav {
+    width: 100%;
+    margin: 0 auto 2em auto;
+    display: flex;
+    justify-content: center;
+    background: none;
+  }
+  ul.cnb {
+    display: flex;
+    flex-direction: row;
+    gap: 1.2em;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: rgba(44, 48, 60, 0.93);
+    border-radius: 0.8em;
+    box-shadow: 0 2px 8px #23252633;
+    align-items: center;
+  }
+  li.cnb {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  .cnb a {
+    display: block;
+    padding: 0.9em 2em;
+    color: #e5e7eb;
+    font-weight: 600;
+    font-size: 1.08em;
+    border-radius: 0.7em;
+    background: none;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+  .cnb a.cactive, .cnb a:hover {
+    background: #339cff;
+    color: #fff;
+    text-decoration: none;
+  }
+  @media (max-width: 700px) {
+    ul.cnb {
+      flex-direction: column;
+      gap: 0.5em;
+      border-radius: 0.6em;
+    }
+    .cnb a {
+      padding: 0.7em 1em;
+      font-size: 1em;
+    }
+  }
+</style>
 <div class="cnav">
   <ul class="cnb">
     <li class="cnb">

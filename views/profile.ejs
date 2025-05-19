@@ -1,48 +1,184 @@
+<!-- Completley Reworked the Design of the Profile/Home tab to make it cleaner and more modern -->
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="../profile.css" />
-    <title>Profile</title>
-  </head>
-  <body>
-    <%- include("partials/header", {active: "profile"}); %>
-    <%- include("partials/particles", {depth: 1}); %>
 
-    <div id="mainContent">
-      <div id="subContent">
-        <div class="info-block">
-          <div class="title"><p>Profile</p></div>
-          <div class="userinfo">Name: <%=locals.name%></div>
-          <div class="userinfo">Username: <%=locals.username%></div>
-          <% if(locals.username!="2025apalikal") { %>
-            <form action="/grade/updateStats" method="POST">
-              <div class="statsInfo">
-                <label for="usaco_div">USACO Division: </label>
-                <select name="usaco_div">
-                  <option value="none" <% if(locals.usaco_div=="none") { %> selected  <% } %> >Not Participated</option>
-                  <option value="bronze" <% if(locals.usaco_div=="bronze") { %> selected  <% } %> >Bronze</option>
-                  <option value="silver" <% if(locals.usaco_div=="silver") { %> selected  <% } %> >Silver</option>
-                  <option value="gold" <% if(locals.usaco_div=="gold") { %> selected  <% } %> >Gold</option>
-                  <option value="plat" <% if(locals.usaco_div=="plat") { %> selected  <% } %> >Platinum</option>
-                </select>
-              </div>
-              <div class="statsInfo">
-                <label for="cf_handle">Codeforces Handle: </label>
-                <input name="cf_handle" value=<%=locals.cf_handle%>>
-                <br>(leave blank if you don't have one)
-              </div>
-              <div class="statsInfo">
-                <input type="submit" value="Save">
-              </div>
-              Note: If the entered information is suspicious, it will be verified in-person.
-            </form>
-          <% } %>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="../profile.css" />
+  <title>Profile</title>
+  <style>
+    .profile-form select,
+    .profile-form input {
+      margin-top: 0.3em;
+      margin-bottom: 1em;
+      width: 100%;
+      background: #232526;
+      color: #e5e7eb;
+      border: 1px solid #339cff;
+      border-radius: 0.4em;
+      padding: 0.6em 0.9em;
+      font-size: 1em;
+      box-shadow: 0 1px 4px #23252622;
+      transition: border 0.2s;
+      box-sizing: border-box;
+    }
+
+
+    .profile-form select:focus,
+    .profile-form input:focus {
+      outline: none;
+      border: 1.5px solid #a259f7;
+      background: #232526;
+      color: #e5e7eb;
+    }
+
+    .profile-form select option {
+      background: #232526;
+      color: #e5e7eb;
+    }
+
+    .profile-card {
+      background: rgba(36, 39, 48, 0.95);
+      border-radius: 1.5em;
+      box-shadow: 0 4px 32px #23252655;
+      padding: 2.5em 2em 2em 2em;
+      max-width: 500px;
+      margin: 3em auto 2em auto;
+      text-align: center;
+      animation: fadeIn 1s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .profile-title {
+      font-size: 2.2em;
+      font-weight: 800;
+      color: #339cff;
+      margin-bottom: 0.2em;
+    }
+
+    .profile-username {
+      color: #a259f7;
+      font-size: 1.1em;
+      margin-bottom: 1.2em;
+    }
+
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 1.5em 0 2em 0;
+      gap: 1.5em;
+    }
+
+    .stat-block {
+      background: #232526;
+      border-radius: 0.7em;
+      padding: 1em 1.5em;
+      min-width: 90px;
+      color: #e5e7eb;
+      box-shadow: 0 2px 8px #23252633;
+    }
+
+    .stat-label {
+      font-size: 0.95em;
+      color: #a259f7;
+      margin-bottom: 0.2em;
+    }
+
+    .stat-value {
+      font-size: 1.4em;
+      font-weight: 700;
+    }
+
+    .profile-form {
+      margin-top: 2em;
+      text-align: left;
+    }
+
+    .profile-form label {
+      color: #339cff;
+      font-weight: 600;
+    }
+
+    .profile-form select,
+    .profile-form input {
+      margin-top: 0.3em;
+      margin-bottom: 1em;
+      width: 100%;
+    }
+
+    .profile-form .save-btn {
+      width: 100%;
+      margin-top: 1em;
+    }
+
+    @media (max-width: 600px) {
+      .profile-card {
+        padding: 1.2em 0.3em;
+      }
+
+      .profile-stats {
+        flex-direction: column;
+        gap: 0.7em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <%- include("partials/header", {active: "profile" }); %>
+    <%- include("partials/particles", {depth: 1}); %>
+      <div class="profile-card">
+        <div class="profile-title">
+          <%=locals.name%>
+        </div>
+        <div class="profile-username"><%=locals.username%>
+        </div>
+        <div class="profile-stats">
+          <div class="stat-block">
+            <div class="stat-label">Rating</div>
+            <div class="stat-value">
+              <%=locals.rating || 1500%>
+            </div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-label">Problems Solved</div>
+            <div class="stat-value">
+              <%=locals.solved || 0%>
+            </div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-label">Contests</div>
+            <div class="stat-value">
+              <%=locals.contests || 0%>
+            </div>
           </div>
         </div>
+        <% if(locals.username!="2025apalikal" ) { %>
+          <form class="profile-form" action="/grade/updateStats" method="POST">
+            <label for="usaco_div">USACO Division:</label>
+            <select name="usaco_div">
+              <option value="none" <% if(locals.usaco_div=="none" ) { %> selected <% } %> >Not Participated</option>
+              <option value="bronze" <% if(locals.usaco_div=="bronze" ) { %> selected <% } %> >Bronze</option>
+              <option value="silver" <% if(locals.usaco_div=="silver" ) { %> selected <% } %> >Silver</option>
+              <option value="gold" <% if(locals.usaco_div=="gold" ) { %> selected <% } %> >Gold</option>
+              <option value="plat" <% if(locals.usaco_div=="plat" ) { %> selected <% } %> >Platinum</option>
+            </select>
+            <label for="cf_handle">Codeforces Handle:</label>
+            <input name="cf_handle" value="<%=locals.cf_handle%>" placeholder="Enter your Codeforces handle">
+            <label for="preferred_lang">Preferred Language:</label>
+            <select name="preferred_lang">
+              <option value="cpp" <% if(locals.preferred_lang=="cpp" ) { %> selected <% } %>>C++</option>
+              <option value="java" <% if(locals.preferred_lang=="java" ) { %> selected <% } %>>Java</option>
+              <option value="python" <% if(locals.preferred_lang=="python" ) { %> selected <% } %>>Python</option>
+            </select>
+            <input class="save-btn button" type="submit" value="Save">
+            <div style="font-size:0.95em;color:#fff;margin-top:0.7em;">Note: If the entered information is suspicious,
+              it will be verified in-person.</div>
+          </form>
+          <% } %>
       </div>
-    </div>
-  </body>
+</body>
+
 </html>

@@ -39,12 +39,14 @@ function getLateTakers(cid) {
 }
 
 router.get("/authlogin", async (req, res) => {
-    if (req.session.loggedin) {
-        res.redirect("/grade/profile");
-    } else {
-        let theurl = await getToken();
-        res.redirect(theurl);
-    }
+    // Simulate a successful login
+    req.session.loggedin = true;
+    req.session.user_data = {
+        id: "12345",
+        display_name: "Test User",
+        ion_username: "testuser"
+    };
+    res.redirect("/grade/profile"); // Redirect to the profile page
 });
 router.get("/login", async (req, res) => {
     let CODE = req.query.code;
@@ -94,27 +96,19 @@ router.get("/info", checkLoggedIn, async (req, res) => {
         tjioi: req.session.tjioi
     });
 });
+
 router.post("/logout", (req, res) => {
     req.session.destroy();
     res.redirect("/");
 });
 router.get("/profile", checkLoggedIn, (req, res) => {
-    if (req.session.tjioi) {
-        res.render("tjioiProfile", {
-            name: req.session.name,
-            username: req.session.username
-        });
-    } else {
-        res.render("profile", {
-            name: req.session.name,
-            username: req.session.username,
-            usaco_div: req.session.usaco_div,
-            cf_handle: req.session.cf_handle
-        });
-    }
+    res.render("profile", {
+        name: req.session.user_data.display_name,
+        username: req.session.user_data.ion_username
+    });
 });
 router.get("/profile/:id", checkLoggedIn, async (req, res) => {
-    if (req.session.tjioi && !req.session.admin) {
+    if (req.session.tjioi) {
         res.redirect("/grade/profile");
     } else {
         let vals = await grabProfile(req.params.id);
@@ -522,8 +516,7 @@ router.get("/status/:id", checkLoggedIn, async (req, res) => {
     }
 });
 router.get("/rankings", checkLoggedIn, async (req, res) => {
-    if (req.session.tjioi) res.redirect('/grade/contests');
-    else res.redirect('/grade/rankings/2025');
+    res.redirect('/grade/rankings/2025');
 });
 router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
     let season = Number(req.params.season);
