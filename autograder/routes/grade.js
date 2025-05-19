@@ -127,6 +127,7 @@ router.get("/profile/:id", checkLoggedIn, async (req, res) => {
                 username: vals.username,
                 cf: vals.cf,
                 usaco: vals.usaco,
+                ratingChanges: vals.ratingChanges,
                 admin: req.session.admin
             });
         }
@@ -623,13 +624,16 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
                 const currentRating = res.rows[0]?.tj_rating;
                 if (currentRating !== index) {
                     const updateQuery = `UPDATE users SET tj_rating = $1 WHERE id = $2;`;
-                    client.query(updateQuery, [index, id], (err, results) => {
+                    client.query(updateQuery, [index, id], (err, results) => {});
+                    const insertQuery = `
+                        INSERT INTO rating_changes (userid, rating, "time")
+                        VALUES ($1, $2, NOW());
+                    `;
+                    client.query(insertQuery, [id, index], (err, result) => {
                         release();
-                        console.log(`Updated user ${id} successfully.`);
                     });
                 } else {
                     release();
-                    console.log(`Rating unchanged for user ${id}.`);
                 }
             });
         });

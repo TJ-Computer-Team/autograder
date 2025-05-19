@@ -33,22 +33,31 @@ async function grabProfile(id) {
             }
             let qry = `SELECT * FROM users WHERE id = $1`;
             client.query(qry, [id], (err, results) => {
-                release();
                 if (err) {
                     console.log("An error occured while querying for profile", err);
                     resolve(false);
                 }
-                if (results.rows.length == 0) {
-                    resolve(false);
-                } else {
-                    res = {
-                        username: results.rows[0].username,
-                        name: results.rows[0].display_name,
-                        cf: results.rows[0].cf_handle,
-                        usaco: results.rows[0].usaco_division
+                let qry2 = `SELECT id, rating, time FROM rating_changes WHERE userid = $1 ORDER BY time ASC`;
+                client.query(qry2, [id], (err, results2) => {
+                    release();
+                    if (err) {
+                        console.log("An error occurred while querying for rating changes", err);
+                        return resolve(false);
                     }
-                    resolve(res);
-                }
+
+                    if (results.rows.length == 0) {
+                        resolve(false);
+                    } else {
+                        const profile = {
+                            username: results.rows[0].username,
+                            name: results.rows[0].display_name,
+                            cf: results.rows[0].cf_handle,
+                            usaco: results.rows[0].usaco_division,
+                            ratingChanges: results2.rows
+                        };
+                        return resolve(profile);
+                    }
+                });
             });
         });
     });

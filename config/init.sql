@@ -16,6 +16,13 @@ CREATE TABLE IF NOT EXISTS users (
     tj_rating        REAL
 );
 
+CREATE TABLE IF NOT EXISTS rating_changes (
+    id              SERIAL PRIMARY KEY,
+    userid          SERIAL,
+    rating          REAL,
+    "time"          TIMESTAMP NOT NULL
+);
+
 -- CONTESTS
 CREATE TABLE IF NOT EXISTS contests (
     id         SERIAL PRIMARY KEY,
