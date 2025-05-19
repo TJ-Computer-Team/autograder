@@ -17,7 +17,8 @@ const {
     updateCF,
     getContest,
     getAllContests,
-    getStats
+    getStats,
+    pl
 } = require("./sql/sql");
 const {
     queue
@@ -603,6 +604,14 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
         }
         else rankings[i].rank = i + 1;
     }
+    for (const user of rankings) {
+        const {id, index} = user;
+        pl.connect((err, client, release) => {
+            let qry = `UPDATE users SET tj_rating = $1 WHERE id = $2;`
+            client.query(qry, [index, id], (err, results) => {});
+        });
+    }
+    
     res.render("rankings", {
         rankings: rankings
     })

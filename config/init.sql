@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS users (
     pass             VARCHAR(255) NOT NULL,
     cf_handle        VARCHAR(255),
     cf_rating        SMALLINT DEFAULT 0,
-    usaco_division   VARCHAR(50)
+    usaco_division   VARCHAR(50),
+    tj_rating        REAL
 );
 
 -- CONTESTS
