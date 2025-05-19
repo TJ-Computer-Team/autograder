@@ -1,3 +1,5 @@
+This is Zain Marshall's Web Master Application of TJ Computer Team. I have made the following changes to the website.
+
 ## CHANGES
 * Visual
     * Reworked the color theme to make the frontend more visually appealing
