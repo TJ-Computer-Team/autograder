@@ -12,6 +12,11 @@
     * Edited the profile layout 
     * Added Codeforce Handle and Usaco Divsion to the fProfile.ejs so when vieweing others Profile's you can get more information that just their username. 
 
+* Planned Changes
+    * Rating graph
+    * Profile Pictures?
+    * Make it so that when sumbitting code for contests it doesn't take you all the way away from the contest page.  
+
 
 ## TJ Computer Team Autograder
 

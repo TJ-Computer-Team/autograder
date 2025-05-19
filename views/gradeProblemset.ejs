@@ -19,18 +19,18 @@
       <div class="title">Problemset</div>
     </div>
     <div class="main-block" id="problems">
-      <table class="problemset-table">
+      <table class="problemset-table" id="problemsetTable">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Contest</th>
-            <th>Letter</th>
-            <th>Title</th>
-            <th>Tags</th>
-            <th>Difficulty</th>
+            <th class="sortable" data-sort="index"># <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="contest">Contest <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="letter">Letter <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="title">Title <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="tags">Tags <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="difficulty">Difficulty <span class="chevron">▼</span></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="problemsetBody">
           <% 
             // Sort problems by pid descending (newest first)
             let sortedProblems = locals.problems.slice().sort((a, b) => b.pid - a.pid);
@@ -43,12 +43,12 @@
               let difficulty = p.difficulty || '800'; // Placeholder
           %>
           <tr>
-            <td><%= sortedProblems.length - i %></td>
-            <td><%= contestId %></td>
-            <td><%= letter %></td>
-            <td><a href="/grade/problemset/<%=p.pid%>" class="problem-link"><%=p.name%></a></td>
-            <td><%= tags %></td>
-            <td><%= difficulty %></td>
+            <td data-value="<%= sortedProblems.length - i %>"><%= sortedProblems.length - i %></td>
+            <td data-value="<%= contestId %>"><%= contestId %></td>
+            <td data-value="<%= letter %>"><%= letter %></td>
+            <td data-value="<%= p.name %>"><a href="/grade/problemset/<%=p.pid%>" class="problem-link"><%=p.name%></a></td>
+            <td data-value="<%= tags %>"><%= tags %></td>
+            <td data-value="<%= difficulty %>"><%= difficulty %></td>
           </tr>
           <% } %>
         </tbody>
@@ -74,6 +74,22 @@
       padding: 0.7em 0.5em;
       border-bottom: 2px solid #232526;
       text-align: left;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+    .problemset-table th .chevron {
+      font-size: 0.9em;
+      margin-left: 0.2em;
+      color: #a259f7;
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+    .problemset-table th.sorted-asc .chevron {
+      transform: rotate(180deg);
+    }
+    .problemset-table th.sorted-desc .chevron {
+      transform: rotate(0deg);
     }
     .problemset-table td {
       background: none; 
@@ -99,5 +115,48 @@
       }
     }
   </style>
+  <script>
+    // Sorting logic for the problemset table
+    document.addEventListener('DOMContentLoaded', function() {
+      const table = document.getElementById('problemsetTable');
+      const tbody = document.getElementById('problemsetBody');
+      const headers = table.querySelectorAll('th.sortable');
+      let sortState = { column: null, direction: 'desc' };
+
+      headers.forEach((header, idx) => {
+        header.addEventListener('click', function() {
+          const sortKey = header.getAttribute('data-sort');
+          let direction = 'desc';
+          if (sortState.column === sortKey) {
+            direction = sortState.direction === 'desc' ? 'asc' : 'desc';
+          }
+          sortState = { column: sortKey, direction };
+          headers.forEach(h => {
+            h.classList.remove('sorted-asc', 'sorted-desc');
+          });
+          header.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+          sortTable(sortKey, direction);
+        });
+      });
+
+      function sortTable(key, direction) {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const colIdx = Array.from(headers).findIndex(h => h.getAttribute('data-sort') === key);
+        rows.sort((a, b) => {
+          let aVal = a.children[colIdx].getAttribute('data-value');
+          let bVal = b.children[colIdx].getAttribute('data-value');
+          // Try to compare as numbers, fallback to string
+          if (!isNaN(aVal) && !isNaN(bVal)) {
+            aVal = Number(aVal);
+            bVal = Number(bVal);
+          }
+          if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+          if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+          return 0;
+        });
+        rows.forEach(row => tbody.appendChild(row));
+      }
+    });
+  </script>
   </body>
 </html>
