@@ -12,7 +12,13 @@ This is Zain Marshall's Web Master Application of TJ Computer Team. I have made 
     * Made the problemset sortable by this data 
 * Profile Changes
     * Edited the profile layout 
+    * Made the edit profile options behind an edit profile button to make the home page cleaner
     * Added Codeforce Handle and Usaco Divsion to the fProfile.ejs so when vieweing others Profile's you can get more information that just their username. 
+* Developer Expirence
+    * When attempting to edit this website, the expirence wasn't the nicest due to two facts:
+        * Setting up the ION OAuth was a bit unclear
+        * Setting up the Postgress Database took a while
+    * TODO: Finsih writing here
 
 * Planned Changes
     * Rating graph
