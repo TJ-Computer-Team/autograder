@@ -39,14 +39,12 @@ function getLateTakers(cid) {
 }
 
 router.get("/authlogin", async (req, res) => {
-    // Simulate a successful login
-    req.session.loggedin = true;
-    req.session.user_data = {
-        id: "12345",
-        display_name: "Test User",
-        ion_username: "testuser"
-    };
-    res.redirect("/grade/profile"); // Redirect to the profile page
+    if (req.session.loggedin) {
+        res.redirect("/grade/profile");
+    } else {
+        let theurl = await getToken();
+        res.redirect(theurl);
+    }
 });
 router.get("/login", async (req, res) => {
     let CODE = req.query.code;
