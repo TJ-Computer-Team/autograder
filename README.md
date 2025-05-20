@@ -25,6 +25,14 @@ This is Zain Marshall's Web Master Application of TJ Computer Team. I have made 
     * Profile Pictures?
     * Make it so that when sumbitting code for contests it doesn't take you all the way away from the contest page.  
 
+## Installation Instructions
+1. Clone this code locally
+2. Go to https://ion.tjhsst.edu/oauth/applications and create a new oauth application with a client type of Confidental and a Authorization grant type of Authorization Code. Set the Redirect URI to http://localhost:3000/grade/login. Copy the Client ID and Client Secret and save this application.
+3. Create a .env file in at the root of the autograder folder. Add:
+CLIENT_ID= [YOUR_CLIENT_ID]
+CLIENT_SECRET= [YOUR_CLIENT_SECRET]
+CLIENT_REDIRECT_URI= http://localhost:3000/grade/login
+4. will write more about psql setup later
 
 ## TJ Computer Team Autograder
 
