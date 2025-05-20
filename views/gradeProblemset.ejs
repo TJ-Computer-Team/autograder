@@ -79,11 +79,15 @@
       position: relative;
     }
     .problemset-table th .chevron {
-      font-size: 0.9em;
+      font-size: 0.7em;
       margin-left: 0.2em;
-      color: #a259f7;
-      transition: transform 0.2s;
+      color: #6b7280; /* Gray for unused chevrons */
+      transition: transform 0.2s, color 0.2s;
       display: inline-block;
+    }
+    .problemset-table th.sorted-asc .chevron,
+    .problemset-table th.sorted-desc .chevron {
+      color: #a259f7; /* Highlight active chevron */
     }
     .problemset-table th.sorted-asc .chevron {
       transform: rotate(180deg);
@@ -116,12 +120,16 @@
     }
   </style>
   <script>
-    // Sorting logic for the problemset table
     document.addEventListener('DOMContentLoaded', function() {
       const table = document.getElementById('problemsetTable');
       const tbody = document.getElementById('problemsetBody');
       const headers = table.querySelectorAll('th.sortable');
-      let sortState = { column: null, direction: 'desc' };
+      let sortState = { column: 'index', direction: 'desc' }; // Default sort by first column
+
+      // Auto-sort by the first column on page load
+      const firstHeader = headers[0];
+      firstHeader.classList.add('sorted-desc');
+      sortTable(sortState.column, sortState.direction);
 
       headers.forEach((header, idx) => {
         header.addEventListener('click', function() {
