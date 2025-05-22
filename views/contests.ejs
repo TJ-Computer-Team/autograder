@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="../profile.css" />
-    <title>Contests</title>
-  </head>
-  <body>
-    <%- include("partials/header", {active: "contests"}); %>
-    <%- include("partials/particles", {depth: 1}); %>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="../profile.css" />
+        <title>Contests</title>
+    </head>
+    <body>
+        <%- include("partials/particles", {depth: 1}); %>
+        <%- include("partials/header", {active: "contests"}); %>
 
-    <div class="main-block">
-      <div class="title">Contests</div>
-    </div>
-    <div class="main-block" id="problems">
-        <% for (let i=locals.contests.length-1; i>=0; i--) { %>
-      <ul class="sl">
-        <li class="sl">
-          <a href= <%= "/grade/contests/" + locals.contests[i].id %> >
-            <div class="problem-text">
-              <%= "[" + (locals.contests[i].season-1) + "-" + locals.contests[i].season + "] " + locals.contests[i].name + " (" + ["Unrated", "Rated"][Number(locals.contests[i].rated)] + ")" %>
-            </div>
-          </a>
-        </li>
-      </ul>
-    <% } %>
-      <ul class="sl">
-        <li class="sl">
-          <a href="https://codeforces.com/group/M4wsRWBHyZ">
-            <div class="problem-text">
-              All Past Contests up to the 2022-2023 School Year
-            </div>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div class="main-block">
-      When participating in any in-house competition, please remember that all code submissions must be your own original work. Using outside sources or generative AI tools to generate solutions is not permitted and will be considered a violation of the competition's rules. We will be actively monitoring submissions for plagiarism using MOSS and manually reviewing any code that appears suspicious. Submissions flagged for plagiarism may result in disqualification.
-    </div>
-  </body>
+        <div class="main-block">
+            <div class="title">Contests</div>
+        </div>
+        <div class="main-block" id="problems">
+                <% for (let i=locals.contests.length-1; i>=0; i--) { %>
+            <ul class="sl">
+                <li class="sl">
+                    <a href= <%= "/grade/contests/" + locals.contests[i].id %> >
+                        <div class="problem-text">
+                            <%= "[" + (locals.contests[i].season-1) + "-" + locals.contests[i].season + "] " + locals.contests[i].name + " (" + ["Unrated", "Rated"][Number(locals.contests[i].rated)] + ")" %>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        <% } %>
+            <ul class="sl">
+                <li class="sl">
+                    <a href="https://codeforces.com/group/M4wsRWBHyZ">
+                        <div class="problem-text">
+                            All Past Contests up to the 2022-2023 School Year
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-block">
+            When participating in any in-house competition, please remember that all code submissions must be your own original work. Using outside sources or generative AI tools to generate solutions is not permitted and will be considered a violation of the competition's rules. We will be actively monitoring submissions for plagiarism using MOSS and manually reviewing any code that appears suspicious. Submissions flagged for plagiarism may result in disqualification.
+        </div>
+    </body>
 </html>

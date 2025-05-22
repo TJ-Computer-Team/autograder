@@ -15,29 +15,29 @@
     <div class='main-block' id="problems">
         <ul class="sl">
             <% for (let i=locals.problems.length-1; i>=0; i--) { %>
-                <li class="sl">		    
+                <li class="sl">
                     <a href = <%="/admin/createProblem?pid=" + locals.problems[i].pid%>>
                         <div class="problem-text">Edit --> ID: <%=locals.problems[i].pid%>, Name: <%=locals.problems[i].name%></div>
                     </a>
                 </li>
             <% } %>
-	    <li class="sl">
+            <li class="sl">
                 <a href = <%="/admin/createProblem?pid=" + (locals.newpid)%>>
-		     <div class="problem-text">Create New Problem</div>
-		</a>
+                    <div class="problem-text">Create New Problem</div>
+                </a>
             </li>
         </ul>
     </div>
     <div class="option-buttons">
         <button class="button">
-    	<a href = "/admin/disableAdmin">
-        	<div class="problem-text">Disable my admin for current session</div>
-        </a>
+            <a href = "/admin/disableAdmin">
+                <div class="problem-text">Disable my admin for current session</div>
+            </a>
         </button>
         <button class="button">
-        <a href="/admin/queue">
-        <div class="problem-text">Manage Queue</div>
-        </a>
+            <a href="/admin/queue">
+                <div class="problem-text">Manage Queue</div>
+            </a>
         </button>
 	</div>
 </body>

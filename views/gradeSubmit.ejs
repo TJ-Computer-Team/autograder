@@ -1,87 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Submit</title>
-    <link rel="stylesheet" type="text/css" href="../profile.css" />
-  </head>
-  <body>
-    <%- include("partials/header", {active: "submit"}); %>
-    <%- include("partials/particles", {depth: 1}); %>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Submit</title>
+        <link rel="stylesheet" type="text/css" href="../profile.css" />
+    </head>
+    <body>
+        <%- include("partials/particles", {depth: 1}); %>
+        <%- include("partials/header", {active: "submit"}); %>
 
-    <div class="main-block">
-      <div class="title">Submit</div>
-      <div class="problem-text">
-        Java users, make sure you are using <a href="https://docs.google.com/document/d/17r0fh2rezqDhNoCoUtwVtExn8hRml0BjeAqxQZk9MCs/edit?usp=sharing" target="_blank">package "subcode" and naming the
-        class "test"</a>
-      </div>
-    </div>
-    <div class="main-block">
-      <form action="/grade/status" method="POST" enctype="multipart/form-data">
-        <div class="problem-text">
-          <select id="problemid" name="problemid">
-            <% for (let i=0; i<locals.problem.length; i++) { %>
-              <option value=<%= locals.problem[i].pid %> <% if(locals.problem[i].pid==locals.problemid) { %> selected  <% } %> > <%= locals.problem[i].pid + " - " + locals.problem[i].name %> </option>
-            <% } %>
-          </select>
+        <div class="main-block">
+            <div class="title">Submit</div>
+            <div class="problem-text">
+                Java users, make sure you are using <a href="https://docs.google.com/document/d/17r0fh2rezqDhNoCoUtwVtExn8hRml0BjeAqxQZk9MCs/edit?usp=sharing" target="_blank">package "subcode" and naming the
+                class "test"</a>
+            </div>
         </div>
-        <div class="problem-text">
-          <div class="vertAlign">
-            <select id="lang" name="lang">
-              <% if( locals.lastlang == "cpp"){ %>
-              <option value="cpp">C++</option>
-              <% }else{ %>
-              <option value="cpp" selected>C++</option>
-              <% } %> <% if( locals.lastlang == "java"){ %>
-              <option value="java" selected>Java</option>
-              <% }else{ %>
-              <option value="java">Java</option>
-              <% } %> <% if( locals.lastlang == "python"){ %>
-              <option value="python" selected>Python</option>
-              <% }else{ %>
-              <option value="python">Python</option>
-              <% } %>
-            </select>
-            <textarea
-              id="codeinput"
-              name="code"
-              rows="20"
-              cols="150"
-              spellcheck="false"
-              maxlength="60000"
-              placeholder=""></textarea>
+        <div class="main-block">
+            <form action="/grade/status" method="POST" enctype="multipart/form-data">
+                <div class="problem-text">
+                    <select id="problemid" name="problemid">
+                        <% for (let i=0; i<locals.problem.length; i++) { %>
+                            <option value=<%= locals.problem[i].pid %> <% if(locals.problem[i].pid==locals.problemid) { %> selected    <% } %> > <%= locals.problem[i].pid + " - " + locals.problem[i].name %> </option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="problem-text">
+                    <div class="vertAlign">
+                        <select id="lang" name="lang">
+                            <% if( locals.lastlang == "cpp"){ %>
+                            <option value="cpp">C++</option>
+                            <% }else{ %>
+                            <option value="cpp" selected>C++</option>
+                            <% } %> <% if( locals.lastlang == "java"){ %>
+                            <option value="java" selected>Java</option>
+                            <% }else{ %>
+                            <option value="java">Java</option>
+                            <% } %> <% if( locals.lastlang == "python"){ %>
+                            <option value="python" selected>Python</option>
+                            <% }else{ %>
+                            <option value="python">Python</option>
+                            <% } %>
+                        </select>
+                        <textarea
+                            id="codeinput"
+                            name="code"
+                            rows="20"
+                            cols="150"
+                            spellcheck="false"
+                            maxlength="60000"
+                            placeholder=""></textarea>
 
-            <label class="custom-file-upload">
-              <input type="file" name="files" class="custom-file"/>
-            </label>
-            <button class="button" type="submit">Submit</button>
-          </div>
+                        <label class="custom-file-upload">
+                            <input type="file" name="files" class="custom-file"/>
+                        </label>
+                        <button class="button" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
         </div>
-      </form>
-    </div>
 
-    <script type="text/javascript">
-      document.getElementById("codeinput").addEventListener("keydown", function (e) {
-        const max = 60000;
-        const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
-        // enforce character cap
-        if (this.value.length >= max && !allowed.includes(e.key)) {
-          e.preventDefault();
-          // (optional) flash a small warning in the UI
-          return;
-        }
-        // handle Tab
-        if (e.key === "Tab") {
-          e.preventDefault();
-          const start = this.selectionStart;
-          const end = this.selectionEnd;
-          this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
-          this.selectionStart = this.selectionEnd = start + 1;
-        }
-      });
-    </script>
+        <script type="text/javascript">
+            document.getElementById("codeinput").addEventListener("keydown", function (e) {
+                const max = 60000;
+                const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
+                // enforce character cap
+                if (this.value.length >= max && !allowed.includes(e.key)) {
+                    e.preventDefault();
+                    // (optional) flash a small warning in the UI
+                    return;
+                }
+                // handle Tab
+                if (e.key === "Tab") {
+                    e.preventDefault();
+                    const start = this.selectionStart;
+                    const end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 1;
+                }
+            });
+        </script>
 
-  </body>
+    </body>
 </html>

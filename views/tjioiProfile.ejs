@@ -8,47 +8,48 @@
     <title>Profile</title>
 </head>
 <body>
-    <%- include("partials/header", {active: "home"}); %>
     <%- include("partials/particles", {depth: 2}); %>
+    <%- include("partials/header", {active: "home"}); %>
 
-    <div class="container"> 
+    <div class="container">
 
-    <div class="info-block">
-    <div class="title"><strong>Profile</strong></div>   
-    <div class="info">Name: <%=locals.name%></div>
-    <div class="info">Username: <%=locals.username%></div>
+        <div class="info-block">
+            <div class="title"><strong>Profile</strong></div>
+            <div class="info">Name: <%=locals.name%></div>
+            <div class="info">Username: <%=locals.username%></div>
+        </div>
+        <div class="info-block">
+            <div class="info">
+                Hi! Feel free to look around the website and access the practice contest when it opens. If you find any technical problems, please let an organizer know.
+            </div>
+        </div>
+        <div class="info-block">
+            <div class="title"><strong>Schedule</strong></div>
+            <div class="info" id="schedule">
+            <table>
+                <tr>
+                    <th>9:30-10:00</th>
+                    <th>Arrival and check-in</th>
+                </tr>
+                <tr>
+                    <th>10:00-11:30</th>
+                    <th>Set-up, opening ceremony, practice round, etc.</th>
+                </tr>
+                <tr>
+                    <th>11:30-12:30</th>
+                    <th>Lunch</th>
+                </tr>
+                <tr>
+                    <th>12:30-3:30</th>
+                    <th>Coding time</th>
+                </tr>
+                <tr>
+                    <th>3:30-4:00</th>
+                    <th>Award ceremony</th>
+                </tr>
+            </table>
+            </div>
+        </div>
     </div>
-    <div class="info-block">
-        <div class="info">Hi! Feel free to look around the website and access the practice contest when it opens. If you find any technical problems, please let an organizer know.</div>
-    </div>
-    <div class="info-block">
-        <div class="title"><strong>Schedule</strong></div>
-	<div class="info" id="schedule">
-	<table>
-            <tr>
-              <th>9:30-10:00</th>
-              <th>Arrival and check-in</th>
-            </tr>
-            <tr>
-              <th>10:00-11:30</th>
-              <th>Set-up, opening ceremony, practice round, etc.</th>
-            </tr>
-            <tr>
-              <th>11:30-12:30</th>
-              <th>Lunch</th>
-            </tr>
-            <tr>
-              <th>12:30-3:30</th>
-              <th>Coding time</th>
-            </tr>
-            <tr>
-              <th>3:30-4:00</th>
-              <th>Award ceremony</th>
-            </tr>
-          </table>
-	</div>
-    </div>
-    </div>
-    
 </body>
 </html>

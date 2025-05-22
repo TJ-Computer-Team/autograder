@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="../profile.css" />
-    <title>Profile</title>
-  </head>
-  <body>
-    <%- include("partials/header", {active: "profile"}); %>
-    <%- include("partials/particles", {depth: 1}); %>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="../profile.css" />
+        <title>Profile</title>
+    </head>
+    <body>
+        <%- include("partials/particles", {depth: 1}); %>
+        <%- include("partials/header", {active: "profile"}); %>
 
-    <div id="mainContent">
-      <div id="subContent">
-        <div class="info-block">
-          <div class="title"><p>Profile</p></div>
-          <div class="userinfo">Name: <%=locals.name%></div>
-          <div class="userinfo">Username: <%=locals.username%></div>
-          <% if(locals.username!="2025apalikal") { %>
-            <form action="/grade/updateStats" method="POST">
-              <div class="statsInfo">
-                <label for="usaco_div">USACO Division: </label>
-                <select name="usaco_div">
-                  <option value="none" <% if(locals.usaco_div=="none") { %> selected  <% } %> >Not Participated</option>
-                  <option value="bronze" <% if(locals.usaco_div=="bronze") { %> selected  <% } %> >Bronze</option>
-                  <option value="silver" <% if(locals.usaco_div=="silver") { %> selected  <% } %> >Silver</option>
-                  <option value="gold" <% if(locals.usaco_div=="gold") { %> selected  <% } %> >Gold</option>
-                  <option value="plat" <% if(locals.usaco_div=="plat") { %> selected  <% } %> >Platinum</option>
-                </select>
-              </div>
-              <div class="statsInfo">
-                <label for="cf_handle">Codeforces Handle: </label>
-                <input name="cf_handle" value=<%=locals.cf_handle%>>
-                <br>(leave blank if you don't have one)
-              </div>
-              <div class="statsInfo">
-                <input type="submit" value="Save">
-              </div>
-              Note: If the entered information is suspicious, it will be verified in-person.
-            </form>
-          <% } %>
-          </div>
+        <div id="mainContent">
+            <div id="subContent">
+                <div class="info-block">
+                    <div class="title"><p>Profile</p></div>
+                    <div class="userinfo">Name: <%=locals.name%></div>
+                    <div class="userinfo">Username: <%=locals.username%></div>
+                    <% if(locals.username!="2025apalikal") { %>
+                        <form action="/grade/updateStats" method="POST">
+                            <div class="statsInfo">
+                                <label for="usaco_div">USACO Division: </label>
+                                <select name="usaco_div">
+                                    <option value="none" <% if(locals.usaco_div=="none") { %> selected    <% } %> >Not Participated</option>
+                                    <option value="bronze" <% if(locals.usaco_div=="bronze") { %> selected    <% } %> >Bronze</option>
+                                    <option value="silver" <% if(locals.usaco_div=="silver") { %> selected    <% } %> >Silver</option>
+                                    <option value="gold" <% if(locals.usaco_div=="gold") { %> selected    <% } %> >Gold</option>
+                                    <option value="plat" <% if(locals.usaco_div=="plat") { %> selected    <% } %> >Platinum</option>
+                                </select>
+                            </div>
+                            <div class="statsInfo">
+                                <label for="cf_handle">Codeforces Handle: </label>
+                                <input name="cf_handle" value=<%=locals.cf_handle%>>
+                                <br>(leave blank if you don't have one)
+                            </div>
+                            <div class="statsInfo">
+                                <input type="submit" value="Save">
+                            </div>
+                            Note: If the entered information is suspicious, it will be verified in-person.
+                        </form>
+                    <% } %>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </body>
+    </body>
 </html>

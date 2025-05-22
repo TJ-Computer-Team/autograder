@@ -1,27 +1,28 @@
-<!DOCTYPE HTML>
-<HTML LANG="EN">
-<HEAD>
-  <META CHARSET="UTF-8">
-  <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
-  <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
-  <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS"/>
-  <TITLE>Create Problem</TITLE>
-</HEAD>
-<BODY>
-  Add tests here. Currently this supports only exact input and output. That is, the checker will look for exact match.
-  <form action="/admin/addTest" method="POST">
-    <p><label for="tid">Test ID</label></p>
-    <input type="number" id="tid" name="tid" value=<%=tid%>>
-    <br>
-    <p><label for="pid">Problem ID</label></p>
-    <input type="number" id="pid" name="pid" value=<%=pid%>>
-    <br>
-    <p><label for="in">Test Input</label></p>
-    <textarea id="in" name="in" rows="4" cols="50"><%=test%></textarea>
-    <br>
-    <p><label for="out">Test Output</label></p>
-    <textarea id="out" name="out" rows="4" cols="50"><%=out%></textarea>
-    <br>
-    <input type="submit" value="Submit">
-  </form>  
-</BODY>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../profile.css"/>
+    <title>Create Problem</title>
+</head>
+<body>
+    Add tests here. Currently this supports only exact input and output. That is, the checker will look for exact match.
+    <form action="/admin/addTest" method="POST">
+        <p><label for="tid">Test ID</label></p>
+        <input type="number" id="tid" name="tid" value=<%=tid%>>
+        <br>
+        <p><label for="pid">Problem ID</label></p>
+        <input type="number" id="pid" name="pid" value=<%=pid%>>
+        <br>
+        <p><label for="in">Test Input</label></p>
+        <textarea id="in" name="in" rows="4" cols="50"><%=test%></textarea>
+        <br>
+        <p><label for="out">Test Output</label></p>
+        <textarea id="out" name="out" rows="4" cols="50"><%=out%></textarea>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

@@ -1,59 +1,59 @@
-<!DOCTYPE HTML>
-<HTML LANG="EN">
-<HEAD>
-  <META CHARSET="UTF-8">
-  <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
-  <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
-  <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS"/>
-    <script type="module">
-      import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
-      customElements.define("latex-js", LaTeXJSComponent)
-    </script>
-    <style>
-      latex-js {
-        display: inline-block;
-        width: 40%;
-        border: 1px solid red;
-        margin-right: 2em;
-      }
-    </style>
-  <TITLE>Create Problem</TITLE>
-</HEAD>
-<BODY>
-  let pid = req.body.pid;
-  let pname = req.body.pname;
-  let cid= req.body.cid;
-  let pts= req.body.pts;
-  let state= req.body.state;
-  let tl= req.body.tl;
-  let ml= req.body.ml;
-  let test = req.body.test;
-  let checker = req.body.checker;
-  let secret = req.body.secret;
-  <form action="/create">
-    <p><label for="problem id">Problem ID cannot be changed</label></p>
-	  <p>Your Problem ID is <%=pid %></p>
-    <br>
-    <p><label for="test">tests</label></p>
-    <input type="test" id="test" name="test">Insert generator code here:
-    <br>
-    <p><label for="test">checker</label></p>
-    <input type="text" id="checker" name="checker">Insert checker/solution code here:
-    <br>
-    <p><label for="test">secret</label></p>
-    <input type="checkbox" id="test" name="test" value="test">
-	  <label for="test">Problem is finished</label>
-    <br>
-    <!--make sure to change the max and min for everything -->
-    <br>
-    <input type="submit" value="Submit">
-  </form>
-  <h1>Compiling LaTeX</h1>
-  <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/">
-    \documentclass{article}
-    \begin{document}
-    <%= locals.problem %>
-    We must evaluate the integral $\int_1^\infty \left(\frac{\log x}{x}\right)^{2011} dx$.
-    \end{document}
-  </latex-js>
-</BODY>
+<!DOCTYPE html>
+<html LANG="EN">
+<head>
+    <meta CHARSET="UTF-8">
+    <meta HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
+    <meta NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
+    <link REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS"/>
+        <script type="module">
+            import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
+            customElements.define("latex-js", LaTeXJSComponent)
+        </script>
+        <style>
+            latex-js {
+                display: inline-block;
+                width: 40%;
+                border: 1px solid red;
+                margin-right: 2em;
+            }
+        </style>
+    <title>Create Problem</title>
+</head>
+<body>
+    let pid = req.body.pid;
+    let pname = req.body.pname;
+    let cid= req.body.cid;
+    let pts= req.body.pts;
+    let state= req.body.state;
+    let tl= req.body.tl;
+    let ml= req.body.ml;
+    let test = req.body.test;
+    let checker = req.body.checker;
+    let secret = req.body.secret;
+    <form action="/create">
+        <p><label for="problem id">Problem ID cannot be changed</label></p>
+        <p>Your Problem ID is <%=pid %></p>
+        <br>
+        <p><label for="test">tests</label></p>
+        <input type="test" id="test" name="test">Insert generator code here:
+        <br>
+        <p><label for="test">checker</label></p>
+        <input type="text" id="checker" name="checker">Insert checker/solution code here:
+        <br>
+        <p><label for="test">secret</label></p>
+        <input type="checkbox" id="test" name="test" value="test">
+        <label for="test">Problem is finished</label>
+        <br>
+        <!--make sure to change the max and min for everything -->
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <h1>Compiling LaTeX</h1>
+    <latex-js baseURL="https://cdn.jsdelivr.net/npm/latex.js/dist/">
+        \documentclass{article}
+        \begin{document}
+        <%= locals.problem %>
+        We must evaluate the integral $\int_1^\infty \left(\frac{\log x}{x}\right)^{2011} dx$.
+        \end{document}
+    </latex-js>
+</body>

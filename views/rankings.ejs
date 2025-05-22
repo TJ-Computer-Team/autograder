@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="../../profile.css" />
-    <title>Rankings</title>
-  </head>
-  <body>
-    <%- include("partials/header", {active: "rankings"}); %>
-    <%- include("partials/particles", {depth: 2}); %>
-    
-    <div class="main-block">
-      <div class="title">Rankings</div>
-      <div class="subtitle">
-        <br>
-        <a href="https://docs.google.com/document/d/14CBtom9g0AKZkmncUQQJwV-dIwG54Arr26FnWfUcdvI/edit?usp=sharing" target="_blank">Learn about how rankings are formulated</a>
-      </div>
-    </div>
-      <div class="main-block">
-      <table>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Index</th>
-          <th>USACO</th>
-          <th>Codeforces</th>
-          <th>In-Houses</th>
-        </tr>
-        <% for (let i=0; i<locals.rankings.length; i++) { %>
-          <tr>
-            <td class="centertext"><%=locals.rankings[i].rank%></td>
-            <td class="centertext"><a href="/grade/profile/<%=locals.rankings[i].id%>"><%=locals.rankings[i].name%></a></td>
-            <td class="centertext"><%=locals.rankings[i].index.toFixed(3)%></td>
-            <td class="centertext"><%=locals.rankings[i].usaco.toFixed(3)%></td>
-            <td class="centertext"><%=locals.rankings[i].cf.toFixed(3)%></td>
-            <td class="centertext"><%=locals.rankings[i].inhouse.toFixed(3)%></td>
-          </tr>
-        <% } %>
-      </table>
-      </div>
-    </div>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="../../profile.css" />
+        <title>Rankings</title>
+    </head>
+    <body>
+        <%- include("partials/particles", {depth: 2}); %>
+        <%- include("partials/header", {active: "rankings"}); %>
+
+        <div class="main-block">
+            <div class="title">Rankings</div>
+            <div class="subtitle">
+                <br>
+                <a href="https://docs.google.com/document/d/14CBtom9g0AKZkmncUQQJwV-dIwG54Arr26FnWfUcdvI/edit?usp=sharing" target="_blank">Learn about how rankings are formulated</a>
+            </div>
+        </div>
+            <div class="main-block">
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Index</th>
+                    <th>USACO</th>
+                    <th>Codeforces</th>
+                    <th>In-Houses</th>
+                </tr>
+                <% for (let i=0; i<locals.rankings.length; i++) { %>
+                    <tr>
+                        <td class="centertext"><%=locals.rankings[i].rank%></td>
+                        <td class="centertext"><a href="/grade/profile/<%=locals.rankings[i].id%>"><%=locals.rankings[i].name%></a></td>
+                        <td class="centertext"><%=locals.rankings[i].index.toFixed(3)%></td>
+                        <td class="centertext"><%=locals.rankings[i].usaco.toFixed(3)%></td>
+                        <td class="centertext"><%=locals.rankings[i].cf.toFixed(3)%></td>
+                        <td class="centertext"><%=locals.rankings[i].inhouse.toFixed(3)%></td>
+                    </tr>
+                <% } %>
+            </table>
+            </div>
+        </div>
+    </body>
 </html>

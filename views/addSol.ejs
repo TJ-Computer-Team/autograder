@@ -1,28 +1,29 @@
-<!DOCTYPE HTML>
-<HTML LANG="EN">
-<HEAD>
-  <META CHARSET="UTF-8">
-  <META HTTP-EQUIV="X-UA-COMPATIBLE" CONTENT="IE=EDGE">
-  <META NAME="VIEWPORT" CONTENT="WIDTH=DEVICE-WIDTH, INITIAL-SCALE=1.0">
-  <LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="../PROFILE.CSS"/>
-  <TITLE>Create Problem</TITLE>
-</HEAD>
-<BODY>
-  <form action="/admin/addSol" method="POST">
-    <p><label for="pid">Problem ID</label></p>
-	  <input type = "number" id="pid" name="pid" value=<%=pid%>>
-    <br>
-    <p><label for="code">Solution Code</label></p>
-	  <textarea id="code" name="code" rows="4" cols="50"><%=code%></textarea>
-    <br>
-    <div class="problem-text">
-      <select id="lang" name="lang">
-        <option value="cpp">C++</option>
-        <option value="java">Java</option>
-        <option value="python">Python</option>
-      </select>
-      <br>
-    </div>
-    <input type="submit" value="Submit">
-  </form>
-</BODY>
+<!DOCTYPE html>
+<html lang="e">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../profile.css"/>
+    <title>Create Problem</title>
+</head>
+<body>
+    <form action="/admin/addSol" method="POST">
+        <p><label for="pid">Problem ID</label></p>
+        <input type = "number" id="pid" name="pid" value=<%=pid%>>
+        <br>
+        <p><label for="code">Solution Code</label></p>
+        <textarea id="code" name="code" rows="4" cols="50"><%=code%></textarea>
+        <br>
+        <div class="problem-text">
+            <select id="lang" name="lang">
+                <option value="cpp">C++</option>
+                <option value="java">Java</option>
+                <option value="python">Python</option>
+            </select>
+            <br>
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

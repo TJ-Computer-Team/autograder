@@ -1,68 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="../profile.css" />
-    <title>Info</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="../profile.css" />
+        <title>Info</title>
+    </head>
 
-  <body>
-    <%- include("partials/header", {active: "info"}); %>
-    <%- include("partials/particles", {depth: 1}); %>
+    <body>
+        <%- include("partials/particles", {depth: 1}); %>
+        <%- include("partials/header", {active: "info"}); %>
 
-    <div class="main-block">
-      <div class="title"><strong>Rules and Information</strong></div>
-    </div>
+        <div class="main-block">
+            <div class="title"><strong>Rules and Information</strong></div>
+        </div>
 
-    <div class="main-block">
-      <div class="info">
-        <strong> Rules<br /> </strong> Do NOT submit malicious code with
-        malicious intent to the grader. Do NOT attempt to exploit
-        any aspect of this system, including but not limited to, accessing
-        unauthorized admin privileges, accessing private user information, etc.
-        If we find out any misuse, you will be disqualified from participating
-        in TJCT competitions, events, and also reported to our sponsors.
-        <br /><br />
-        Furthermore, please follow all rules given when taking contests on this
-        system. Perhaps there will be collaborative contests, but unless
-        otherwise stated, contests are individual. All aspects of the TJHSST
-        honor code apply.
-        <br /><br />
-        <% if (!locals.tjioi) { %> In general, please note what you can and
-        cannot do for contests. These are subject to change.
-        <br />
-        1. You ARE allowed to use templates and pre-written datastructures. We
-        acknowledge that in-houses are short on time and having pre-written code
-        can make the process much less tedious.
-        <br />
-        2. You ARE allowed to use reference sources online such as language
-        specific documentation. General algorithm guides such as GeeksForGeeks
-        are allowed if the guide doesn't completely solve the problem.
-        <br />
-        3. You are NOT allowed consult intelligent sources such as ChatGPT or other Generative AI, as well as any human sources during a
-        contest.
-        <br />
-        4. You are NOT allowed to discuss problem details until the alloted time
-        window for the contest is over. <% } %>
-        <br /><br />
-        During any in-house competition, we will be actively monitoring submissions for plagiarism or use of generative AI
-        and will manually review any code that appears suspicious. Submissions flagged for plagiarism may result in disqualification from
-        future in-houses and travel competitions.
-        <br /><br />
-        Thank you for your cooperation.
-      </div>
-    </div>
-    <div class="main-block">
-      <div class="info">
-        <strong> Information</strong><br />
-        A guide to this website can be found <a target="_blank" href="https://docs.google.com/document/d/17r0fh2rezqDhNoCoUtwVtExn8hRml0BjeAqxQZk9MCs/edit?usp=sharing" >here</a>.
-        <br>
-        If you have any questions/concerns about the website, such as vulnerabily issues, account/data inquiries, please
-        contact tjctgrader@gmail.com and tjhsstictcaptains@gmail.com. If your inquiry is not seen, feel free to alert
-        one of your current officers.
-      </div>
-    </div>
-  </body>
+        <div class="main-block">
+            <div class="info">
+                <strong> Rules<br /> </strong> Do NOT submit malicious code with
+                malicious intent to the grader. Do NOT attempt to exploit
+                any aspect of this system, including but not limited to, accessing
+                unauthorized admin privileges, accessing private user information, etc.
+                If we find out any misuse, you will be disqualified from participating
+                in TJCT competitions, events, and also reported to our sponsors.
+                <br /><br />
+                Furthermore, please follow all rules given when taking contests on this
+                system. Perhaps there will be collaborative contests, but unless
+                otherwise stated, contests are individual. All aspects of the TJHSST
+                honor code apply.
+                <br /><br />
+                <% if (!locals.tjioi) { %> In general, please note what you can and
+                cannot do for contests. These are subject to change.
+                <br />
+                1. You ARE allowed to use templates and pre-written datastructures. We
+                acknowledge that in-houses are short on time and having pre-written code
+                can make the process much less tedious.
+                <br />
+                2. You ARE allowed to use reference sources online such as language
+                specific documentation. General algorithm guides such as GeeksForGeeks
+                are allowed if the guide doesn't completely solve the problem.
+                <br />
+                3. You are NOT allowed consult intelligent sources such as ChatGPT or other Generative AI, as well as any human sources during a
+                contest.
+                <br />
+                4. You are NOT allowed to discuss problem details until the alloted time
+                window for the contest is over. <% } %>
+                <br /><br />
+                During any in-house competition, we will be actively monitoring submissions for plagiarism or use of generative AI
+                and will manually review any code that appears suspicious. Submissions flagged for plagiarism may result in disqualification from
+                future in-houses and travel competitions.
+                <br /><br />
+                Thank you for your cooperation.
+            </div>
+        </div>
+        <div class="main-block">
+            <div class="info">
+                <strong> Information</strong><br />
+                A guide to this website can be found <a target="_blank" href="https://docs.google.com/document/d/17r0fh2rezqDhNoCoUtwVtExn8hRml0BjeAqxQZk9MCs/edit?usp=sharing" >here</a>.
+                <br>
+                If you have any questions/concerns about the website, such as vulnerabily issues, account/data inquiries, please
+                contact tjctgrader@gmail.com and tjhsstictcaptains@gmail.com. If your inquiry is not seen, feel free to alert
+                one of your current officers.
+            </div>
+        </div>
+    </body>
 </html>

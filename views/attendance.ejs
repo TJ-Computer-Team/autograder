@@ -2,57 +2,53 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="../style.css" />
-  <title>Attendance</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <title>Attendance</title>
 </head>
 
 <body>
-  <section class=<%=locals.device%>>
-    <div class="bgbox">
-      <div class="title"><strong>Attendance</strong></div>
+    <section class=<%=locals.device%>>
+        <div class="bgbox">
+            <div class="title"><strong>Attendance</strong></div>
 
-      <div class="subbox">
-        <div class="subtext">
-          <form action="/confirm" method="POST">
-            Complete 8th period attendance here.<br><br>
+            <div class="subbox">
+                <div class="subtext">
+                    <form action="/confirm" method="POST">
+                        Complete 8th period attendance here.<br><br>
 
-            Make sure the following information is correct...<br>
-            Name: <strong>
-              <%=locals.name%>
-            </strong><br>
-            Username: <strong>
-              <%=locals.username%>
-            </strong><br>
-            <br>
+                        Make sure the following information is correct...<br>
+                        Name: <strong>
+                            <%=locals.name%>
+                        </strong><br>
+                        Username: <strong>
+                            <%=locals.username%>
+                        </strong><br>
+                        <br>
 
-            Please select which block you are completing attendance for.<br>
-            <select name="block" id="block">
-              <option value="SCT">Senior Computer Team</option>
-              <option value="ICT">Intermediate Computer Team</option>
-            </select>
-            <br><br>
+                        Please select which block you are completing attendance for.<br>
+                        <select name="block" id="block">
+                            <option value="SCT">Senior Computer Team</option>
+                            <option value="ICT">Intermediate Computer Team</option>
+                        </select>
+                        <br><br>
 
-            Please enter today's attendance password.<br>
-            <input type="text" name="pass" id="pass"></input>
-            <br><br>
-            <div class="cnt_buttons">
-              <button class="button" type="submit">Confirm</button>
+                        Please enter today's attendance password.<br>
+                        <input type="text" name="pass" id="pass"></input>
+                        <br><br>
+                        <div class="cnt_buttons">
+                            <button class="button" type="submit">Confirm</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
+
+            <form class="submit" action="/grade/completeAttendance" method="POST">
+
+            </form>
         </div>
-      </div>
-
-      <form class="submit" action="/grade/completeAttendance" method="POST">
-
-      </form>
-    </div>
-
-
-  </section>
-
+    </section>
 </body>
-
 </html>

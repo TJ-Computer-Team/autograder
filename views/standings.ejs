@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="../../../profile.css"/>
-  <title>Standings</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../../profile.css"/>
+    <title>Standings</title>
 </head>
 <body>
-  <%- include("partials/header"); %>
-  <%- include("partials/contestNavbar", {active: "standings", title: locals.title, user: locals.user, cid: locals.cid}); %>
-  <%- include("partials/particles", {depth: 3}); %>
+    <%- include("partials/particles", {depth: 3}); %>
+    <%- include("partials/header"); %>
+    <%- include("partials/contestNavbar", {active: "standings", title: locals.title, user: locals.user, cid: locals.cid}); %>
 
-  <div class="main-block">
-    <table>
-      <tr>
-        <th>#</th>
-        <th>Name</th>
-	<th>Points</th>
-        <th>Penalty</th>
-        <% for (let i=0; i<locals.pnum; i++) { %>
-          <th><%= "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i] %></th>   
-        <% } %>	
-      </tr>
-      <% for (let i=0; i<locals.load.length; i++) { %>
-        <tr>
-          <td class="centertext"><%=locals.load[i].rank%></td>
-          <td class="centertext"><a href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.load[i].id%>"><%=locals.load[i].name%></a></td>
-	  <td class="centertext"><%=locals.load[i].solved%></td>
-          <td class="centertext"><%=locals.load[i].penalty%></td>
-          <% for (let j=0; j<locals.pnum; j++) { %>
-	    <% if(locals.load[i].problems[j]>0) { %>
-            	<td class="centertext" style="color:lime;" ><%=locals.load[i].problems[j]%></td>
-	    <% } else if(locals.load[i].problems[j]<0) { %>
-            	<td class="centertext" style="color:red;" ><%=locals.load[i].problems[j]%></td>
-	    <% } else { %>
-            	<td class="centertext" ><%=locals.load[i].problems[j]%></td>
-	    <% } %>
-          <% } %>
-        </tr>
-      <% } %>
-    </table>
-  </div>
+    <div class="main-block">
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Points</th>
+                <th>Penalty</th>
+                <% for (let i=0; i<locals.pnum; i++) { %>
+                    <th><%= "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i] %></th>
+                <% } %>
+            </tr>
+            <% for (let i=0; i<locals.load.length; i++) { %>
+                <tr>
+                    <td class="centertext"><%=locals.load[i].rank%></td>
+                    <td class="centertext"><a href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.load[i].id%>"><%=locals.load[i].name%></a></td>
+                    <td class="centertext"><%=locals.load[i].solved%></td>
+                    <td class="centertext"><%=locals.load[i].penalty%></td>
+                    <% for (let j=0; j<locals.pnum; j++) { %>
+                        <% if(locals.load[i].problems[j]>0) { %>
+                            <td class="centertext" style="color:lime;" ><%=locals.load[i].problems[j]%></td>
+                        <% } else if(locals.load[i].problems[j]<0) { %>
+                            <td class="centertext" style="color:red;" ><%=locals.load[i].problems[j]%></td>
+                        <% } else { %>
+                            <td class="centertext" ><%=locals.load[i].problems[j]%></td>
+                        <% } %>
+                    <% } %>
+                </tr>
+            <% } %>
+        </table>
+    </div>
 </body>
 </html>

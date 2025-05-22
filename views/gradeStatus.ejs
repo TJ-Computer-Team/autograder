@@ -1,63 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="/../profile.css" />
-    <title>Submissions</title>
-  </head>
-  <body>
-    <%- include("partials/header", {active: "submissions"}); %>
-    <%- include("partials/particles", {depth: 1}); %>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="/../profile.css" />
+        <title>Submissions</title>
+    </head>
+    <body>
+        <%- include("partials/particles", {depth: 1}); %>
+        <%- include("partials/header", {active: "submissions"}); %>
 
-    <div class="main-block">
-      <div class="title">
-        Submissions<% if (locals.viewAsAdmin == true) { %> - Viewing as Admin <%} %>
-      </div>
-    </div>
-    <div class="main-block" id="submissions">
-      <table>
-        <tr>
-          <th>Submission</th>
-          <% if (locals.viewAsAdmin == true) { %>
-          <th>User</th>
-          <% } %>
-          <th>Problem</th>
-          <th>Runtime</th>
-          <th>Verdict</th>
-        </tr>
-        <% for (let i=locals.submissions.length-1-(locals.page-1)*100; i>=Math.max(locals.submissions.length-locals.page*100, 0); i--) { %>
-        <tr>
-          <td>
-            <a href=<%="/grade/status/" + locals.submissions[i].id%>>
+        <div class="main-block">
+            <div class="title">
+                Submissions<% if (locals.viewAsAdmin == true) { %> - Viewing as Admin <%} %>
+            </div>
+        </div>
+        <div class="main-block" id="submissions">
+            <table>
+                <tr>
+                    <th>Submission</th>
+                    <% if (locals.viewAsAdmin == true) { %>
+                    <th>User</th>
+                    <% } %>
+                    <th>Problem</th>
+                    <th>Runtime</th>
+                    <th>Verdict</th>
+                </tr>
+                <% for (let i=locals.submissions.length-1-(locals.page-1)*100; i>=Math.max(locals.submissions.length-locals.page*100, 0); i--) { %>
+                <tr>
+                    <td>
+                        <a href=<%="/grade/status/" + locals.submissions[i].id%>>
 							View #<%=locals.submissions[i].id%>
-            </a>
-          </td>
-          <% if (locals.viewAsAdmin == true) { %>
+                        </a>
+                    </td>
+                    <% if (locals.viewAsAdmin == true) { %>
 						<td>
 							<a href=<%="/grade/profile/" + locals.submissions[i].user%>>
 								<%=locals.submissions[i].user%>
 							</a>
 						</td>
-          <% } %>
-          <td>
-            <a href=<%="/grade/problemset/" + locals.submissions[i].problemid%>>
+                    <% } %>
+                    <td>
+                        <a href=<%="/grade/problemset/" + locals.submissions[i].problemid%>>
 							<%=locals.submissions[i].problemname%>
-            </a>
-          </td>
-          <td>
+                        </a>
+                    </td>
+                    <td>
 						<%=locals.submissions[i].runtime%> ms
 					</td>
-          <td>
+                    <td>
 						<%=locals.submissions[i].verdict%>
 					</td>
-        </tr>
-        <% } %>
-      </table>
-      <a href=<%="/grade/status/?page=" +(parseInt(locals.page)+1) %>>
+                </tr>
+                <% } %>
+            </table>
+            <a href=<%="/grade/status/?page=" +(parseInt(locals.page)+1) %>>
 				Next Page
 			</a>
-    </div>
-  </body>
+        </div>
+    </body>
 </html>
