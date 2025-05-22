@@ -1,87 +1,141 @@
+<!-- Reworked the sumbit text area to have syntax highloghitng using code mirror 5 rather than just being a plain textbox. While most people do code in usaco.ide, vscode, or something else, for people first coming to the club it can be useful to have a decent editor on the website so everything is in the same spot. -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Submit</title>
-    <link rel="stylesheet" type="text/css" href="../profile.css" />
-  </head>
-  <body>
-    <%- include("partials/header", {active: "submit"}); %>
+
+<head>
+
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit</title>
+  <link rel="stylesheet" type="text/css" href="../profile.css" />
+  <!-- CodeMirror 5 import for the sumbssions box to have syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+
+  <!-- Languages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+  
+
+  <!-- Dark theme -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css" />
+
+</head>
+
+<body>
+  <%- include("partials/header", {active: "submit" }); %>
     <%- include("partials/particles", {depth: 1}); %>
 
-    <div class="main-block">
-      <div class="title">Submit</div>
-      <div class="problem-text">
-        Java users, make sure you are using <a href="https://docs.google.com/document/d/17r0fh2rezqDhNoCoUtwVtExn8hRml0BjeAqxQZk9MCs/edit?usp=sharing" target="_blank">package "subcode" and naming the
-        class "test"</a>
-      </div>
-    </div>
-    <div class="main-block">
-      <form action="/grade/status" method="POST" enctype="multipart/form-data">
+      <div class="main-block">
+        <div class="title">Submit</div>
         <div class="problem-text">
-          <select id="problemid" name="problemid">
-            <% for (let i=0; i<locals.problem.length; i++) { %>
-              <option value=<%= locals.problem[i].pid %> <% if(locals.problem[i].pid==locals.problemid) { %> selected  <% } %> > <%= locals.problem[i].pid + " - " + locals.problem[i].name %> </option>
-            <% } %>
-          </select>
-        </div>
-        <div class="problem-text">
-          <div class="vertAlign">
-            <select id="lang" name="lang">
-              <% if( locals.lastlang == "cpp"){ %>
-              <option value="cpp">C++</option>
-              <% }else{ %>
-              <option value="cpp" selected>C++</option>
-              <% } %> <% if( locals.lastlang == "java"){ %>
-              <option value="java" selected>Java</option>
-              <% }else{ %>
-              <option value="java">Java</option>
-              <% } %> <% if( locals.lastlang == "python"){ %>
-              <option value="python" selected>Python</option>
-              <% }else{ %>
-              <option value="python">Python</option>
-              <% } %>
-            </select>
-            <textarea
-              id="codeinput"
-              name="code"
-              rows="20"
-              cols="150"
-              spellcheck="false"
-              maxlength="60000"
-              placeholder=""></textarea>
-
-            <label class="custom-file-upload">
-              <input type="file" name="files" class="custom-file"/>
-            </label>
-            <button class="button" type="submit">Submit</button>
+          <div id="java-hint" style="display: none;">
+            Java users, make sure you are using <a
+              href="https://docs.google.com/document/d/17r0fh2rezqDhNoCoUtwVtExn8hRml0BjeAqxQZk9MCs/edit?usp=sharing"
+              target="_blank">package "subcode" and naming the
+              class "test"</a>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+      <div class="main-block">
+        <form action="/grade/status" method="POST" enctype="multipart/form-data">
+          <div class="problem-text">
+            <select id="problemid" name="problemid">
+              <% for (let i=0; i<locals.problem.length; i++) { %>
+                <option value=<%=locals.problem[i].pid %>
+                  <% if(locals.problem[i].pid==locals.problemid) { %> selected <% } %> > <%= locals.problem[i].pid
+                        + " - " + locals.problem[i].name %>
+                </option>
+                <% } %>
+            </select>
+          </div>
+          <div class="problem-text">
+            <div class="vertAlign" style="text-align: left;">
+              <select id="lang" name="lang">
+                <% if( locals.lastlang=="cpp" ){ %>
+                  <option value="cpp">C++</option>
+                  <% }else{ %>
+                    <option value="cpp" selected>C++</option>
+                    <% } %>
+                      <% if( locals.lastlang=="java" ){ %>
+                        <option value="java" selected>Java</option>
+                        <% }else{ %>
+                          <option value="java">Java</option>
+                          <% } %>
+                            <% if( locals.lastlang=="python" ){ %>
+                              <option value="python" selected>Python</option>
+                              <% }else{ %>
+                                <option value="python">Python</option>
+                                <% } %>
+              </select>
+              <textarea id="codeinput" name="code"></textarea>
 
-    <script type="text/javascript">
-      document.getElementById("codeinput").addEventListener("keydown", function (e) {
-        const max = 60000;
-        const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
-        // enforce character cap
-        if (this.value.length >= max && !allowed.includes(e.key)) {
-          e.preventDefault();
-          // (optional) flash a small warning in the UI
-          return;
-        }
-        // handle Tab
-        if (e.key === "Tab") {
-          e.preventDefault();
-          const start = this.selectionStart;
-          const end = this.selectionEnd;
-          this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
-          this.selectionStart = this.selectionEnd = start + 1;
-        }
-      });
-    </script>
 
-  </body>
+              <label class="custom-file-upload">
+                <input type="file" name="files" class="custom-file" />
+              </label>
+              <button class="button" type="submit">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <style>
+        /* Ensure CodeMirror editor and its text are left-aligned */
+        .CodeMirror {
+          text-align: left !important;
+          margin-left: 0 !important;
+        }
+      </style>
+
+      <script type="text/javascript">
+        document.getElementById("codeinput").addEventListener("keydown", function (e) {
+          const max = 60000;
+          const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+          // enforce character cap
+          if (this.value.length >= max && !allowed.includes(e.key)) {
+            e.preventDefault();
+            // (optional) flash a small warning in the UI
+            return;
+          }
+          // handle Tab
+          if (e.key === "Tab") {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 1;
+          }
+        });
+      </script>
+
+      <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("codeinput"), {
+          lineNumbers: true,
+          mode: "text/x-c++src", // Default to C++
+          theme: "dracula",
+          indentUnit: 4,
+          indentWithTabs: true,
+          lineWrapping: true
+        });
+
+        // Show/hide Java hint based on language selection
+        function updateJavaHint() {
+          var lang = document.getElementById("lang").value;
+          document.getElementById("java-hint").style.display = (lang === "java") ? "block" : "none";
+        }
+        // Switch syntax highlighting when language is changed
+        document.getElementById("lang").addEventListener("change", function () {
+          const selectedLang = this.value;
+          let mode = "text/x-c++src";
+          if (selectedLang === "java") mode = "text/x-java";
+          else if (selectedLang === "python") mode = "python";
+          editor.setOption("mode", mode);
+          updateJavaHint();
+        });
+        // Initial call on page load
+        updateJavaHint();
+      </script>
+</body>
+
 </html>

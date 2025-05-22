@@ -1,3 +1,4 @@
+
 html {
   background-attachment: fixed;
   height: 100%;
@@ -40,7 +41,7 @@ body {
   margin-right: auto;
   margin-top: auto;
   margin-bottom: auto;
-  background-color: black;
+  background-color: rgb(0, 0, 0);
   border-radius: 3vw;
   z-index: 100;
   position: relative;
@@ -128,4 +129,3 @@ body {
   position: absolute;
   z-index: -999;
 }
-

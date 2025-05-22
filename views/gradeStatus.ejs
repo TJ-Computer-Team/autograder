@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<% const PAGE_SIZE = 2; %>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -27,7 +28,7 @@
           <th>Runtime</th>
           <th>Verdict</th>
         </tr>
-        <% for (let i=locals.submissions.length-1-(locals.page-1)*100; i>=Math.max(locals.submissions.length-locals.page*100, 0); i--) { %>
+        <% for (let i=locals.submissions.length-1-(locals.page-1)*PAGE_SIZE; i>=Math.max(locals.submissions.length-locals.page*PAGE_SIZE, 0); i--) { %>
         <tr>
           <td>
             <a href=<%="/grade/status/" + locals.submissions[i].id%>>
@@ -55,9 +56,39 @@
         </tr>
         <% } %>
       </table>
-      <a href=<%="/grade/status/?page=" +(parseInt(locals.page)+1) %>>
-				Next Page
-			</a>
+      <div class="pagination">
+        <% const totalPages = Math.ceil(locals.submissions.length / PAGE_SIZE); %>
+        <% for (let page = 1; page <= totalPages; page++) { %>
+          <a href="<%='/grade/status/?page=' + page %>" 
+             class="<%= page === parseInt(locals.page) ? 'active' : '' %>">
+            <%= page %>
+          </a>
+        <% } %>
+      </div>
     </div>
+    <style>
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 1em;
+      }
+      .pagination a {
+        margin: 0 0.5em;
+        padding: 0.5em 1em;
+        text-decoration: none;
+        color: #339cff;
+        border: 1px solid #339cff;
+        border-radius: 0.3em;
+        transition: background-color 0.2s, color 0.2s;
+      }
+      .pagination a.active {
+        background-color: #339cff;
+        color: #fff;
+      }
+      .pagination a:hover {
+        background-color: #232526;
+        color: #fff;
+      }
+    </style>
   </body>
 </html>

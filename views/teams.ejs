@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teams</title>
+  <link rel="stylesheet" href="/profile.css" />
+  <style>
+    .team-list { margin: 2em 0; }
+    .team-row { display: flex; align-items: center; justify-content: space-between; padding: 0.7em 1em; background: #232526; border-radius: 0.5em; margin-bottom: 0.7em; }
+    .team-row .team-name { font-weight: 700; color: #339cff; }
+    .team-row .team-id { color: #a259f7; font-size: 0.95em; margin-left: 1em; }
+    .team-row .join-btn { margin-left: 1em; }
+    .secret-code-box { background: #181a20; color: #fff; border-radius: 0.4em; padding: 0.7em 1em; margin: 1em 0; font-size: 1.1em; display: flex; align-items: center; gap: 1em; }
+    .secret-code-value { filter: blur(0.5em); transition: filter 0.2s; cursor: pointer; }
+    .copy-secret-btn { padding: 0.2em 0.7em; font-size: 0.95em; }
+    .copy-feedback { margin-left: 0.5em; color: #5fd17a; display: none; font-size: 0.95em; }
+    .your-team-block { background: #232526; border-radius: 0.7em; padding: 1.2em 1.5em; margin-bottom: 2em; }
+  </style>
+</head>
+<body>
+  <%- include("partials/header", {active: "teams" }); %>
+  <%- include("partials/particles", {depth: 1}); %>
+  <div class="main-block">
+    <h1 style="font-size:2.2em; font-weight:800; color:#339cff; margin-bottom:0.2em;">Teams</h1>
+    <% var myTeam = typeof yourTeam !== 'undefined' ? yourTeam : null; %>
+    <% if (myTeam) { %>
+      <div class="your-team-block" style="box-shadow:0 4px 32px #23252655; max-width:500px; margin:2em auto 2em auto;">
+        <h2 style="font-size:1.5em; font-weight:700; color:#a259f7; margin-bottom:0.2em;">
+          Your Team: <%= myTeam.name %>
+          <span style="color:#5fd17a;font-weight:600;font-size:0.8em;margin-left:0.7em;vertical-align:middle;">(You are in this team)</span>
+        </h2>
+        <div class="secret-code-box" style="margin:1.5em 0 1em 0; justify-content:center;">
+          <span style="user-select:none;">Secret Code:</span>
+          <span class="secret-code-value" title="Hover to reveal"><b><%= myTeam.secret_code %></b></span>
+          <button type="button" class="copy-secret-btn button" style="padding:0.4em 1.2em; font-size:1.05em;">Copy</button>
+          <span class="copy-feedback">Copied!</span>
+        </div>
+        <form action="/grade/teams/leave" method="POST" style="margin-top:1.5em;">
+          <input type="hidden" name="team_id" value="<%= myTeam.id %>" />
+          <button type="submit" class="button" style="padding:0.5em 1.5em; font-size:1.05em; background:#ff4d4f; color:#fff; border:none; border-radius:0.4em; margin-top:0.5em;">Leave Team</button>
+        </form>
+      </div>
+      <script>
+        // Reveal secret code on hover
+        const secretCode = document.querySelector('.secret-code-value');
+        if (secretCode) {
+          secretCode.addEventListener('mouseenter', () => {
+            secretCode.style.filter = 'none';
+          });
+          secretCode.addEventListener('mouseleave', () => {
+            secretCode.style.filter = 'blur(0.5em)';
+          });
+        }
+        // Copy to clipboard
+        const copyBtn = document.querySelector('.copy-secret-btn');
+        const feedback = document.querySelector('.copy-feedback');
+        if (copyBtn && secretCode) {
+          copyBtn.addEventListener('click', () => {
+            const code = secretCode.textContent.trim();
+            navigator.clipboard.writeText(code).then(() => {
+              if (feedback) {
+                feedback.style.display = 'inline';
+                setTimeout(() => { feedback.style.display = 'none'; }, 1200);
+              }
+            });
+          });
+        }
+      </script>
+    <% } else { %>
+      <form action="/grade/teams/create" method="POST" style="margin-bottom:2em; max-width:400px; margin-left:auto; margin-right:auto;">
+        <input type="text" name="name" placeholder="Team Name" required style="width:100%; padding:0.7em 1em; font-size:1.1em; border-radius:0.4em; border:1px solid #339cff; background:#232526; color:#e5e7eb; margin-bottom:1em;" />
+        <button type="submit" class="button" style="width:100%; padding:0.7em 0; font-size:1.1em;">Create Team</button>
+      </form>
+      <form action="/grade/teams/joinByCode" method="POST" style="margin-bottom:2em; max-width:400px; margin-left:auto; margin-right:auto;">
+        <input type="text" name="secret_code" placeholder="Enter Team Secret Code" required style="width:100%; padding:0.7em 1em; font-size:1.1em; border-radius:0.4em; border:1px solid #a259f7; background:#232526; color:#e5e7eb; margin-bottom:1em;" />
+        <button type="submit" class="button" style="width:100%; padding:0.7em 0; font-size:1.1em; background:#a259f7; color:#fff;">Join by Code</button>
+      </form>
+    <% } %>
+    <h2 style="font-size:1.3em; color:#339cff; margin-top:2.5em;">All Teams</h2>
+    <div class="team-list">
+      <% allTeams.forEach(team => { %>
+        <div class="team-row">
+          <span class="team-name"><a href="/grade/teams/<%= team.id %>"><%= team.name %></a></span>
+          <span class="team-id">ID: <%= team.id %></span>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>

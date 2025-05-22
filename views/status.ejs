@@ -5,42 +5,98 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="../../profile.css" />
+
+    <!-- CodeMirror core + C-like language support -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+
     <title>Status</title>
+
+    <style>
+      .CodeMirror {
+        font-size: 1.5em;
+        width: 100%;
+        height: auto;
+        border: 1px solid #ccc;
+      }
+    </style>
+
     <script>
       function auto_grow() {
-        element = document.getElementById("usercode");
-        element.style.height = "5px";
-        element.style.height = element.scrollHeight + "px";
-        element = document.getElementById("feedback");
-        element.style.height = "5px";
-        element.style.height = element.scrollHeight + "px";
+        const codeMirrorInstances = document.querySelectorAll(".CodeMirror");
+        codeMirrorInstances.forEach((cm) => {
+          cm.CodeMirror.refresh();
+        });
       }
     </script>
   </head>
+
   <body onload="auto_grow()">
-    <%- include("partials/header", {active: "submissions"}); %>
-    <%- include("partials/particles", {depth: 2}); %>
-    
+    <%- include("partials/header", { active: "submissions" }); %>
+    <%- include("partials/particles", { depth: 2 }); %>
+
     <div class="main-block">
       <div class="title">
-        Problem: <%=locals.submission.problemname%>, Language:
-        <%=locals.submission.language%>, Runtime:
-        <%=locals.submission.runtime%>ms, Verdict:
-        <%=locals.submission.verdict%>, Time: <%=new Date((locals.submission.timestamp/1000)*1000 - 4 * 60 * 60 * 1000).toLocaleString();%>
-        <% if (locals.submission.admin) { %> - Viewing as Admin <% } %>
+        Problem: <%= locals.submission.problemname %>,<br />
+        Language: <%= locals.submission.language %>,<br />
+        Runtime: <%= locals.submission.runtime %>ms,<br />
+        Verdict: <%= locals.submission.verdict %>,<br />
+        Time: <%= new Date((locals.submission.timestamp / 1000) * 1000 - 4 * 60 * 60 * 1000).toLocaleString(); %>
+        <% if (locals.submission.admin) { %>
+          - Viewing as Admin
+        <% } %>
       </div>
-      <br/>
-      <textarea id="usercode" style="width: 100%; font-size: 1.5em" rows="4", cols="50" readonly><%=locals.submission.code%></textarea>
-      <br/>
-      <textarea id="feedback" style="width: 100%; font-size: 1.5em" rows="4", cols="50" readonly><%=locals.submission.insight%></textarea>
+
+      <br />
+
+      <textarea id="usercode" readonly>
+<%= locals.submission.code %>
+      </textarea>
+
+      <br />
+
+      <textarea id="feedback" readonly>
+<%= locals.submission.insight %>
+      </textarea>
     </div>
+
     <div class="option-buttons">
-      <a href= <%= "/grade/problemset/" + locals.submission.problemid %> >
+      <a href="<%= '/grade/problemset/' + locals.submission.problemid %>">
         <div class="button">Problem</div>
       </a>
       <a href="/grade/status">
         <div class="button">Back</div>
       </a>
     </div>
+
+    <script>
+      const codeEditor = CodeMirror.fromTextArea(
+        document.getElementById("usercode"),
+        {
+          lineNumbers: true,
+          readOnly: true,
+          mode: "text/x-c++src",
+          theme: "dracula"
+        }
+      );
+
+      const feedbackEditor = CodeMirror.fromTextArea(
+        document.getElementById("feedback"),
+        {
+          lineNumbers: false,
+          readOnly: true,
+          mode: "text/plain",
+          theme: "dracula"
+        }
+      );
+    </script>
   </body>
 </html>

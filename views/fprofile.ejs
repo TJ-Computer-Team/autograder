@@ -8,22 +8,105 @@
     <title>Profile</title>
 </head>
 <body>
-    <%- include("partials/header"); %>
-    <%- include("partials/particles", {depth: 2}); %>
-
-    <div id="mainContent">
-        <div id="subContent">
-          <div class="info-block">
-            <div class="title"><p>Profile</p></div>
-            <div class="userinfo">Name: <%=locals.name%></div>
-            <div class="userinfo">Username: <%=locals.username%></div>
-            <% if (locals.admin) { %>
-                <div class="statsInfo">USACO Division: <%=locals.usaco%></div>
-                <div class="statsInfo"> Codeforces Handle: <%=locals.cf%></div>
-            <% } %>
-          </div>
+  <%- include("partials/header"); %>
+  <%- include("partials/particles", {depth: 2}); %>
+  <div class="profile-card">
+    <div class="profile-title">
+      <%=locals.name%>
+    </div>
+    <div class="profile-username"><%=locals.username%></div>
+    <div class="profile-stats">
+      <div class="stat-block">
+        <div class="stat-label">Index</div>
+        <div class="stat-value"><%=locals.rating || 1500%></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Problems Solved</div>
+        <div class="stat-value"><%=locals.solved || 0%></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Contests</div>
+        <div class="stat-value"><%=locals.contests || 0%></div>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="stat-block">
+        <div class="stat-label">USACO Division</div>
+        <div class="stat-value"><%= (locals.usaco ? locals.usaco.charAt(0).toUpperCase() + locals.usaco.slice(1) : 'N/A') %></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Codeforces Handle</div>
+        <div class="stat-value"><%=locals.cf || 'N/A'%></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Preferred Language</div>
+        <div class="stat-value">
+          <%= locals.preferred_lang ? (locals.preferred_lang === 'cpp' ? 'C++' : (locals.preferred_lang === 'java' ? 'Java' : (locals.preferred_lang === 'python' ? 'Python' : locals.preferred_lang))) : 'N/A' %>
         </div>
       </div>
     </div>
+    <% if (locals.admin) { %>
+      <div class="admin-badge" style="margin-top:1em;color:#fff;background:#a259f7;padding:0.4em 1.2em;border-radius:0.6em;font-weight:700;display:inline-block;">Admin</div>
+    <% } %>
+  </div>
+  <style>
+    .profile-card {
+      background: rgba(36, 39, 48, 0.95);
+      border-radius: 1.5em;
+      box-shadow: 0 4px 32px #23252655;
+      padding: 2.5em 2em 2em 2em;
+      max-width: 500px;
+      margin: 3em auto 2em auto;
+      text-align: center;
+      animation: fadeIn 1s cubic-bezier(.4, 0, .2, 1);
+    }
+    .profile-title {
+      font-size: 2.2em;
+      font-weight: 800;
+      color: #339cff;
+      margin-bottom: 0.2em;
+    }
+    .profile-username {
+      color: #a259f7;
+      font-size: 1.1em;
+      margin-bottom: 1.2em;
+    }
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 1.5em 0 2em 0;
+      gap: 1.5em;
+    }
+    .stat-block {
+      background: #232526;
+      border-radius: 0.7em;
+      padding: 1em 1.5em;
+      min-width: 90px;
+      color: #e5e7eb;
+      box-shadow: 0 2px 8px #23252633;
+    }
+    .stat-label {
+      font-size: 0.95em;
+      color: #a259f7;
+      margin-bottom: 0.2em;
+    }
+    .stat-value {
+      font-size: 1.4em;
+      font-weight: 700;
+    }
+    @media (max-width: 600px) {
+      .profile-card {
+        padding: 1.2em 0.3em;
+      }
+      .profile-stats {
+        flex-direction: column;
+        gap: 0.7em;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: none; }
+    }
+  </style>
 </body>
 </html>

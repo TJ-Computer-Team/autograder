@@ -9,7 +9,7 @@
   </head>
   <body>
     <%- include("partials/header"); %>
-    <%- include("partials/contestNavbar", {active: "problems", title: locals.title, user: locals.user, cid: locals.cid}); %>
+    <%- include("partials/contestNavbar", {active: "problems", title: locals.title, user: locals.user, cid: locals.cid, is_team: locals.is_team}); %>
     <%- include("partials/particles", {depth: 2}); %>
 
     <div class="main-block">

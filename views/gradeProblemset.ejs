@@ -1,3 +1,6 @@
+<!-- updated the style to match the rest of the new website, also added a lot of data to each problem to make the problemset more useful. reversed the sorting to match codeforces with new problems on the top. added a difficulty, currenlt hardcoded but this can be added to the datanase. added tags similar to diffiuclty hradcoded. planning on making it show which oes you've solved so its more useful. -->
+
+<!-- TODO: Add-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="../profile.css" />
     <title>Problemset</title>
+
   </head>
   <body>
     <%- include("partials/header", {active: "problemset"}); %>
@@ -15,15 +19,152 @@
       <div class="title">Problemset</div>
     </div>
     <div class="main-block" id="problems">
-      <ul class="sl">
-        <% for (let i=0; i<locals.problems.length; i++) { %>
-          <li class="sl">
-            <a href = <%="/grade/problemset/"+locals.problems[i].pid%>>
-              <div class="problem-text"><%=locals.problems[i].name%></div>
-            </a>
-          </li>
-        <% } %>
-      </ul>
+      <table class="problemset-table" id="problemsetTable">
+        <thead>
+          <tr>
+            <th class="sortable" data-sort="index"># <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="contest">Contest <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="letter">Letter <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="title">Title <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="tags">Tags <span class="chevron">▼</span></th>
+            <th class="sortable" data-sort="difficulty">Difficulty <span class="chevron">▼</span></th>
+          </tr>
+        </thead>
+        <tbody id="problemsetBody">
+          <% 
+            // Sort problems by pid descending (newest first)
+            let sortedProblems = locals.problems.slice().sort((a, b) => b.pid - a.pid);
+            for (let i = 0; i < sortedProblems.length; i++) { 
+              let p = sortedProblems[i];
+              // Placeholder logic for contest, letter, tags, difficulty
+              let contestId = p.contestid || '1';
+              let letter = String.fromCharCode(65 + (i % 26)); // A, B, C, ...
+              let tags = p.tags || 'math, implementation'; // Placeholder
+              let difficulty = p.difficulty || '800'; // Placeholder
+          %>
+          <tr>
+            <td data-value="<%= sortedProblems.length - i %>"><%= sortedProblems.length - i %></td>
+            <td data-value="<%= contestId %>"><%= contestId %></td>
+            <td data-value="<%= letter %>"><%= letter %></td>
+            <td data-value="<%= p.name %>"><a href="/grade/problemset/<%=p.pid%>" class="problem-link"><%=p.name%></a></td>
+            <td data-value="<%= tags %>"><%= tags %></td>
+            <td data-value="<%= difficulty %>"><%= difficulty %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
     </div>
+  <style>
+    .problemset-table {
+      width: 100%;
+      border-collapse: collapse; 
+      color: #e5e7eb;
+      font-size: 1.08em;
+      margin-top: 0.5em;
+      background: #232526; 
+      border-radius: 0.7em;
+      overflow: hidden;
+      box-shadow: 0 2px 8px #23252633;
+    }
+    .problemset-table th {
+      background: none;
+      color: #339cff;
+      font-weight: 700;
+      font-size: 1.08em;
+      padding: 0.7em 0.5em;
+      border-bottom: 2px solid #232526;
+      text-align: left;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+    .problemset-table th .chevron {
+      font-size: 0.7em;
+      margin-left: 0.2em;
+      color: #6b7280; /* Gray for unused chevrons */
+      transition: transform 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .problemset-table th.sorted-asc .chevron,
+    .problemset-table th.sorted-desc .chevron {
+      color: #a259f7; /* Highlight active chevron */
+    }
+    .problemset-table th.sorted-asc .chevron {
+      transform: rotate(180deg);
+    }
+    .problemset-table th.sorted-desc .chevron {
+      transform: rotate(0deg);
+    }
+    .problemset-table td {
+      background: none; 
+      border-radius: 0;
+      padding: 0.8em 0.7em;
+      box-shadow: none; 
+      vertical-align: middle;
+    }
+    .problem-link {
+      color: #a259f7;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .problem-link:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    @media (max-width: 700px) {
+      .problemset-table th, .problemset-table td {
+        font-size: 0.98em;
+        padding: 0.5em 0.2em;
+      }
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const table = document.getElementById('problemsetTable');
+      const tbody = document.getElementById('problemsetBody');
+      const headers = table.querySelectorAll('th.sortable');
+      let sortState = { column: 'index', direction: 'desc' }; // Default sort by first column
+
+      // Auto-sort by the first column on page load
+      const firstHeader = headers[0];
+      firstHeader.classList.add('sorted-desc');
+      sortTable(sortState.column, sortState.direction);
+
+      headers.forEach((header, idx) => {
+        header.addEventListener('click', function() {
+          const sortKey = header.getAttribute('data-sort');
+          let direction = 'desc';
+          if (sortState.column === sortKey) {
+            direction = sortState.direction === 'desc' ? 'asc' : 'desc';
+          }
+          sortState = { column: sortKey, direction };
+          headers.forEach(h => {
+            h.classList.remove('sorted-asc', 'sorted-desc');
+          });
+          header.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+          sortTable(sortKey, direction);
+        });
+      });
+
+      function sortTable(key, direction) {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const colIdx = Array.from(headers).findIndex(h => h.getAttribute('data-sort') === key);
+        rows.sort((a, b) => {
+          let aVal = a.children[colIdx].getAttribute('data-value');
+          let bVal = b.children[colIdx].getAttribute('data-value');
+          // Try to compare as numbers, fallback to string
+          if (!isNaN(aVal) && !isNaN(bVal)) {
+            aVal = Number(aVal);
+            bVal = Number(bVal);
+          }
+          if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+          if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+          return 0;
+        });
+        rows.forEach(row => tbody.appendChild(row));
+      }
+    });
+  </script>
   </body>
 </html>
