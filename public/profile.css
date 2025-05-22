@@ -441,10 +441,11 @@ th[role=columnheader]:not(.no-sort) {
 	cursor: pointer;
 }
 th[role=columnheader]:not(.no-sort):after {
+    position:absolute;
 	content: '';
 	float: right;
-	margin-top: 7px;
-    margin-left: 5px;
+	margin-top: 10px;
+    margin-left: 20px;
 	border-width: 0 4px 4px;
 	border-style: solid;
 	border-color: white transparent;
