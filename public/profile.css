@@ -432,3 +432,7 @@ li.cnb a:hover:not(.active) {
     padding: 0.5em;
     font-size: 1em;
 }
+
+.row-highlight {
+    background: rgb(31 67 243)
+}
