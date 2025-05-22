@@ -14,7 +14,7 @@ body {
     padding: 4%;
     border-radius: 2vw;
     line-height: 3em;
-}   
+}
 .title {
     font-size: 250%;
     color: white;
@@ -26,7 +26,7 @@ body {
     font-family: 'Lucida Sans';
 }
 .centertext {
-  text-align: center;
+    text-align: center;
 }
 .main-block {
     background-color: rgb(0, 0, 0, 0.6);
@@ -73,7 +73,7 @@ li.sl:hover {
 .statement {
     color:white;
     font-size: 150%;
-    width: 100%;    
+    width: 100%;
     font-family: 'Lucida Sans';
 }
 .option-buttons {
@@ -93,7 +93,7 @@ li.sl:hover {
     background-color: rgb(65, 136, 203);
     text-align: center;
     color:black;
-    font-size: 200%; 
+    font-size: 200%;
     font-family: 'Lucida Sans';
     position: relative;
 }
@@ -216,7 +216,7 @@ th {
 td {
 	font-size: 2vw;
 	padding-left: 0.5vw;
-	text-decoration: none;	
+	text-decoration: none;
 	border: 1px solid;
 	border-color: black;
 }
