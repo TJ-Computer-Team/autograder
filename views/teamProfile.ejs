@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="/profile.css" />
 </head>
 <body>
+    <%- include("partials/particles", {depth: 1}); %>
+
   <%- include("partials/header", {active: "teams" }); %>
   <div class="main-block">
     <h1>Team: <%= team.name %></h1>
