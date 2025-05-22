@@ -6,6 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="../../profile.css" />
         <title>Rankings</title>
+        <!-- Sortable table -->
+        <script src='tablesort.min.js'></script>
+        <script src='tablesort.number.js'></script>
     </head>
     <body>
         <%- include("partials/particles", {depth: 2}); %>
@@ -19,8 +22,8 @@
             </div>
         </div>
             <div class="main-block">
-            <table>
-                <tr>
+            <table id="rankings">
+                <tr data-sort-method="none">
                     <th>#</th>
                     <th>Name</th>
                     <th>Index</th>
@@ -42,4 +45,9 @@
             </div>
         </div>
     </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new Tablesort(document.getElementById('rankings'));
+        }, false);
+    </script>
 </html>
