@@ -1,7 +1,7 @@
 // this file has functions to exectute the second half of the OAuth after the request to Ion API has been completed
 
 const Client = require('pg').Client;
-const {pl} = require('./routes/sql');
+const {pl} = require('./routes/sql/sql');
 async function check(user_data, req, res) {
     try {
         // communicate with the database

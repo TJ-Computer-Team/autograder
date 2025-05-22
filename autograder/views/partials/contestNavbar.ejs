@@ -7,7 +7,7 @@
       <a <% if (locals.active == "problems") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>">Problems</a>
     </li>
     <li class="cnb">
-      <a href="/grade/submit">Submit Code</a>
+      <a href="<%= '/grade/submit?contest=' + locals.cid %>">Submit Code</a>
     </li>
     <li class="cnb">
       <a <% if (locals.active == "submissions") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.user%>">My Submissions</a>

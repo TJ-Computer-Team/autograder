@@ -61,7 +61,7 @@
 	</div>
     </div>
     <div class="option-buttons">
-        <a href = <%="/grade/submit?problem="+locals.pid%>>
+        <a href="<%= '/grade/submit?problem=' + locals.pid + '&contest=' + locals.cid %>">
             <div class="button">Submit</div>
         </a>
         <a href = <%=locals.back%>>

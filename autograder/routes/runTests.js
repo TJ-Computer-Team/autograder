@@ -2,7 +2,7 @@ const {
     grabProblem,
     insertSubmission,
     grabStatus
-} = require("./sql");
+} = require("./sql/sql");
 const axios = require('axios');
 const querystring = require('querystring');
 

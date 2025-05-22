@@ -7,17 +7,20 @@ Please contact us through tjctgrader@gmail.com if you have any questions or conc
 This repository contains most of the website that deals with how pages are rendered to users. The part of the website that runs code and judges it can be found at this repository: https://github.com/TJ-Computer-Team/coderunner.
 
 ### Getting Started
-`public` folder: Homepage animation, mainly visual
+`autograder` folder: contains main code
+`autograder/public` folder: Homepage animation, mainly visual
 
-`routes` folder: Main grader code
+`autograder/routes` folder: Main grader code
 - `admin.js` = admin functions
 - `grade.js` = main functions
 - `runTests.js` = portal to other VM where the code is run
 - `sql.js` = functions to interact with database
 
-`views` folder: EJS files that are rendered to users
+`autograder/views` folder: EJS files that are rendered to users
 
-To run this locally, download the files, install Node.js and use npm to install the necessary packages. Then, run: ```node app.js```. You will also have to update the environment variables and database code for it to load properly.
+`config` folder: contains code for dev testing
+
+To run this locally, make sure to have docker installed and run `docker compose up --build` inside the `config` folder. If you want to make changes to the database layout, edit `init.sql` and run `reset_db.sh`. This will delete all data in the database and replace it with filler example data.
 
 ---
 
