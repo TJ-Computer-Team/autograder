@@ -2,6 +2,10 @@
 
 import os; import sys; import requests; import logging
 
+# Load Cloudflare API token
+from dotenv import load_dotenv
+load_dotenv()
+
 type = logging.INFO
 logging.basicConfig(level=type, format='%(message)s')
 
