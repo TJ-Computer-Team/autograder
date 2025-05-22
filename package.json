@@ -26,8 +26,7 @@
     "pm2": "^5.3.0",
     "serve-favicon": "^2.5.0",
     "simple-oauth2": "^4.3.0",
-    "svgdom": "^0.1.10",
-    "tablesort": "^5.6.0"
+    "svgdom": "^0.1.10"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
