@@ -1,3 +1,4 @@
+// This file contains all the SQL commands for the website
 const {
     Pool
 } = require('pg');

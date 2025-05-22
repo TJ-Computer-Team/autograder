@@ -1,3 +1,5 @@
+// This file contains the logic for running code submissions
+
 const {
     grabProblem,
     insertSubmission,

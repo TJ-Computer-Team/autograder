@@ -1,3 +1,4 @@
+// This file contains all the routes for the admin side of the website
 require('dotenv').config();
 const express = require('express');
 const router = express.Router({
