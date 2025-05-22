@@ -17,6 +17,7 @@ async function check(user_data, req, res) {
         } else {
             cl.release();
             req.session.name = results.rows[0].display_name;
+            req.session.truename = results.rows[0].display_name;
             req.session.username = results.rows[0].username;
             req.session.userid = results.rows[0].id;
             req.session.admin = results.rows[0].admin;

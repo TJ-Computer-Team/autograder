@@ -29,7 +29,7 @@
                     <th>In-Houses</th>
                 </tr>
                 <% for (let i=0; i<locals.rankings.length; i++) { %>
-                    <tr class="<%= locals.rankings[i].id === locals.id ? 'row-highlight' : '' %>">
+                    <tr class="<%= locals.rankings[i].name === locals.name ? 'row-highlight' : '' %>">
                         <td class="centertext"><%=locals.rankings[i].rank%></td>
                         <td class="centertext"><a href="/grade/profile/<%=locals.rankings[i].id%>"><%=locals.rankings[i].name%></a></td>
                         <td class="centertext"><%=locals.rankings[i].index.toFixed(3)%></td>
@@ -43,6 +43,6 @@
         </div>
     </body>
     <script>
-        console.log(<%=locals.id%>);
+        console.log(<%=locals.name%>);
     </script>
 </html>

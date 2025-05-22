@@ -601,7 +601,7 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
         else rankings[i].rank = i + 1;
     }
     res.render("rankings", {
-        rankings: rankings, id: req.session.userid
+        rankings: rankings, name: req.session.truename
     })
 });
 function checkLoggedIn(req, res, next) {
