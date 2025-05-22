@@ -52,11 +52,6 @@ CLIENT_REDIRECT_URI= http://localhost:3000/grade/login
     ```
 7. The website is now running http://localhost:3000!
 
-* Planned Changes
-    * Rating graph
-    * Profile Pictures?
-    * Make it so that when sumbitting code for contests it doesn't take you all the way away from the contest page.  
-
 ## TJ Computer Team Autograder
 
 TJ Computer Team Members: You can find all information about in-houses and the club here: https://activities.tjhsst.edu/ict/.
