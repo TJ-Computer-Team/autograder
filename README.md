@@ -50,7 +50,7 @@ CLIENT_REDIRECT_URI= http://localhost:3000/grade/login
     ```sh
     node app.js
     ```
-7. The website is now running http://localhost:3000!
+7. The website is now running http://localhost:3000 !
 
 ## TJ Computer Team Autograder
 
