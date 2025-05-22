@@ -26,7 +26,8 @@ const {
     getTeamById,
     getAllTeams,
     getTeamBySecretCode,
-    getAllTeamRankings
+    getAllTeamRankings,
+    getAllTeamScores
 } = require("./sql");
 const {
     queue
@@ -246,7 +247,8 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
             cid: cid,
             timeStatus: timeMessage,
             timeType: timeType,
-            editorial: contest.editorial
+            editorial: contest.editorial,
+            is_team: contest.is_team 
         });
     else
         res.redirect('/grade/contests');

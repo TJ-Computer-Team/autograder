@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="../../../profile.css"/>
+  <title>Team Standings</title>
+  <style>
+    .standings-table { width: 100%; border-collapse: collapse; margin-top: 2em; }
+    .standings-table th, .standings-table td { padding: 0.8em 1.2em; border-bottom: 1px solid #333; text-align: left; }
+    .standings-table th { background: #232526; color: #339cff; font-size: 1.1em; }
+    .standings-table tr:nth-child(even) { background: #23252655; }
+    .team-name { font-weight: 700; color: #a259f7; }
+    .member-list { color: #e5e7eb; font-size: 0.98em; }
+    .score { font-weight: 700; color: #5fd17a; }
+    table { width: 100%; border-collapse: collapse; margin-top: 2em; }
+    th, td { padding: 0.8em 1.2em; border-bottom: 1px solid #333; text-align: left; }
+    th { background: #232526; color: #339cff; font-size: 1.1em; }
+    tr:nth-child(even) { background: #23252655; }
+    .centertext { text-align: center; }
+  </style>
+</head>
+<body>
+  <%- include("partials/header"); %>
+  <%- include("partials/contestNavbar", {active: "teamstandings", cid: contest_id, is_team: true}); %>
+  <%- include("partials/particles", {depth: 3}); %>
+  <div class="main-block">
+    <table>
+      <tr>
+        <th>#</th>
+        <th>Team Name</th>
+        <th>Points</th>
+        <th>Penalty</th>
+        <% for (let i=0; i<locals.pnum; i++) { %>
+          <th><%= "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i] %></th>
+        <% } %>
+      </tr>
+      <% teams.forEach((team, idx) => { %>
+        <tr>
+          <td class="centertext"><%= idx + 1 %></td>
+          <td class="centertext"><%= team.name %></td>
+          <td class="centertext"><%= team.score %></td>
+          <td class="centertext"><%= team.penalty != null ? team.penalty : 0 %></td>
+          <% for (let j=0; j<pnum; j++) { %>
+            <% if (team.problems && team.problems[j] > 0) { %>
+              <td class="centertext" style="color:lime;"><%= team.problems[j] %></td>
+            <% } else if (team.problems && team.problems[j] < 0) { %>
+              <td class="centertext" style="color:red;"><%= team.problems[j] %></td>
+            <% } else { %>
+              <td class="centertext"><%= team.problems ? team.problems[j] : 0 %></td>
+            <% } %>
+          <% } %>
+        </tr>
+      <% }) %>
+    </table>
+  </div>
+</body>
+</html>

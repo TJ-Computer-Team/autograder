@@ -5,6 +5,10 @@ This is Zain Marshall's Web Master Application of TJ Computer Team. I have made 
     * Reworked the color theme to make the frontend more visually appealing
     * Added smooth animations on page changes
     * Made the particle animation in the background a bit less distracting, but its too cool to fully remove. 
+* Teams
+    * I added a teams tab which allows users to create teams and join teams using secret codes so you can't just randomly join teams.
+    * Added a team rankings page similar to the indivudal rankings page. It is based solely off in-houses.
+    * This feature can be used to implement team in-houses which is an idea I had for the club that I feel could increase engagment and collaboration. 
 * Code Editor
     * Replaced the default text box in the gradeSumbit.ejs and Sumbission tab with CodeMirror 5. This has syntax highlighting for all three lanagues, auto indentation after curly braces, line numbers, and overall actually feels like a code editor, albiet very lightweight, rather than a blank textbox. 
 * Problemset Changes
