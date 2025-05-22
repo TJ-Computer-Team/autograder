@@ -17,7 +17,16 @@ const {
     updateCF,
     getContest,
     getAllContests,
-    getStats
+    getStats,
+    createTeam,
+    joinTeam,
+    leaveTeam,
+    getUserTeams,
+    getTeamMembers,
+    getTeamById,
+    getAllTeams,
+    getTeamBySecretCode,
+    getAllTeamRankings
 } = require("./sql");
 const {
     queue
@@ -348,6 +357,28 @@ router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
         load: standings.load
     });
 });
+router.get('/contests/:cid/teamstandings', async (req, res) => {
+    if (!req.session.loggedin) return res.redirect('/grade/login');
+    const contest_id = req.params.cid;
+    // Get contest info to check if it's a team contest
+    const contest = await getContest(contest_id);
+    if (!contest || !contest.is_team) return res.status(404).send('Not a team contest.');
+    // Get team scores for this contest
+    const teamScores = await getAllTeamScores(contest_id);
+    // Get team info and members for each team
+    const teams = [];
+    for (const row of teamScores) {
+        const team = await getTeamById(row.team_id);
+        const members = await getTeamMembers(row.team_id);
+        teams.push({
+            id: team.id,
+            name: team.name,
+            score: row.solved,
+            members
+        });
+    }
+    res.render('teamStandings', { teams, contest_id });
+});
 router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
     let user = req.query.user;
     let cid = req.params.id;
@@ -384,9 +415,15 @@ router.get("/problemset/:id", checkLoggedIn, async (req, res) => {
     let contestStart = new Date(contest.start).getTime();
     let userid = req.session.userid;
     if (vals.cid == 3) {
-        if ([1002379].includes(userid)) contestStart += 50 * 60000; // shaurya bisht
-        if ([1001533].includes(userid)) contestStart += ((4 * 24) * 60 + 30) * 60000; // yicong wang
-        if (getLateTakers(3).includes(userid)) contestStart += (2 * 24 + 20) * 60 * 60000;
+        if ([1002379].includes(userid)) {
+            contestStart += 50 * 60000; // shaurya bisht
+        }
+        if ([1001533].includes(userid)) {
+            contestStart += ((4 * 24) * 60 + 30) * 60000; // yicong wang
+        }
+        if (getLateTakers(3).includes(userid)) {
+            contestStart += (2 * 24 + 20) * 60 * 60000;
+        }
     } else if (vals.cid == 4) {
         if (getLateTakers(4).includes(userid)) contestStart += (3 * 24 + 4) * 60 * 60000; // 6:30 pm on monday
     }
@@ -603,6 +640,65 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
     res.render("rankings", {
         rankings: rankings
     })
+});
+// Team management routes
+router.get('/teams', async (req, res) => {
+    if (!req.session.loggedin) return res.redirect('/grade/login');
+    const allTeams = await getAllTeams();
+    const userTeams = await getUserTeams(req.session.userid);
+    const yourTeam = userTeams.length > 0 ? userTeams[0] : null;
+    res.render('teams', { allTeams, yourTeam });
+});
+
+router.post('/teams/create', async (req, res) => {
+    if (!req.session.loggedin) return res.redirect('/grade/login');
+    const { name } = req.body;
+    const team = await createTeam(name);
+    await joinTeam(team.id, req.session.userid);
+    res.redirect('/grade/teams');
+});
+
+router.post('/teams/join', async (req, res) => {
+    if (!req.session.loggedin) return res.redirect('/grade/login');
+    const { team_id } = req.body;
+    await joinTeam(team_id, req.session.userid);
+    res.redirect('/grade/teams');
+});
+
+router.post('/teams/joinByCode', async (req, res) => {
+    if (!req.session.loggedin) return res.redirect('/grade/login');
+    const { secret_code } = req.body;
+    const team = await getTeamBySecretCode(secret_code);
+    if (team) {
+        await joinTeam(team.id, req.session.userid);
+        res.redirect('/grade/teams');
+    } else {
+        res.send('Invalid secret code.');
+    }
+});
+
+router.post('/teams/leave', async (req, res) => {
+    if (!req.session.loggedin) return res.redirect('/grade/login');
+    const { team_id } = req.body;
+    await leaveTeam(team_id, req.session.userid);
+    res.redirect('/grade/teams');
+});
+
+router.get('/teams/:id', async (req, res) => {
+    if (!req.session.loggedin) return res.redirect('/grade/login');
+    const team = await getTeamById(req.params.id);
+    const members = await getTeamMembers(req.params.id);
+    const userTeams = await getUserTeams(req.session.userid);
+    const isMember = userTeams.length > 0 && userTeams[0].id == team.id;
+    res.render('teamProfile', { team, members, isMember });
+});
+router.get('/teamrankings', async (req, res) => {
+    if (!req.session.loggedin) return res.redirect('/grade/login');
+    const teams = await getAllTeamRankings();
+    for (let i = 0; i < teams.length; i++) {
+        teams[i].members = await getTeamMembers(teams[i].id);
+    }
+    res.render('teamRankings', { teams });
 });
 function checkLoggedIn(req, res, next) {
     if (req.session.loggedin) {

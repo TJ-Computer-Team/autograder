@@ -11,6 +11,7 @@ const pl = new Pool({
     connectionTimeoutMillis: 10000,
     allowExitOnIdle: true
 });
+const crypto = require('crypto');
 
 async function grab(id) {
     return new Promise((resolve, reject) => {
@@ -648,6 +649,143 @@ async function getStats(season) {
     });
 }
 
+// TEAM CONTESTS BACKEND LOGIC
+async function createTeam(name) {
+    const client = await pl.connect();
+    try {
+        // Generate a unique secret code
+        let secret_code;
+        let exists = true;
+        while (exists) {
+            secret_code = crypto.randomBytes(4).toString('hex');
+            const check = await client.query('SELECT 1 FROM teams WHERE secret_code = $1', [secret_code]);
+            exists = check.rows.length > 0;
+        }
+        const result = await client.query(
+            'INSERT INTO teams (name, secret_code) VALUES ($1, $2) RETURNING *', [name, secret_code]
+        );
+        return result.rows[0];
+    } finally {
+        client.release();
+    }
+}
+
+async function joinTeam(team_id, user_id) {
+    const client = await pl.connect();
+    try {
+        // Remove user from any existing team
+        await client.query('DELETE FROM team_members WHERE user_id = $1', [user_id]);
+        // Add user to the new team
+        await client.query(
+            'INSERT INTO team_members (team_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+            [team_id, user_id]
+        );
+        return true;
+    } finally {
+        client.release();
+    }
+}
+
+async function leaveTeam(team_id, user_id) {
+    const client = await pl.connect();
+    try {
+        await client.query(
+            'DELETE FROM team_members WHERE team_id = $1 AND user_id = $2',
+            [team_id, user_id]
+        );
+        return true;
+    } finally {
+        client.release();
+    }
+}
+
+async function getUserTeams(user_id) {
+    const client = await pl.connect();
+    try {
+        const result = await client.query(
+            'SELECT t.* FROM teams t JOIN team_members m ON t.id = m.team_id WHERE m.user_id = $1',
+            [user_id]
+        );
+        return result.rows;
+    } finally {
+        client.release();
+    }
+}
+
+async function getTeamMembers(team_id) {
+    const client = await pl.connect();
+    try {
+        const result = await client.query(
+            'SELECT u.* FROM users u JOIN team_members m ON u.id = m.user_id WHERE m.team_id = $1',
+            [team_id]
+        );
+        return result.rows;
+    } finally {
+        client.release();
+    }
+}
+
+async function getTeamById(team_id) {
+    const client = await pl.connect();
+    try {
+        const result = await client.query('SELECT * FROM teams WHERE id = $1', [team_id]);
+        return result.rows[0];
+    } finally {
+        client.release();
+    }
+}
+
+async function getAllTeams() {
+    const client = await pl.connect();
+    try {
+        const result = await client.query('SELECT * FROM teams ORDER BY id ASC');
+        return result.rows;
+    } finally {
+        client.release();
+    }
+}
+
+async function getTeamBySecretCode(secret_code) {
+    const client = await pl.connect();
+    try {
+        const result = await client.query('SELECT * FROM teams WHERE secret_code = $1', [secret_code]);
+        return result.rows[0];
+    } finally {
+        client.release();
+    }
+}
+
+async function getAllTeamRankings() {
+    const client = await pl.connect();
+    try {
+        // Add a contest_score column to teams if not already present
+        // SELECT all teams and their contest_score, order by contest_score desc
+        const result = await client.query('SELECT * FROM teams ORDER BY contest_score DESC NULLS LAST');
+        return result.rows;
+    } finally {
+        client.release();
+    }
+}
+
+// Returns [{ team_id, solved }] for a given contest_id
+async function getAllTeamScores(contest_id) {
+    const client = await pl.connect();
+    try {
+        // For each team, sum the points for accepted submissions in this contest
+        const result = await client.query(`
+            SELECT s.team_id, COALESCE(SUM(p.points), 0) AS solved
+            FROM submissions s
+            JOIN problems p ON s.problemid = p.pid
+            WHERE s.contest = $1 AND s.team_id IS NOT NULL AND (s.verdict = 'Accepted' OR s.verdict = 'AC')
+            GROUP BY s.team_id
+            ORDER BY solved DESC
+        `, [contest_id]);
+        return result.rows;
+    } finally {
+        client.release();
+    }
+}
+
 module.exports = {
     grab: (id) => {
         if (Number(id))
@@ -728,5 +866,15 @@ module.exports = {
     getStats: (season) => {
         return getStats(season);
     },
+    createTeam,
+    joinTeam,
+    leaveTeam,
+    getUserTeams,
+    getTeamMembers,
+    getTeamById,
+    getAllTeams,
+    getTeamBySecretCode,
+    getAllTeamRankings,
+    getAllTeamScores,
     pl
 }

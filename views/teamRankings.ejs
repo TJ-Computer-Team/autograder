@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Team Rankings</title>
+  <link rel="stylesheet" href="/profile.css" />
+  <style>
+    .rankings-table { width: 100%; border-collapse: collapse; margin-top: 2em; }
+    .rankings-table th, .rankings-table td { padding: 0.8em 1.2em; border-bottom: 1px solid #333; text-align: left; }
+    .rankings-table th { background: #232526; color: #339cff; font-size: 1.1em; }
+    .rankings-table tr:nth-child(even) { background: #23252655; }
+    .team-name { font-weight: 700; color: #a259f7; }
+    .member-list { color: #e5e7eb; font-size: 0.98em; }
+    .score { font-weight: 700; color: #5fd17a; }
+  </style>
+</head>
+<body>
+  <%- include("partials/header", {active: "teamrankings" }); %>
+  <div class="main-block">
+    <h1>Team Rankings</h1>
+    <table class="rankings-table">
+      <tr>
+        <th>Rank</th>
+        <th>Team Name</th>
+        <th>Contest Score</th>
+        <th>Members</th>
+      </tr>
+      <% teams.forEach((team, idx) => { %>
+        <tr>
+          <td><%= idx + 1 %></td>
+          <td class="team-name"><a href="/grade/teams/<%= team.id %>"><%= team.name %></a></td>
+          <td class="score"><%= team.contest_score %></td>
+          <td class="member-list">
+            <% team.members.forEach(m => { %>
+              <span><%= m.display_name %> (<%= m.username %>)</span><% if (team.members.indexOf(m) !== team.members.length - 1) { %>, <% } %>
+            <% }) %>
+          </td>
+        </tr>
+      <% }) %>
+    </table>
+  </div>
+</body>
+</html>

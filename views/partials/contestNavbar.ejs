@@ -72,5 +72,10 @@
     <li class="cnb">
       <a <% if (locals.active == "standings") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>/standings">Standings</a>
     </li>
+    <li class="cnb">
+      <% if (locals.is_team) { %>
+        <a <% if (locals.active == "teamstandings") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>/teamstandings">Team Standings</a>
+      <% } %>
+    </li>
   </ul>
 </div>

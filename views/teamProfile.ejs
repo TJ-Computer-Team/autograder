@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Team Profile</title>
+  <link rel="stylesheet" href="/profile.css" />
+</head>
+<body>
+  <%- include("partials/header", {active: "teams" }); %>
+  <div class="main-block">
+    <h1>Team: <%= team.name %></h1>
+    <h2>Members</h2>
+    <ul>
+      <% members.forEach(member => { %>
+        <li><%= member.display_name %> (<%= member.username %>)</li>
+      <% }) %>
+    </ul>
+    <% if (isMember) { %>
+      <div class="secret-code-box">Secret Code: <b id="secretCode"><%= team.secret_code %></b>
+        <button onclick="navigator.clipboard.writeText('<%= team.secret_code %>')" class="button" style="margin-left:1em;">Copy</button>
+      </div>
+    <% } %>
+    <a href="/grade/teams" class="button">Back to Teams</a>
+  </div>
+</body>
+</html>

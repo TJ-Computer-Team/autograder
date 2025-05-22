@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teams</title>
+  <link rel="stylesheet" href="/profile.css" />
+  <style>
+    .team-list { margin: 2em 0; }
+    .team-row { display: flex; align-items: center; justify-content: space-between; padding: 0.7em 1em; background: #232526; border-radius: 0.5em; margin-bottom: 0.7em; }
+    .team-row .team-name { font-weight: 700; color: #339cff; }
+    .team-row .team-id { color: #a259f7; font-size: 0.95em; margin-left: 1em; }
+    .team-row .join-btn { margin-left: 1em; }
+    .secret-code-box { background: #181a20; color: #fff; border-radius: 0.4em; padding: 0.7em 1em; margin: 1em 0; font-size: 1.1em; }
+    .your-team-block { background: #232526; border-radius: 0.7em; padding: 1.2em 1.5em; margin-bottom: 2em; }
+  </style>
+</head>
+<body>
+  <%- include("partials/header", {active: "teams" }); %>
+  <div class="main-block">
+    <h1>Teams</h1>
+    <% var myTeam = typeof yourTeam !== 'undefined' ? yourTeam : null; %>
+    <% if (myTeam) { %>
+      <div class="your-team-block">
+        <h2>Your Team: <%= myTeam.name %></h2>
+        <div class="secret-code-box">Secret Code: <b><%= myTeam.secret_code %></b></div>
+        <form action="/grade/teams/leave" method="POST">
+          <input type="hidden" name="team_id" value="<%= myTeam.id %>" />
+          <button type="submit" class="button">Leave Team</button>
+        </form>
+      </div>
+    <% } else { %>
+      <form action="/grade/teams/create" method="POST" style="margin-bottom:2em;">
+        <input type="text" name="name" placeholder="Team Name" required />
+        <button type="submit" class="button">Create Team</button>
+      </form>
+      <form action="/grade/teams/joinByCode" method="POST" style="margin-bottom:2em;">
+        <input type="text" name="secret_code" placeholder="Enter Team Secret Code" required />
+        <button type="submit" class="button">Join by Code</button>
+      </form>
+    <% } %>
+    <h2>All Teams</h2>
+    <div class="team-list">
+      <% allTeams.forEach(team => { %>
+        <div class="team-row">
+          <span class="team-name"><a href="/grade/teams/<%= team.id %>"><%= team.name %></a></span>
+          <span class="team-id">ID: <%= team.id %></span>
+          <% if (yourTeam && yourTeam.id === team.id) { %>
+            <span style="color:#5fd17a;font-weight:600;">(You are in this team)</span>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>

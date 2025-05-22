@@ -9,7 +9,8 @@
     <li class="nb"><a <% if (locals.active == "info") { %> class="cactive" <% } %> href="/grade/info">Rules and Info</a></li>
     <li class="nb"><a <% if (locals.active == "rankings") { %> class="cactive" <% } %> href="/grade/rankings">Rankings</a></li>
     <li class="nb"><a <% if (locals.active == "attendance") { %> class="cactive" <% } %> href="/grade/attendance">Attendance</a></li>
-    
+    <li class="nb"><a <% if (locals.active == "teams") { %> class="cactive" <% } %> href="/grade/teams">Teams</a></li>
+    <li class="nb"><a <% if (locals.active == "teamrankings") { %> class="cactive" <% } %> href="/grade/teamrankings">Team Rankings</a></li>
     <li class="nb topnav-right">
       <form style="height: 100%;" action="/grade/logout" method="POST">
         <button class="logoutbtn" type="submit">Log Out</button>
