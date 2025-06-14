@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "devStart": "nodemon app.js"
+    "devStart": "nodemon app.js -e js,ejs"
   },
   "dependencies": {
     "axios": "^0.27.2",

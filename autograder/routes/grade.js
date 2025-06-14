@@ -17,8 +17,9 @@ const {
     updateCF,
     getContest,
     getAllContests,
-    getStats
-} = require("./sql");
+    getStats,
+    pl
+} = require("./sql/sql");
 const {
     queue
 } = require("./runTests");
@@ -126,6 +127,7 @@ router.get("/profile/:id", checkLoggedIn, async (req, res) => {
                 username: vals.username,
                 cf: vals.cf,
                 usaco: vals.usaco,
+                ratingChanges: vals.ratingChanges,
                 admin: req.session.admin
             });
         }
@@ -158,10 +160,10 @@ router.post("/attendanceComplete", async (req, res) => {
 });
 router.get("/contests", checkLoggedIn, async (req, res) => {
     let contests = await getAllContests();
-    contests = contests.filter(function(elem) {
+    contests = contests.filter(function (elem) {
         return !(req.session.tjioi ^ elem.tjioi);
     });
-    contests.sort(function(a, b) {
+    contests.sort(function (a, b) {
         return (a.id < b.id ? -1 : 1);
     });
     res.render('contests', {
@@ -211,11 +213,11 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
             }
         }
         if (pind == undefined) {
-            console.log("error - cannot find matching problem for submission in rendering solve count: "+subs[i].problemid);
+            console.log("error - cannot find matching problem for submission in rendering solve count: " + subs[i].problemid);
             continue;
         }
         if (ind == undefined) {
-            console.log("error - cannot find matching user for submission in rendering solve count: "+subs[i].user);
+            console.log("error - cannot find matching user for submission in rendering solve count: " + subs[i].user);
             continue;
         }
         if (subs[i].verdict == "Accepted" || subs[i].verdict == "AC") {
@@ -224,7 +226,7 @@ router.get("/contests/:id", checkLoggedIn, async (req, res) => {
             ordered[pind].users.push(ind);
         }
     }
-    ordered.sort(function(a, b) {
+    ordered.sort(function (a, b) {
         if (a.points == b.points)
             return a.pid > b.pid ? 1 : -1;
         return a.points > b.points ? 1 : -1;
@@ -246,7 +248,7 @@ async function getStandings(cid) {
     let subs = await grabSubs(undefined, cid);
     let users = await grabUsers();
     let problems = await grabContestProblems(cid);
-    problems.sort(function(a, b) {
+    problems.sort(function (a, b) {
         return a.pid > b.pid ? 1 : -1;
     });
     let contest = await getContest(cid);
@@ -267,7 +269,7 @@ async function getStandings(cid) {
         }
         load.push(row);
     }
-    subs.sort(function(a, b) {
+    subs.sort(function (a, b) {
         return parseInt(a.timestamp) > parseInt(b.timestamp) ? 1 : -1;
     });
     for (let i = 0; i < subs.length; i++) {
@@ -323,11 +325,11 @@ async function getStandings(cid) {
     let load2 = [];
     for (let i = 0; i < load.length; i++) {
         let val = load[i];
-        if (val.solved > 0 && !(cid==6 && [1002404,1002587,1001623,1001694,1001672,1001944,1001560,1001608,1001865,1001217,1001317,1003218,69].includes(val.id)) && !(cid==7 && [1001849,1001623].includes(val.id))) {
+        if (val.solved > 0 && !(cid == 6 && [1002404, 1002587, 1001623, 1001694, 1001672, 1001944, 1001560, 1001608, 1001865, 1001217, 1001317, 1003218, 69].includes(val.id)) && !(cid == 7 && [1001849, 1001623].includes(val.id))) {
             if (val.penalty >= 0) load2.push(val);
         }
     }
-    load2.sort(function(a, b) {
+    load2.sort(function (a, b) {
         if (a.solved == b.solved) return a.penalty > b.penalty ? 1 : -1;
         return a.solved < b.solved ? 1 : -1;
     });
@@ -335,7 +337,7 @@ async function getStandings(cid) {
         if (i > 0 && load2[i].solved == load2[i - 1].solved && load2[i].penalty == load2[i - 1].penalty) load2[i].rank = load2[i - 1].rank;
         else load2[i].rank = i + 1;
     }
-    return {title: contest.name, pnum: problems.length, load: load2};
+    return { title: contest.name, pnum: problems.length, load: load2 };
 }
 router.get("/contests/:id/standings", checkLoggedIn, async (req, res) => {
     let cid = req.params.id;
@@ -354,7 +356,7 @@ router.get("/contests/:id/status", checkLoggedIn, async (req, res) => {
     if (user != undefined) user = Number(user);
     let contest = await getContest(cid);
     let submissions = await grabSubs(user, cid);
-    submissions = submissions.filter(function(elem) {
+    submissions = submissions.filter(function (elem) {
         return req.session.admin || elem.timestamp > new Date(contest.start).getTime();
     });
     res.render("contestStatus", {
@@ -371,7 +373,7 @@ router.get("/problemset", checkLoggedIn, async (req, res) => {
         let p = vals[i];
         if ((!p.secret || req.session.admin) && (req.session.tjioi ^ p.contestid < 202400)) lst.push(p);
     }
-    lst.sort(function(a, b) {
+    lst.sort(function (a, b) {
         return a.pid > b.pid ? 1 : -1;
     });
     res.render("gradeProblemset", {
@@ -413,19 +415,22 @@ router.get("/submit", checkLoggedIn, async (req, res) => {
     let user = req.session.userid;
     let last = await grabSubs(user);
     problems = await grabAllProblems(req.session.admin);
+    if (req.query.contest != null) {
+        problems = await grabContestProblems(req.query.contest);
+    }
     let problemname;
     for (let i = 0; i < problems.length; i++) {
         if (problems[i].pid == req.query.problem) problemname = problems[i].name;
     }
-    problems = problems.filter(function(elem) {
+    problems = problems.filter(function (elem) {
         return req.session.tjioi ^ elem.contestid < 202400;
     });
-    problems.sort(function(a, b) {
+    problems.sort(function (a, b) {
         if (a.pid < b.pid) return -1;
         return 1;
     });
-    lastSub='python';
-    if (last.length>0) lastSub = last[last.length - 1].language;
+    lastSub = 'python';
+    if (last.length > 0) lastSub = last[last.length - 1].language;
     res.render("gradeSubmit", {
         problemid: req.query.problem,
         problemname: problemname,
@@ -446,9 +451,9 @@ router.post("/status", checkLoggedIn, async (req, res) => { // sends file to ano
     }
     let file = req.body.code;
     if (file.length > 60000) {
-      return res
-        .status(413)
-        .send("Submission too long – please keep it under 60 000 characters.");
+        return res
+            .status(413)
+            .send("Submission too long – please keep it under 60 000 characters.");
     }
     let problem = await grabProblem(pid);
     let cid = problem.cid;
@@ -496,7 +501,7 @@ router.get("/status", checkLoggedIn, async (req, res) => {
         user = req.session.userid;
     }
     let submissions = await grabSubs(user, contest);
-    submissions = submissions.filter(function(elem) {
+    submissions = submissions.filter(function (elem) {
         return req.session.tjioi ^ elem.contest < 202400;
     });
     let page = req.query.page;
@@ -532,19 +537,19 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
         if (rankings[i].usaco == "plat") {
             rankings[i].usaco = 1900;
         } else if (rankings[i].usaco == "gold") {
-            rankings[i].usaco=1600;
+            rankings[i].usaco = 1600;
         } else if (rankings[i].usaco == "silver") {
-            rankings[i].usaco=1200;
+            rankings[i].usaco = 1200;
         } else {
-            rankings[i].usaco=800;
+            rankings[i].usaco = 800;
         }
-        rankings[i].inhouses=[]
+        rankings[i].inhouses = []
     }
     let contests = await getAllContests();
     let contest_count = 0;
     for (let i = 0; i < contests.length; i++) {
         if (contests[i].rated == true && contests[i].season == season) {
-            contest_count ++;
+            contest_count++;
             let standings = await getStandings(contests[i].id);
             for (let useri = 0; useri < rankings.length; useri++) {
                 let took = false;
@@ -562,14 +567,14 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
         }
     }
     for (let i = 0; i < rankings.length; i++) {
-        rankings[i].inhouses.sort(function(a, b) {
-            return a-b;
+        rankings[i].inhouses.sort(function (a, b) {
+            return a - b;
         });
-        let author_drops=0;
-        if ([1001521,1001932,1001207,1001092,1002872,1001805,1001549,1002135,1001753].includes(rankings[i].id)) {
+        let author_drops = 0;
+        if ([1001521, 1001932, 1001207, 1001092, 1002872, 1001805, 1001549, 1002135, 1001753].includes(rankings[i].id)) {
             author_drops++;
         }
-        if ([1001521,1002872,1001694,1001092,1002135,1001549,1001805,1001207].includes(rankings[i].id)) {
+        if ([1001521, 1002872, 1001694, 1001092, 1002135, 1001549, 1001805, 1001207].includes(rankings[i].id)) {
             author_drops++;
         }
         let drops = Math.min(2, contest_count - 2) + author_drops;
@@ -583,23 +588,58 @@ router.get("/rankings/:season", checkLoggedIn, async (req, res) => {
         }
         rankings[i].inhouse = overall;
         let vals = [rankings[i].usaco, rankings[i].cf, rankings[i].inhouse];
-        vals.sort(function(a, b) {
-            return a-b;
+        vals.sort(function (a, b) {
+            return a - b;
         });
         rankings[i].index = 0.2 * vals[0] + 0.35 * vals[1] + 0.45 * vals[2];
     }
-    rankings = rankings.filter(function(elem) {
+    rankings = rankings.filter(function (elem) {
         return elem.usaco > 800 || elem.cf > 0 || elem.inhouse > 0;
     });
-    rankings.sort(function(a, b) {
+    rankings.sort(function (a, b) {
         return a.index < b.index ? 1 : -1;
     });
     for (let i = 0; i < rankings.length; i++) {
         if (i > 0 && rankings[i].index == rankings[i - 1].index) {
-            rankings[i].rank =  rankings[i - 1].rank;
+            rankings[i].rank = rankings[i - 1].rank;
         }
         else rankings[i].rank = i + 1;
     }
+    for (const user of rankings) {
+        const { id, index } = user;
+
+        pl.connect((err, client, release) => {
+            if (err) {
+                console.error('Connection error:', err.stack);
+                return;
+            }
+
+            const checkQuery = `SELECT tj_rating FROM users WHERE id = $1;`;
+            client.query(checkQuery, [id], (err, res) => {
+                if (err) {
+                    release();
+                    console.error(`Error fetching rating for id ${id}:`, err.stack);
+                    return;
+                }
+                const currentRating = res.rows[0]?.tj_rating;
+                if (currentRating !== index) {
+                    const updateQuery = `UPDATE users SET tj_rating = $1 WHERE id = $2;`;
+                    client.query(updateQuery, [index, id], (err, results) => {});
+                    const insertQuery = `
+                        INSERT INTO rating_changes (userid, rating, "time")
+                        VALUES ($1, $2, NOW());
+                    `;
+                    client.query(insertQuery, [id, index], (err, result) => {
+                        release();
+                    });
+                } else {
+                    release();
+                }
+            });
+        });
+    }
+
+
     res.render("rankings", {
         rankings: rankings, id: req.session.userid
     })
