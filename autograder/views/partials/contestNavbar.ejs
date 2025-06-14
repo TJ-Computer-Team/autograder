@@ -2,25 +2,6 @@
     <div class="title"><%=locals.title%></div>
 </div>
 <div class="cnav">
-<<<<<<< HEAD:views/partials/contestNavbar.ejs
-    <ul class="cnb">
-        <li class="cnb">
-            <a <% if (locals.active == "problems") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>">Problems</a>
-        </li>
-        <li class="cnb">
-            <a href="/grade/submit">Submit Code</a>
-        </li>
-        <li class="cnb">
-            <a <% if (locals.active == "submissions") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>/status?user=<%=locals.user%>">My Submissions</a>
-        </li>
-        <li class="cnb">
-            <a <% if (locals.active == "status") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>/status">All Submissions</a>
-        </li>
-        <li class="cnb">
-            <a <% if (locals.active == "standings") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>/standings">Standings</a>
-        </li>
-    </ul>
-=======
   <ul class="cnb">
     <li class="cnb">
       <a <% if (locals.active == "problems") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>">Problems</a>
@@ -38,5 +19,4 @@
       <a <% if (locals.active == "standings") { %> class="cactive" <% } %> href="/grade/contests/<%=locals.cid%>/standings">Standings</a>
     </li>
   </ul>
->>>>>>> f8b059285be7a20585ab979e807b84fd9e019c3b:autograder/views/partials/contestNavbar.ejs
 </div>
