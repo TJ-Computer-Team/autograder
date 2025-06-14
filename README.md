@@ -23,8 +23,9 @@ This repository contains most of the website that deals with how pages are rende
 To run this locally, make sure to have docker installed and run `docker compose up --build` inside the `config` folder. If you want to make changes to the database layout, edit `init.sql` and run `reset_db.sh`. This will delete all data in the database and replace it with filler example data.
 
 ---
+Current Developers: Samuel Chow, Samuel Zhang
 
-Current Developers: Gabriel Xu, Peter Kisselev, Andrew Chen
+2024-2025 Developers: Gabriel Xu, Peter Kisselev, Andrew Chen
 
 2023-2024 Developers: Johnny Liu, Daniel Qiu, Gabriel Xu
 
