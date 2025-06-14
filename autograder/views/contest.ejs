@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="../../profile.css" />
+        <title>Contest</title>
+    </head>
+    <body>
+        <%- include("partials/particles", {depth: 2}); %>
+        <%- include("partials/header"); %>
+        <%- include("partials/contestNavbar", {active: "problems", title: locals.title, user: locals.user, cid: locals.cid}); %>
+
+    <div class="main-block">
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <% if (locals.problems[0].points != locals.problems[locals.problems.length-1].points) { %>
+          <th>Points</th>
+          <% } %>
+          <th>Solved</th>
+        </tr>
+        <% for (let i=0; i<locals.problems.length; i++) { %>
+        <tr>
+          <td class="centertext"><%= "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i] %></td>
+          <% if (locals.problems[i].available) { %>
+            <td class="centertext">
+              <a href="/grade/problemset/<%=locals.problems[i].pid%>?back=/grade/contests/<%=locals.cid%>">
+                <%=locals.problems[i].name%>
+              </a>
+            </td>
+          <% } else { %>
+            <td class="centertext">Problem Not Available</td>
+          <% } %>
+          <% if (locals.problems[0].points != locals.problems[locals.problems.length-1].points) { %>
+            <td class="centertext"><%=locals.problems[i].points%></td>
+          <% } %>
+          <td class="centertext"><%=locals.problems[i].solves%></td>
+        </tr>
+      <% } %>
+      </table>
+    </div>
+    <div class="main-block small-padding">
+      <div class="info">
+          <p id="countdown">Contest Has Ended</p>
+      </div>
+    </div>
+    <% if (locals.editorial != undefined) { %>
+    <div class="main-block small-padding">
+      <div class="info">
+        <a href="<%=locals.editorial%>" target="_blank">Editorial</a>
+      </div>
+    </div>
+    <% } %>
+    <div class="option-buttons">
+      <a href="<%= '/grade/submit?contest=' + locals.cid %>">
+        <div class="button">Submit</div>
+      </a>
+      <a href="/grade/contests">
+        <div class="button">Back</div>
+      </a>
+    </div>
+  <script>
+    let myVar = setInterval(myTimer,1000);
+    function myTimer() {
+      var d = '<%= locals.timeStatus %>' - new Date();
+      if (d>0) {
+        d=new Date(d);
+        let diff=(d.getTime()-(new Date("1970-01-01")).getTime());
+        let days=Math.floor(diff/(24*60*60*1000));
+        let hours=Math.floor(diff/(60*60*1000))%24;
+        let minutes=Math.floor(diff/(60*1000))%60;
+        let seconds=Math.floor(diff/(1000))%60;
+        document.getElementById("countdown").innerHTML = days+" Days, "+hours+" Hours, "+minutes+" Minutes, "+seconds+" Seconds until contest <%= locals.timeType %>";
+      }
+    }
+	</script>
+    </body>
+</html>

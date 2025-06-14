@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="../../profile.css" />
+  <title>Profile</title>
+</head>
+
+<body>
+  <%- include("partials/header"); %>
+  <%- include("partials/particles", {depth: 2}); %>
+
+  <div id="mainContent">
+    <div id="subContent">
+      <div class="info-block">
+        <div class="title">
+          <p>Profile</p>
+        </div>
+        <div class="userinfo">Name: <%=locals.name%>
+        </div>
+        <div class="userinfo">Username: <%=locals.username%>
+        </div>
+        <% if (locals.admin) { %>
+        <div class="statsInfo">USACO Division: <%=locals.usaco%>
+        </div>
+        <div class="statsInfo"> Codeforces Handle: <%=locals.cf%>
+        </div>
+        <% } %>
+        <br>
+        <div class="subtitle">
+          <p>Rating History</p>
+        </div>
+        <canvas id="ratingChart" width="600" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+
+  <script>
+    <% if (locals.ratingChanges && locals.ratingChanges.length) { %>
+    const rawData = <%- JSON.stringify(locals.ratingChanges) %>;
+
+    const labels = rawData.map(pt => pt.time);
+    const data = rawData.map(pt => pt.rating);
+
+    const ctx = document.getElementById('ratingChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Rating',
+          data: rawData.map(pt => ({
+            x: pt.time,
+            y: pt.rating
+          })),
+          fill: false,
+          borderWidth: 2,
+          tension: 0.1
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'month',
+              tooltipFormat: 'MMM yyyy',
+              displayFormats: {
+                month: 'MMM yyyy'
+              }
+            },
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Rating'
+            },
+            suggestedMin: Math.min(...data) - 50,
+            suggestedMax: Math.max(...data) + 50
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: true
+      }
+
+    });
+    <% } %>
+  </script>
+</body>
+
+</html>
