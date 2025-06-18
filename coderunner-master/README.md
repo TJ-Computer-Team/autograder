@@ -1,0 +1,3 @@
+## TJ Computer Team Coderunner
+
+This is a separate server than the autograder website, and the autograder website sends requests to the run function in `app.js`, which then calls the other functions in the `routes` folder to properly run the code. Not shown in this repository is a `subcode` folder that contains `cpp`, `.java`, and `.py` files that the submitted code is entered into. These files are then run and the output is piped to an output file for comparison with the correct output. Outside the `coderunner` folder is a separate folder named `problems` which contains folders for each problem id, which each contain a `code` checker file and `test` and `sol` folders containing the text for each test.

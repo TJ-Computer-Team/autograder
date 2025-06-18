@@ -6,6 +6,13 @@ const {
 const axios = require('axios');
 const querystring = require('querystring');
 
+// Import the new services
+const CodeRunnerService = require('../services/codeRunner');
+const cfAPI = require('../services/cfAPI');
+const testCaseService = require('../services/testCaseService');
+
+const codeRunner = new CodeRunnerService();
+
 let tasks = [],
     tasksS = [];
 let running = false;
@@ -19,6 +26,7 @@ function queue(pid, sid) {
         running = true;
     }
 }
+
 async function run() {
     running = true;
     if (tasks.length == 0) {
@@ -28,33 +36,42 @@ async function run() {
         let task = tasks.shift();
         let sub = tasksS.shift();
         console.log("Running task:", task, sub);
-        let res = await grabProblem(task);
-        let checkid = res.checkid;
-        let tl = res.tl;
-        let ml = res.ml;
-        res = await grabStatus(sub);
-        let userCode = res.code;
-        let language = res.language;
-        let output = undefined,
-            fverdict = "ER",
-            runtime = -1,
-            memory = -1;
-        await axios.post('http://10.150.0.7:8080/run', querystring.stringify({
-            lang: language,
-            problemid: String(task),
-            code: userCode,
-            tl: tl,
-            ml: ml
-        })).then(res => {
-            return res['data']
-        }).then(res => {
-            console.log('response recieved from coderunner');
-            insertSubmission(sub, res.verdict, res.tl, memory, res.output);
-            if (!queuePaused) run();
-        }).catch((error) => {
-            insertSubmission(sub, "ERROR", res.tl, memory, "Grading server error:\n" + error);
-            if (!queuePaused) run();
-        });
+        
+        try {
+            // Get problem details
+            let problem = await grabProblem(task);
+            if (!problem) {
+                insertSubmission(sub, "ERROR", 0, 0, "Problem not found");
+                if (!queuePaused) run();
+                return;
+            }
+            
+            // Get submission details
+            let submission = await grabStatus(sub);
+            if (!submission) {
+                insertSubmission(sub, "ERROR", 0, 0, "Submission not found");
+                if (!queuePaused) run();
+                return;
+            }
+            
+            // Use the new CodeRunnerService for better handling
+            const result = await codeRunner.runSubmission({
+                problemId: task,
+                code: submission.code,
+                language: submission.language,
+                timeLimit: problem.tl,
+                memoryLimit: problem.ml
+            });
+            
+            // Insert the result
+            insertSubmission(sub, result.verdict, result.time || 0, result.memory || 0, result.output);
+            
+        } catch (error) {
+            console.error('Error running submission:', error);
+            insertSubmission(sub, "ERROR", 0, 0, "Grading server error:\n" + error.message);
+        }
+        
+        if (!queuePaused) run();
     }
 }
 
