@@ -483,7 +483,7 @@ router.post("/status", checkLoggedIn, async (req, res) => { // sends file to ano
     if (prevts == undefined) {
         prevts = -30000
     }
-    if (timestamp - prevts > 30000 || req.session.admin) {
+    if (timestamp - prevts > 30000 || req.session.admin || process.env.PROD == 'false') {
         let sid = await createSubmission(req.session.userid, file, pid, language, problemname, cid, timestamp);
         lastSubmission.set(req.session.userid, timestamp);
         await queue(pid, sid);

@@ -39,7 +39,12 @@ async function run() {
             fverdict = "ER",
             runtime = -1,
             memory = -1;
-        await axios.post('http://10.150.0.7:8080/run', querystring.stringify({
+
+        let coderunner_link = "http://10.150.0.7:8080/run";
+        if (process.env.PROD == "false") {
+            coderunner_link = "http://coderunner:8080/run";
+        }
+        await axios.post(coderunner_link, querystring.stringify({
             lang: language,
             problemid: String(task),
             code: userCode,

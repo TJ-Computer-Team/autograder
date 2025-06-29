@@ -119,7 +119,7 @@ async function createSubmission(user, code, problem, language, problemname, cid,
                 resolve(false);
             }
             let qry = `INSERT INTO submissions (usr, code, problemid, language, runtime, memory, verdict, problemname, contest, timestamp) values ($1, $2, $3, $4, -1, -1, 'Running', $5, $6, $7) RETURNING id`;
-            let vals = [user, code, problem, language, problemname, cid, timestamp];
+            let vals = [user, code, problem, language, problemname, cid, new Date(timestamp)];
             client.query(qry, vals, (err, results) => {
                 release();
                 if (err) {
