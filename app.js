@@ -2,7 +2,7 @@ require('dotenv').config();
 const session = require('express-session');
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 4000;
 const gradeRouter = require("./routes/grade");
 const adminRouter = require("./routes/admin");
 const {

