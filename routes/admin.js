@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config(); // Commented out - no .env file needed for local development
 const express = require('express');
 const router = express.Router({
     mergeParams: true
@@ -15,6 +15,8 @@ const {
     run,
     skip
 } = require("./runTests");
+
+
 
 function findMex(problems) {
   const pids = problems.map(problem => problem.pid);

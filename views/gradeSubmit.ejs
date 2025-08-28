@@ -6,6 +6,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Submit</title>
         <link rel="stylesheet" type="text/css" href="../profile.css" />
+        <!-- Ace Editor CSS -->
+        <style>
+            #editor {
+                width: 100%;
+                height: 400px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+                font-size: 14px;
+            }
+            .ace_editor {
+                border-radius: 4px;
+            }
+            .language-selector {
+                margin-bottom: 10px;
+            }
+            .editor-container {
+                margin-bottom: 20px;
+            }
+        </style>
     </head>
     <body>
         <%- include("partials/particles", {depth: 1}); %>
@@ -28,8 +48,8 @@
                     </select>
                 </div>
                 <div class="problem-text">
-                    <div class="vertAlign">
-                        <select id="lang" name="lang">
+                    <div class="language-selector">
+                        <select id="lang" name="lang" onchange="changeLanguage()">
                             <% if( locals.lastlang == "cpp"){ %>
                             <option value="cpp">C++</option>
                             <% }else{ %>
@@ -44,15 +64,12 @@
                             <option value="python">Python</option>
                             <% } %>
                         </select>
-                        <textarea
-                            id="codeinput"
-                            name="code"
-                            rows="20"
-                            cols="150"
-                            spellcheck="false"
-                            maxlength="60000"
-                            placeholder=""></textarea>
-
+                    </div>
+                    <div class="editor-container">
+                        <div id="editor"></div>
+                        <input type="hidden" id="codeinput" name="code" />
+                    </div>
+                    <div class="vertAlign">
                         <label class="custom-file-upload">
                             <input type="file" name="files" class="custom-file"/>
                         </label>
@@ -62,23 +79,113 @@
             </form>
         </div>
 
+        <!-- Ace Editor JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/mode-c_cpp.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/mode-java.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/mode-python.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/theme-monokai.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ext-language_tools.js"></script>
+        
         <script type="text/javascript">
-            document.getElementById("codeinput").addEventListener("keydown", function (e) {
-                const max = 60000;
-                const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
-                // enforce character cap
-                if (this.value.length >= max && !allowed.includes(e.key)) {
-                    e.preventDefault();
-                    // (optional) flash a small warning in the UI
-                    return;
+            let editor;
+            let currentLanguage = '<%= locals.lastlang %>';
+            
+            // Initialize Ace Editor
+            document.addEventListener('DOMContentLoaded', function() {
+                editor = ace.edit("editor");
+                editor.setTheme("ace/theme/monokai");
+                editor.setShowPrintMargin(false);
+                editor.setShowInvisibles(false);
+                editor.setFontSize(14);
+                editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true,
+                    showLineNumbers: true,
+                    showGutter: true,
+                    highlightActiveLine: true,
+                    wrap: true
+                });
+                
+                // Set initial language mode
+                changeLanguage();
+                
+                // Set initial content based on language
+                setInitialContent();
+                
+                // Update hidden input before form submission
+                document.querySelector('form').addEventListener('submit', function() {
+                    document.getElementById('codeinput').value = editor.getValue();
+                });
+            });
+            
+            // Change language mode
+            function changeLanguage() {
+                const langSelect = document.getElementById('lang');
+                currentLanguage = langSelect.value;
+                
+                switch(currentLanguage) {
+                    case 'cpp':
+                        editor.session.setMode("ace/mode/c_cpp");
+                        break;
+                    case 'java':
+                        editor.session.setMode("ace/mode/java");
+                        break;
+                    case 'python':
+                        editor.session.setMode("ace/mode/python");
+                        break;
                 }
-                // handle Tab
-                if (e.key === "Tab") {
-                    e.preventDefault();
-                    const start = this.selectionStart;
-                    const end = this.selectionEnd;
-                    this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
-                    this.selectionStart = this.selectionEnd = start + 1;
+            }
+            
+            // Set initial content based on language
+            function setInitialContent() {
+                let initialCode = '';
+                switch(currentLanguage) {
+                    case 'cpp':
+                        initialCode = `#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    // Your code here
+    
+    return 0;
+}`;
+                        break;
+                    case 'java':
+                        initialCode = `package subcode;
+
+public class test {
+    public static void main(String[] args) {
+        // Your code here
+        
+    }
+}`;
+                        break;
+                    case 'python':
+                        initialCode = `# Your code here
+`;
+                        break;
+                }
+                editor.setValue(initialCode);
+                editor.clearSelection();
+            }
+            
+            // Character limit enforcement
+            editor?.session.on('change', function() {
+                const max = 60000;
+                const currentLength = editor.getValue().length;
+                
+                if (currentLength > max) {
+                    // Truncate to max length
+                    const truncated = editor.getValue().substring(0, max);
+                    editor.setValue(truncated);
+                    editor.clearSelection();
+                    
+                    // Show warning
+                    alert(`Code truncated to ${max} characters limit`);
                 }
             });
         </script>
