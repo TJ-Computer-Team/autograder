@@ -45,8 +45,12 @@ router.get("/authlogin", async (req, res) => {
     if (req.session.loggedin) {
         res.redirect("/grade/profile");
     } else {
-        let theurl = await getToken();
-        res.redirect(theurl);
+        // Temporarily bypass OAuth for local development
+        // let theurl = await getToken();
+        // res.redirect(theurl);
+        
+        // Redirect to TJIOI login instead for local testing
+        res.redirect("/grade/tjioilogin");
     }
 });
 router.get("/login", async (req, res) => {
